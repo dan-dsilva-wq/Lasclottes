@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medieval Villages near Lasclottes | Penne d'Agenais, Pujols, Monflanquin</title>
+    <meta name="description" content="Explore hilltop perched bastide towns near Lasclottes. Penne d'Agenais (5 min), Pujols and Monflanquin (Plus Beaux Villages de France), and Tournon-d'Agenais.">
+    <link rel="canonical" href="https://lasclottes.com/activities/villages.html">
+    <link rel="stylesheet" href="../css/style_old.css">
+    <style>
+        .activity-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 350px;
+            overflow: hidden;
+        }
+        .activity-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .activity-hero-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-xl) var(--space-lg);
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: var(--color-white);
+        }
+        .activity-hero-overlay h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: var(--space-xs);
+        }
+        .activity-hero-overlay p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .activity-content {
+            padding: var(--space-2xl) 0;
+        }
+        .activity-text {
+            max-width: 800px;
+            margin: 0 auto var(--space-2xl);
+        }
+        .activity-text h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+        }
+        .activity-text p {
+            color: var(--color-text);
+            line-height: 1.8;
+            margin-bottom: var(--space-sm);
+        }
+        .village-card {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+            background: var(--color-bg-alt);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: var(--space-xl);
+        }
+        .village-card-content {
+            padding: var(--space-lg);
+        }
+        .village-card h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            font-size: 1.4rem;
+            margin-bottom: var(--space-xs);
+        }
+        .village-meta {
+            color: var(--color-accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: var(--space-sm);
+        }
+        .village-badge {
+            display: inline-block;
+            background: var(--color-primary);
+            color: var(--color-white);
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .village-card p {
+            color: var(--color-text-light);
+            line-height: 1.7;
+            font-size: 0.95rem;
+            margin-bottom: var(--space-xs);
+        }
+        .village-highlights {
+            margin-top: var(--space-sm);
+            padding-top: var(--space-sm);
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+        .village-highlights span {
+            display: inline-block;
+            background: var(--color-white);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            margin: 3px 4px 3px 0;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-md);
+            margin: var(--space-lg) 0;
+        }
+        .info-card {
+            background: var(--color-bg-alt);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+        }
+        .info-card h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+            font-size: 1.1rem;
+        }
+        .info-card p {
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .cta-banner {
+            background: var(--color-primary);
+            color: var(--color-white);
+            text-align: center;
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            margin: var(--space-xl) 0;
+        }
+        .cta-banner h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin-bottom: var(--space-sm);
+        }
+        .cta-banner p {
+            opacity: 0.9;
+            margin-bottom: var(--space-md);
+        }
+        .cta-banner .btn {
+            background: var(--color-accent);
+            color: var(--color-white);
+            border: none;
+        }
+        .back-link {
+            text-align: center;
+            padding: var(--space-lg) 0 var(--space-2xl);
+        }
+    </style>
+</head>
+<body>
+    <header class="nav" id="nav">
+        <div class="container nav__inner">
+            <a href="../index.html" class="nav__logo"><img src="../Media/Logo/Lasclottes Logo 3 png.png" alt="Lasclottes" class="nav__logo-img"></a>
+            <ul class="nav__list">
+                <li><a href="../index.html#activities" class="nav__link">Activities</a></li>
+                <li><a href="../index.html#contact" class="nav__link">Book</a></li>
+            </ul>
+            <div class="nav__actions">
+                <a href="../index.html#contact" class="nav__cta">Book Now</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="activity-hero">
+        <img src="../Media/Site Files/Agen via duct.jpg" alt="Historic viaduct near Agen in the Lot-et-Garonne region">
+        <div class="activity-hero-overlay">
+            <h1>Medieval Villages</h1>
+            <p>Hilltop perched bastide towns and ancient stone streets</p>
+        </div>
+    </div>
+
+    <main class="activity-content">
+        <div class="container">
+
+            <div class="activity-text">
+                <p>The countryside around Lasclottes is studded with medieval villages, many of them perched dramatically on hilltops with commanding views across the Lot Valley. Several are officially recognised as <em>Plus Beaux Villages de France</em> (Most Beautiful Villages in France). With narrow cobbled streets, ancient stone houses, and squares shaded by plane trees, they're a wonderful way to spend a morning or afternoon.</p>
+            </div>
+
+            <!-- Penne d'Agenais -->
+            <div class="village-card">
+                <div class="village-card-content">
+                    <h3>Penne d'Agenais</h3>
+                    <p class="village-meta">5 minutes from Lasclottes &bull; 8 km</p>
+                    <p>The closest hilltop village and one you'll likely visit many times during your stay. Penne d'Agenais is crowned by the striking Basilique Notre-Dame de Peyragude, visible for miles around, with panoramic views from the terrace stretching across the Lot Valley to the hills beyond.</p>
+                    <p>The village itself is a delight to explore: narrow medieval streets wind steeply between stone houses, opening into small squares with caf&eacute;s and artisan shops. There's a Thursday morning market, several restaurants with terrace dining, and a real sense of a living, working community rather than a tourist attraction.</p>
+                    <div class="village-highlights">
+                        <span>Basilica &amp; panoramic views</span>
+                        <span>Thursday market</span>
+                        <span>Restaurants &amp; caf&eacute;s</span>
+                        <span>5 min from Lasclottes</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pujols -->
+            <div class="village-card">
+                <div class="village-card-content">
+                    <h3>Pujols <span class="village-badge">Plus Beaux Villages de France</span></h3>
+                    <p class="village-meta">20 minutes from Lasclottes</p>
+                    <p>Officially one of the most beautiful villages in France, Pujols sits on a ridge overlooking Villeneuve-sur-Lot. The village is tiny &mdash; you can walk its length in ten minutes &mdash; but every corner is picturesque. Honey-coloured stone walls, flowering window boxes, and a 15th-century church with remarkable frescoes.</p>
+                    <p>There are a handful of excellent restaurants in the village, including one with a terrace that offers spectacular sunset views across the valley. Worth timing an evening visit to catch the light.</p>
+                    <div class="village-highlights">
+                        <span>Plus Beaux Villages</span>
+                        <span>15th-century frescoes</span>
+                        <span>Sunset dining</span>
+                        <span>Artisan galleries</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tournon-d'Agenais -->
+            <div class="village-card">
+                <div class="village-card-content">
+                    <h3>Tournon-d'Agenais</h3>
+                    <p class="village-meta">25 minutes from Lasclottes</p>
+                    <p>A 13th-century bastide town perched on a promontory with views in every direction. Tournon has kept its original grid layout of narrow streets and a central covered market square. The iconic clock tower, built into the old town gate, is the village's most recognisable landmark.</p>
+                    <p>Less visited than some of its neighbours, Tournon has a wonderfully quiet, authentic feel. There's a small museum of local history, a couple of caf&eacute;s, and beautiful walks around the ramparts. The summer night market here is one of the best in the area.</p>
+                    <div class="village-highlights">
+                        <span>Bastide town</span>
+                        <span>Clock tower</span>
+                        <span>Night markets in summer</span>
+                        <span>Panoramic rampart walks</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monflanquin -->
+            <div class="village-card">
+                <div class="village-card-content">
+                    <h3>Monflanquin <span class="village-badge">Plus Beaux Villages de France</span></h3>
+                    <p class="village-meta">30 minutes from Lasclottes</p>
+                    <p>Another of France's officially most beautiful villages, Monflanquin is a classic bastide town founded in 1256 by Alphonse de Poitiers. The perfectly preserved central square is surrounded by stone arcades (<em>couverts</em>) that once sheltered market traders and still do today.</p>
+                    <p>The Mus&eacute;e des Bastides tells the fascinating story of these planned medieval towns, unique to southwest France. Monflanquin also has a lively Thursday evening market in summer, excellent restaurants, and art galleries tucked into the narrow streets.</p>
+                    <div class="village-highlights">
+                        <span>Plus Beaux Villages</span>
+                        <span>13th-century bastide</span>
+                        <span>Mus&eacute;e des Bastides</span>
+                        <span>Thursday evening market</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What are bastides -->
+            <div class="activity-text">
+                <h2>What Are Bastide Towns?</h2>
+                <p>Bastides are planned medieval new towns, built mostly in the 13th century across southwest France. They were founded by both English and French lords, often competing for control of the region during the lead-up to the Hundred Years' War.</p>
+                <p>They share common features: a central market square (often with a covered hall), a grid street plan, fortified gates, and a church. The Lot-et-Garonne has one of the highest concentrations of bastides anywhere in France, making it a fascinating area for history lovers to explore.</p>
+            </div>
+
+            <!-- Tips -->
+            <div class="activity-text">
+                <h2>Practical Information</h2>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>Getting There</h3>
+                    <p>All these villages are an easy drive from Lasclottes along quiet country roads. Parking is usually free and located just outside the village walls. Wear comfortable shoes &mdash; the streets are steep and cobbled.</p>
+                </div>
+                <div class="info-card">
+                    <h3>Best Time to Visit</h3>
+                    <p>Early morning for quiet streets and photos. Market days for atmosphere. Summer evenings for night markets and terrace dining. Each village has its own character at different times of day.</p>
+                </div>
+                <div class="info-card">
+                    <h3>Combine Visits</h3>
+                    <p>Several villages can be combined in a half-day circuit. Try Penne d'Agenais in the morning, lunch at Pujols, and Tournon or Monflanquin in the afternoon.</p>
+                </div>
+                <div class="info-card">
+                    <h3>Markets &amp; Shops</h3>
+                    <p>Village shops tend to close for lunch (12:30&ndash;2:30pm). Many close on Mondays. Market days bring the most life &mdash; check individual village schedules.</p>
+                </div>
+            </div>
+
+            <div class="cta-banner">
+                <h2>Step Back in Time</h2>
+                <p>Book your stay at Lasclottes and explore the medieval villages of the Lot-et-Garonne.</p>
+                <a href="../index.html#contact" class="btn btn-primary">Book Your Stay</a>
+            </div>
+
+            <div class="back-link">
+                <a href="../index.html#activities" class="btn btn-primary">&larr; Back to Activities</a>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../js/main_old.js"></script>
+</body>
+</html>

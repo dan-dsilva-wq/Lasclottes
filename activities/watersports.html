@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Sports near Lasclottes | River Lot, France</title>
+    <meta name="description" content="Waterskiing, wakeboarding, and leisure boating at nearby bases on the River Lot. Club Nautique Penne Saint-Sylvestre is just minutes from Lasclottes.">
+    <link rel="canonical" href="https://lasclottes.com/activities/watersports.html">
+    <link rel="stylesheet" href="../css/style_old.css">
+    <style>
+        .activity-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 350px;
+            overflow: hidden;
+        }
+        .activity-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .activity-hero-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-xl) var(--space-lg);
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: var(--color-white);
+        }
+        .activity-hero-overlay h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: var(--space-xs);
+        }
+        .activity-hero-overlay p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .activity-content {
+            padding: var(--space-2xl) 0;
+        }
+        .activity-block {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            align-items: center;
+            margin-bottom: var(--space-2xl);
+        }
+        .activity-block.reverse {
+            direction: rtl;
+        }
+        .activity-block.reverse > * {
+            direction: ltr;
+        }
+        .activity-block img {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+        .activity-block h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+        }
+        .activity-block p, .activity-text p {
+            color: var(--color-text);
+            line-height: 1.8;
+            margin-bottom: var(--space-sm);
+        }
+        .activity-text {
+            max-width: 800px;
+            margin: 0 auto var(--space-2xl);
+        }
+        .activity-text h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+        }
+        .sport-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-lg) 0 var(--space-2xl);
+        }
+        .sport-card {
+            background: var(--color-bg-alt);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            border-left: 4px solid var(--color-accent);
+        }
+        .sport-card h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+            font-size: 1.2rem;
+        }
+        .sport-card p {
+            color: var(--color-text-light);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        .venue-card {
+            background: var(--color-bg-alt);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+        }
+        .venue-card h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+            font-size: 1.2rem;
+        }
+        .venue-card .venue-meta {
+            color: var(--color-accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: var(--space-sm);
+        }
+        .venue-card p {
+            color: var(--color-text-light);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: var(--space-xs);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-md);
+            margin: var(--space-lg) 0;
+        }
+        .info-card {
+            background: var(--color-bg-alt);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+        }
+        .info-card h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+            font-size: 1.1rem;
+        }
+        .info-card p {
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .cta-banner {
+            background: var(--color-primary);
+            color: var(--color-white);
+            text-align: center;
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            margin: var(--space-xl) 0;
+        }
+        .cta-banner h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin-bottom: var(--space-sm);
+        }
+        .cta-banner p {
+            opacity: 0.9;
+            margin-bottom: var(--space-md);
+        }
+        .cta-banner .btn {
+            background: var(--color-accent);
+            color: var(--color-white);
+            border: none;
+        }
+        .back-link {
+            text-align: center;
+            padding: var(--space-lg) 0 var(--space-2xl);
+        }
+        @media (max-width: 768px) {
+            .activity-block {
+                grid-template-columns: 1fr;
+            }
+            .activity-block.reverse {
+                direction: ltr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="nav" id="nav">
+        <div class="container nav__inner">
+            <a href="../index.html" class="nav__logo"><img src="../Media/Logo/Lasclottes Logo 3 png.png" alt="Lasclottes" class="nav__logo-img"></a>
+            <ul class="nav__list">
+                <li><a href="../index.html#activities" class="nav__link">Activities</a></li>
+                <li><a href="../index.html#contact" class="nav__link">Book</a></li>
+            </ul>
+            <div class="nav__actions">
+                <a href="../index.html#contact" class="nav__cta">Book Now</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="activity-hero">
+        <img src="../Media/Site Files/Lasclottes Pool.jpeg" alt="The pool at Lasclottes with views over the grounds">
+        <div class="activity-hero-overlay">
+            <h1>Water Sports</h1>
+            <p>Waterskiing, wakeboarding, and leisure boating on the Lot</p>
+        </div>
+    </div>
+
+    <main class="activity-content">
+        <div class="container">
+
+            <div class="activity-text">
+                <p>The River Lot and the lakes of the Lot-et-Garonne offer a range of water sports for thrill-seekers and families alike. From waterskiing and wakeboarding to leisure boating and open-water swimming, there's plenty to get you on (or in) the water during your stay at Lasclottes.</p>
+            </div>
+
+            <!-- Activities -->
+            <div class="activity-text">
+                <h2>What's Available</h2>
+            </div>
+
+            <div class="sport-grid">
+                <div class="sport-card">
+                    <h3>Waterskiing</h3>
+                    <p>The Club Nautique Penne Saint-Sylvestre offers waterskiing sessions on the Lot, just minutes from Lasclottes. Suitable for all levels, from complete beginners to experienced skiers. Equipment and instruction are provided.</p>
+                </div>
+                <div class="sport-card">
+                    <h3>Wakeboarding</h3>
+                    <p>Wakeboarding is also available at the Club Nautique. The calm, wide sections of the Lot are ideal for learning, and the club's instructors can get beginners up and riding within a session or two.</p>
+                </div>
+                <div class="sport-card">
+                    <h3>Leisure Boating</h3>
+                    <p>Electric boats and leisure craft can be hired for gentle cruises on the Lot. A peaceful way to spend an afternoon, drifting past the fields and villages that line the river. No licence required for small electric boats.</p>
+                </div>
+                <div class="sport-card">
+                    <h3>Open-Water Swimming</h3>
+                    <p>The floating swimming pool (<em>piscine flottante</em>) at Saint-Sylvestre-sur-Lot is a unique facility &mdash; a proper swimming pool floating on the river itself, with lifeguards and changing facilities. Open in summer and popular with families.</p>
+                </div>
+            </div>
+
+            <!-- Venues -->
+            <div class="activity-text">
+                <h2>Where to Go</h2>
+            </div>
+
+            <div class="venue-card">
+                <h3>Club Nautique Penne Saint-Sylvestre</h3>
+                <p class="venue-meta">5&ndash;10 minutes from Lasclottes</p>
+                <p>The closest water sports centre to Lasclottes, offering waterskiing, wakeboarding, and boat hire on the River Lot. The club is welcoming to visitors and offers sessions for beginners through to advanced. This is the go-to spot for anyone wanting to try something more active on the water.</p>
+            </div>
+
+            <div class="venue-card">
+                <h3>Piscine Flottante, Saint-Sylvestre-sur-Lot</h3>
+                <p class="venue-meta">5 minutes from Lasclottes</p>
+                <p>A floating outdoor swimming pool on the River Lot, open during the summer months. It offers the experience of swimming in the river environment with the safety and facilities of a proper pool. Supervised by lifeguards, with changing rooms and a small caf&eacute;. A unique and refreshing experience.</p>
+            </div>
+
+            <div class="venue-card">
+                <h3>Lac de Fumel</h3>
+                <p class="venue-meta">20 minutes from Lasclottes</p>
+                <p>A supervised lake beach with swimming, pedalos, and picnic areas. The lake has a designated swimming zone with lifeguards in summer, plus grassy areas for sunbathing and a playground for children. A good option for a family day out away from the river.</p>
+            </div>
+
+            <!-- Back at Lasclottes -->
+            <div class="activity-block">
+                <div>
+                    <h2>Back at Lasclottes</h2>
+                    <p>After a morning of water sports, head back to Lasclottes and cool off in the private swimming pool, set in the garden with views over the grounds and down to the river.</p>
+                    <p>The pool is the perfect place to spend lazy afternoons between activities &mdash; loungers and parasols are available, and you can keep an eye on the river below in case you spot a hot air balloon or a heron.</p>
+                </div>
+                <img src="../Media/Site Files/Pool.jpeg" alt="The swimming pool at Lasclottes">
+            </div>
+
+            <!-- Practical -->
+            <div class="activity-text">
+                <h2>Practical Information</h2>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>Booking</h3>
+                    <p>Water sports sessions at the Club Nautique should be booked in advance during peak season (July&ndash;August). Outside peak times, walk-ins are often possible. We can help arrange sessions when you book your stay.</p>
+                </div>
+                <div class="info-card">
+                    <h3>What to Bring</h3>
+                    <p>Swimwear, suncream, and a towel. Equipment (skis, boards, wetsuits, life jackets) is provided by the operators. Bring water shoes for the river beach areas.</p>
+                </div>
+                <div class="info-card">
+                    <h3>For Children</h3>
+                    <p>The floating pool and lake beaches are ideal for younger children. Waterskiing and wakeboarding are typically available for children aged 8 and over, depending on the operator.</p>
+                </div>
+                <div class="info-card">
+                    <h3>Season</h3>
+                    <p>Water sports run from May to September. The floating pool and lake beaches are typically open from late June to early September. The river itself is accessible year-round.</p>
+                </div>
+            </div>
+
+            <div class="cta-banner">
+                <h2>Make a Splash on the Lot</h2>
+                <p>Book your stay at Lasclottes and enjoy water sports just minutes from the property.</p>
+                <a href="../index.html#contact" class="btn btn-primary">Book Your Stay</a>
+            </div>
+
+            <div class="back-link">
+                <a href="../index.html#activities" class="btn btn-primary">&larr; Back to Activities</a>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../js/main_old.js"></script>
+</body>
+</html>

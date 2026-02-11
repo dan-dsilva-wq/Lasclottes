@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cycling near Lasclottes | Lot Valley, France</title>
+    <meta name="description" content="Explore the Lot Valley by bike from Lasclottes. Flat riverside greenways, rolling countryside lanes, and the V86 Véloroute passing nearby. Bike hire available locally.">
+    <link rel="canonical" href="https://lasclottes.com/activities/cycling.html">
+    <link rel="stylesheet" href="../css/style_old.css">
+    <style>
+        .activity-hero {
+            position: relative;
+            height: 50vh;
+            min-height: 350px;
+            overflow: hidden;
+        }
+        .activity-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .activity-hero-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-xl) var(--space-lg);
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: var(--color-white);
+        }
+        .activity-hero-overlay h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: var(--space-xs);
+        }
+        .activity-hero-overlay p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .activity-content {
+            padding: var(--space-2xl) 0;
+        }
+        .activity-block {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            align-items: center;
+            margin-bottom: var(--space-2xl);
+        }
+        .activity-block.reverse {
+            direction: rtl;
+        }
+        .activity-block.reverse > * {
+            direction: ltr;
+        }
+        .activity-block img {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+        .activity-block h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+        }
+        .activity-block p, .activity-text p {
+            color: var(--color-text);
+            line-height: 1.8;
+            margin-bottom: var(--space-sm);
+        }
+        .activity-text {
+            max-width: 800px;
+            margin: 0 auto var(--space-2xl);
+        }
+        .activity-text h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-md);
+            margin: var(--space-lg) 0;
+        }
+        .info-card {
+            background: var(--color-bg-alt);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+        }
+        .info-card h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+            font-size: 1.1rem;
+        }
+        .info-card p {
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .route-card {
+            background: var(--color-bg-alt);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+        }
+        .route-card h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: var(--space-xs);
+        }
+        .route-card .route-meta {
+            color: var(--color-accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: var(--space-xs);
+        }
+        .route-card p {
+            color: var(--color-text-light);
+            line-height: 1.6;
+        }
+        .cta-banner {
+            background: var(--color-primary);
+            color: var(--color-white);
+            text-align: center;
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            margin: var(--space-xl) 0;
+        }
+        .cta-banner h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin-bottom: var(--space-sm);
+        }
+        .cta-banner p {
+            opacity: 0.9;
+            margin-bottom: var(--space-md);
+        }
+        .cta-banner .btn {
+            background: var(--color-accent);
+            color: var(--color-white);
+            border: none;
+        }
+        .back-link {
+            text-align: center;
+            padding: var(--space-lg) 0 var(--space-2xl);
+        }
+        @media (max-width: 768px) {
+            .activity-block {
+                grid-template-columns: 1fr;
+            }
+            .activity-block.reverse {
+                direction: ltr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="nav" id="nav">
+        <div class="container nav__inner">
+            <a href="../index.html" class="nav__logo"><img src="../Media/Logo/Lasclottes Logo 3 png.png" alt="Lasclottes" class="nav__logo-img"></a>
+            <ul class="nav__list">
+                <li><a href="../index.html#activities" class="nav__link">Activities</a></li>
+                <li><a href="../index.html#contact" class="nav__link">Book</a></li>
+            </ul>
+            <div class="nav__actions">
+                <a href="../index.html#contact" class="nav__cta">Book Now</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="activity-hero">
+        <img src="../Media/Site Files/People cyling landscape.jpg" alt="Cycling through the Lot Valley countryside near Lasclottes">
+        <div class="activity-hero-overlay">
+            <h1>Cycling the Lot Valley</h1>
+            <p>Riverside greenways, quiet country lanes, and rolling hills</p>
+        </div>
+    </div>
+
+    <main class="activity-content">
+        <div class="container">
+
+            <div class="activity-text">
+                <p>The Lot Valley is superb cycling country. From flat, paved greenways ideal for families to challenging hill climbs through sunflower fields and vineyards, there's riding for every level. Lasclottes sits right in the heart of it, with routes heading out directly from the front gate.</p>
+            </div>
+
+            <div class="activity-block">
+                <div>
+                    <h2>The V86 &mdash; V&eacute;loroute de la Vall&eacute;e du Lot</h2>
+                    <p>The V86 is a long-distance cycling route that follows the Lot Valley from its source all the way to the Garonne. It passes through Saint-Sylvestre-sur-Lot, just minutes from Lasclottes, and provides a well-signed, largely flat route through some of the most beautiful scenery in southwest France.</p>
+                    <p>The route connects historic towns including Villeneuve-sur-Lot, Penne d'Agenais, and Fumel, with plenty of caf&eacute; stops along the way.</p>
+                </div>
+                <img src="../Media/Site Files/Lasclottes Cycle routes_.jpg" alt="Cycle routes near Lasclottes showing the V86 route">
+            </div>
+
+            <div class="activity-block reverse">
+                <div>
+                    <h2>Voie Verte en Villeneuvois</h2>
+                    <p>The Voie Verte is an 8.4 km paved greenway running along a disused railway line between Villeneuve-sur-Lot and the surrounding countryside. It's entirely car-free, flat, and shaded &mdash; perfect for families with children, leisure cyclists, or an easy morning spin.</p>
+                    <p>The surface is smooth tarmac, suitable for road bikes, hybrids, and even pushchairs. There are picnic areas and benches along the route.</p>
+                </div>
+                <img src="../Media/Site Files/Cycling group.jpg" alt="Group cycling along a quiet road in the Lot Valley">
+            </div>
+
+            <div class="activity-block">
+                <div>
+                    <h2>Country Roads &amp; Hill Climbs</h2>
+                    <p>For more adventurous cyclists, the surrounding countryside offers a network of quiet departmental roads winding through orchards, vineyards, and hilltop villages. The terrain is gently rolling with occasional steeper climbs up to bastide towns like Penne d'Agenais and Pujols.</p>
+                    <p>Traffic is minimal outside of the main roads, and the scenery is constantly rewarding &mdash; fields of sunflowers in summer, plum orchards in autumn, and wide views across the valley from every ridge.</p>
+                </div>
+                <img src="../Media/Site Files/Single cyclist.jpg" alt="Solo cyclist on a quiet road in Lot-et-Garonne">
+            </div>
+
+            <div class="activity-text">
+                <h2>Suggested Routes from Lasclottes</h2>
+            </div>
+
+            <div class="route-card">
+                <h3>Lasclottes to Penne d'Agenais</h3>
+                <p class="route-meta">8 km each way &bull; Easy to Moderate &bull; Some climbing into the village</p>
+                <p>Follow quiet lanes along the river to the hilltop bastide town of Penne d'Agenais. Reward yourself with a coffee in the square and take in the panoramic views from the basilica before a largely downhill return.</p>
+            </div>
+
+            <div class="route-card">
+                <h3>Lot Valley Loop via Saint-Sylvestre</h3>
+                <p class="route-meta">20 km &bull; Easy &bull; Mostly flat riverside</p>
+                <p>A relaxed loop following the river through Saint-Sylvestre-sur-Lot and along the V86 route. Flat terrain, beautiful river views, and several caf&eacute; stops along the way. Ideal for families.</p>
+            </div>
+
+            <div class="route-card">
+                <h3>Lasclottes to Villeneuve-sur-Lot</h3>
+                <p class="route-meta">15 km each way &bull; Easy &bull; Flat valley road</p>
+                <p>Ride into the market town of Villeneuve-sur-Lot along the river. Browse the market (Tuesday and Saturday mornings), stop for lunch, and cycle back. A great full-morning outing.</p>
+            </div>
+
+            <div class="route-card">
+                <h3>Hilltop Villages Circuit</h3>
+                <p class="route-meta">40&ndash;50 km &bull; Challenging &bull; Hilly terrain</p>
+                <p>For fit cyclists: a loop taking in Penne d'Agenais, Tournon-d'Agenais, and Monflanquin. Significant climbing but spectacular views and three stunning medieval villages as rewards.</p>
+            </div>
+
+            <div class="activity-block reverse">
+                <div>
+                    <h2>Tour de France Country</h2>
+                    <p>The Tour de France has passed through the Lot-et-Garonne region, bringing the world's best cyclists through the very roads you'll be riding. The area's mix of flat valley stages and punchy hill climbs makes it classic Tour terrain.</p>
+                    <p>Cycling culture runs deep here &mdash; you'll share the road with local club riders, see cycling memorabilia in village caf&eacute;s, and find that drivers give cyclists plenty of respect and room.</p>
+                </div>
+                <img src="../Media/Site Files/Tour de France 2024.jpeg" alt="Tour de France passing through the Lot-et-Garonne region">
+            </div>
+
+            <div class="activity-text">
+                <h2>Practical Information</h2>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>Bike Hire</h3>
+                    <p><strong>Cycles Lamiche</strong> in Villeneuve-sur-Lot hire road, hybrid, and mountain bikes. <strong>C'Lot</strong> at Casseneuil offer bikes alongside their canoe hire. <strong>FatVelo</strong> specialise in e-bikes for those who want the views without the sweat.</p>
+                </div>
+                <div class="info-card">
+                    <h3>Bring Your Own</h3>
+                    <p>There's secure storage at Lasclottes for your own bikes. The property has a sheltered area suitable for cleaning and basic maintenance. Bring your toolkit and spare tubes.</p>
+                </div>
+                <div class="info-card">
+                    <h3>Best Time to Ride</h3>
+                    <p>May, June, and September offer the best cycling weather &mdash; warm but not too hot. In July and August, ride early morning or late afternoon to avoid the midday heat.</p>
+                </div>
+                <div class="info-card">
+                    <h3>Family Cycling</h3>
+                    <p>The Voie Verte greenway and flat riverside sections of the V86 are ideal for children. Several hire companies offer child seats, trailers, and smaller bikes.</p>
+                </div>
+            </div>
+
+            <div class="cta-banner">
+                <h2>Explore the Lot Valley on Two Wheels</h2>
+                <p>Book your stay at Lasclottes and discover the best cycling in southwest France.</p>
+                <a href="../index.html#contact" class="btn btn-primary">Book Your Stay</a>
+            </div>
+
+            <div class="back-link">
+                <a href="../index.html#activities" class="btn btn-primary">&larr; Back to Activities</a>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../js/main_old.js"></script>
+</body>
+</html>

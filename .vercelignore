@@ -1,0 +1,13 @@
+# Exclude videos (not used on the site)
+Media/Videos
+
+# Exclude HEIC files (iOS format, not web compatible)
+*.heic
+*.HEIC
+
+# Exclude unused photo folders
+Media/New Images 2020
+
+# Exclude backup/archive files
+*.zip
+*.rar
