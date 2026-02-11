@@ -46,23 +46,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    /* ---- Hero Slideshow — recursive setTimeout for Safari ---- */
+    /* ---- Hero Slideshow with dots ---- */
     const slides = document.querySelectorAll('.hero-slide');
+    const dotsContainer = document.querySelector('.hero__dots');
     let currentSlide = 0;
+    let slideTimer = null;
+
+    /* Build dot indicators */
+    if (dotsContainer && slides.length > 1) {
+        slides.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'hero__dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', `Slide ${i + 1}`);
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsContainer.appendChild(dot);
+        });
+    }
+
+    const dots = document.querySelectorAll('.hero__dot');
 
     const showSlide = (index) => {
         slides.forEach(s => s.classList.remove('active'));
+        dots.forEach(d => d.classList.remove('active'));
         if (slides[index]) slides[index].classList.add('active');
+        if (dots[index]) dots[index].classList.add('active');
+    };
+
+    const goToSlide = (index) => {
+        currentSlide = index;
+        showSlide(currentSlide);
+        clearTimeout(slideTimer);
+        scheduleNextSlide();
     };
 
     const scheduleNextSlide = () => {
-        setTimeout(() => {
+        slideTimer = setTimeout(() => {
             requestAnimationFrame(() => {
                 currentSlide = (currentSlide + 1) % slides.length;
                 showSlide(currentSlide);
                 scheduleNextSlide();
             });
-        }, 5500);
+        }, 6000);
     };
 
     if (slides.length > 1) {
@@ -106,25 +130,108 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    /* ---- Gallery Filters ---- */
+    /* ---- Gallery: Show-More + Filters ---- */
     const filterBtns = document.querySelectorAll('.gallery-filter');
     const galleryItems = document.querySelectorAll('.gallery-item');
+    const showMoreBtn = document.getElementById('galleryShowMore');
+    const INITIAL_SHOW = 12;
+    let galleryExpanded = false;
 
+    /* Initial state: hide items beyond INITIAL_SHOW */
+    const applyShowMore = () => {
+        if (galleryExpanded) return;
+        const activeFilter = document.querySelector('.gallery-filter.active')?.dataset.filter || 'all';
+        let visibleCount = 0;
+        galleryItems.forEach(item => {
+            const matchesFilter = activeFilter === 'all' || item.dataset.category === activeFilter;
+            if (matchesFilter) {
+                visibleCount++;
+                if (visibleCount > INITIAL_SHOW) {
+                    item.classList.add('gallery-hidden');
+                } else {
+                    item.classList.remove('gallery-hidden');
+                }
+                item.style.display = item.classList.contains('gallery-hidden') ? 'none' : '';
+            }
+        });
+        if (showMoreBtn) {
+            const remaining = visibleCount - INITIAL_SHOW;
+            if (remaining > 0) {
+                showMoreBtn.parentElement.style.display = '';
+                showMoreBtn.textContent = `View All Photos (${remaining} more)`;
+            } else {
+                showMoreBtn.parentElement.style.display = 'none';
+            }
+        }
+    };
+
+    if (showMoreBtn) {
+        showMoreBtn.addEventListener('click', () => {
+            galleryExpanded = true;
+            galleryItems.forEach(item => {
+                item.classList.remove('gallery-hidden');
+                if (!item.style.display || item.style.display === 'none') {
+                    const activeFilter = document.querySelector('.gallery-filter.active')?.dataset.filter || 'all';
+                    const matchesFilter = activeFilter === 'all' || item.dataset.category === activeFilter;
+                    item.style.display = matchesFilter ? '' : 'none';
+                }
+            });
+            showMoreBtn.parentElement.style.display = 'none';
+        });
+    }
+
+    applyShowMore();
+
+    /* Smooth filter transitions */
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            const filter = btn.getAttribute('data-filter');
-            galleryItems.forEach(item => {
-                if (filter === 'all' || item.getAttribute('data-category') === filter) {
-                    item.style.display = '';
-                    setTimeout(() => item.classList.add('visible'), 10);
-                } else {
-                    item.classList.remove('visible');
-                    item.style.display = 'none';
+            const filter = btn.dataset.filter;
+
+            /* Fade out all visible items first */
+            galleryItems.forEach(item => item.classList.add('fade-out'));
+
+            setTimeout(() => {
+                galleryItems.forEach(item => {
+                    const matches = filter === 'all' || item.dataset.category === filter;
+                    item.style.display = matches ? '' : 'none';
+                    item.classList.remove('gallery-hidden');
+                });
+
+                /* Reset expanded state per filter if not already expanded */
+                if (!galleryExpanded) {
+                    let count = 0;
+                    galleryItems.forEach(item => {
+                        const matches = filter === 'all' || item.dataset.category === filter;
+                        if (matches) {
+                            count++;
+                            if (count > INITIAL_SHOW) {
+                                item.classList.add('gallery-hidden');
+                                item.style.display = 'none';
+                            }
+                        }
+                    });
+                    if (showMoreBtn) {
+                        const total = Array.from(galleryItems).filter(i => filter === 'all' || i.dataset.category === filter).length;
+                        const remaining = total - INITIAL_SHOW;
+                        if (remaining > 0) {
+                            showMoreBtn.parentElement.style.display = '';
+                            showMoreBtn.textContent = `View All Photos (${remaining} more)`;
+                        } else {
+                            showMoreBtn.parentElement.style.display = 'none';
+                        }
+                    }
+                } else if (showMoreBtn) {
+                    showMoreBtn.parentElement.style.display = 'none';
                 }
-            });
+
+                /* Fade in after short delay */
+                requestAnimationFrame(() => {
+                    galleryItems.forEach(item => item.classList.remove('fade-out'));
+                });
+            }, 250);
         });
     });
 
