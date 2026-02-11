@@ -3289,3 +3289,87 @@ textarea:focus-visible {
 .skip-link:focus {
   top: 0;
 }
+
+/* ============================================================
+   26. ACTIVITY CROSS-LINKS
+   ============================================================ */
+.related-activities {
+  margin: var(--space-xl) 0;
+  padding: var(--space-lg);
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-lg);
+}
+
+.related-activities h2 {
+  margin-bottom: var(--space-sm);
+  color: var(--color-primary);
+  font-size: 1.6rem;
+}
+
+.related-activities p {
+  margin-bottom: var(--space-md);
+  color: var(--color-text-light);
+}
+
+.related-activities__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-xs);
+}
+
+.related-activities__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(44, 62, 45, 0.2);
+  background: var(--color-white);
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.related-activities__link:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.related-activities__link.is-active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Activity hero pictures use responsive <picture> sources. */
+.activity-hero picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.activity-hero picture > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Reduce expensive visual effects on touch devices (iPhone/iPad/Android). */
+@media (hover: none) and (pointer: coarse) {
+  .hero-slide.active {
+    animation: none;
+    transform: none;
+  }
+
+  .nav--scrolled {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}

@@ -49,6 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ---- Hero Slideshow with dots ---- */
     const slides = document.querySelectorAll('.hero-slide');
     const dotsContainer = document.querySelector('.hero__dots');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const devicePx = Math.ceil(window.innerWidth * Math.min(window.devicePixelRatio || 1, 2));
+    const heroTargetWidth = devicePx <= 900 ? 768 : (devicePx <= 1400 ? 1280 : 1600);
+    const supportsImageSet = typeof CSS !== 'undefined'
+        && typeof CSS.supports === 'function'
+        && (
+            CSS.supports('background-image', 'image-set(url("x.webp") 1x)')
+            || CSS.supports('background-image', '-webkit-image-set(url("x.webp") 1x)')
+        );
     let currentSlide = 0;
     let slideTimer = null;
 
@@ -65,7 +74,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const dots = document.querySelectorAll('.hero__dot');
 
+    const optimizedKey = (path) => path
+        .toLowerCase()
+        .replace(/\\/g, '/')
+        .replace(/^(\.\.\/)+/, '')
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+
+    const optimizedImagePath = (originalPath, format) => {
+        const key = optimizedKey(originalPath);
+        const relPrefix = originalPath.startsWith('../') ? '../' : '';
+        return `${relPrefix}Media/optimized/${key}-w${heroTargetWidth}.${format}`;
+    };
+
+    const hydrateSlideBackground = (slide) => {
+        if (!slide) return;
+        const bg = slide.getAttribute('data-bg');
+        if (!bg) return;
+        if (slide.dataset.bgApplied === '1') return;
+        const webp = optimizedImagePath(bg, 'webp');
+        const avif = optimizedImagePath(bg, 'avif');
+        if (supportsImageSet) {
+            slide.style.backgroundImage = `-webkit-image-set(url('${avif}') type('image/avif'), url('${webp}') type('image/webp'), url('${bg}'))`;
+            slide.style.backgroundImage = `image-set(url('${avif}') type('image/avif'), url('${webp}') type('image/webp'), url('${bg}'))`;
+        } else {
+            slide.style.backgroundImage = `url('${bg}')`;
+        }
+        slide.dataset.bgApplied = '1';
+        slide.removeAttribute('data-bg');
+    };
+
+    const hydrateSlidesAround = (index) => {
+        hydrateSlideBackground(slides[index]);
+        if (slides.length > 1) {
+            hydrateSlideBackground(slides[(index + 1) % slides.length]);
+        }
+    };
+
     const showSlide = (index) => {
+        hydrateSlidesAround(index);
         slides.forEach(s => s.classList.remove('active'));
         dots.forEach(d => d.classList.remove('active'));
         if (slides[index]) slides[index].classList.add('active');
@@ -75,8 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const goToSlide = (index) => {
         currentSlide = index;
         showSlide(currentSlide);
-        clearTimeout(slideTimer);
-        scheduleNextSlide();
+        if (!prefersReducedMotion) {
+            clearTimeout(slideTimer);
+            scheduleNextSlide();
+        }
     };
 
     const scheduleNextSlide = () => {
@@ -90,9 +139,22 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (slides.length > 1) {
+        hydrateSlidesAround(0);
         showSlide(0);
-        scheduleNextSlide();
+        if (!prefersReducedMotion) {
+            scheduleNextSlide();
+        }
     }
+
+    document.addEventListener('visibilitychange', () => {
+        if (prefersReducedMotion || slides.length <= 1) return;
+        if (document.hidden) {
+            clearTimeout(slideTimer);
+            return;
+        }
+        clearTimeout(slideTimer);
+        scheduleNextSlide();
+    });
 
     /* ---- Smooth Scroll ---- */
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -247,12 +309,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let lightboxIndex = 0;
     let touchStartX = 0;
     let touchEndX = 0;
+    const getLightboxSource = (imgEl) => imgEl?.dataset?.full || imgEl?.currentSrc || imgEl?.src || '';
 
     const openLightbox = (index) => {
         lightboxImages = Array.from(document.querySelectorAll('.gallery-item:not([style*="display: none"]) img'));
         lightboxIndex = index;
         if (lightbox && lightboxImg && lightboxImages[index]) {
-            lightboxImg.src = lightboxImages[index].src;
+            lightboxImg.src = getLightboxSource(lightboxImages[index]);
             lightboxImg.alt = lightboxImages[index].alt;
             lightbox.hidden = false;
             lightbox.classList.add('active');
@@ -272,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showLightboxPrev = () => {
         lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
         if (lightboxImg && lightboxImages[lightboxIndex]) {
-            lightboxImg.src = lightboxImages[lightboxIndex].src;
+            lightboxImg.src = getLightboxSource(lightboxImages[lightboxIndex]);
             lightboxImg.alt = lightboxImages[lightboxIndex].alt;
         }
         updateCounter();
@@ -281,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showLightboxNext = () => {
         lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
         if (lightboxImg && lightboxImages[lightboxIndex]) {
-            lightboxImg.src = lightboxImages[lightboxIndex].src;
+            lightboxImg.src = getLightboxSource(lightboxImages[lightboxIndex]);
             lightboxImg.alt = lightboxImages[lightboxIndex].alt;
         }
         updateCounter();
@@ -396,8 +459,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('iframe[data-src]').forEach(iframe => iframeObserver.observe(iframe));
 
     /* ---- Form Validation ---- */
-    const bookingForm = document.getElementById('bookingForm');
+    const bookingForm = document.getElementById('bookingForm') || document.getElementById('contactForm');
     const formStatus = document.getElementById('formStatus');
+    const isFrenchPage = document.documentElement.lang?.toLowerCase().startsWith('fr');
 
     if (bookingForm) {
         const arrivalInput = document.getElementById('arrivalDate');
@@ -418,7 +482,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (new Date(departureInput.value) <= new Date(arrivalInput.value)) {
                     e.preventDefault();
                     if (formStatus) {
-                        formStatus.textContent = 'Departure date must be after arrival date.';
+                        formStatus.textContent = isFrenchPage
+                            ? "La date de d\u00E9part doit \u00EAtre post\u00E9rieure \u00E0 la date d'arriv\u00E9e."
+                            : 'Departure date must be after arrival date.';
                         formStatus.className = 'form-status error';
                     }
                     return;
@@ -426,7 +492,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (formStatus) {
-                formStatus.textContent = 'Sending your booking request…';
+                formStatus.textContent = isFrenchPage
+                    ? 'Envoi de votre demande de r\u00E9servation...'
+                    : 'Sending your booking request...';
                 formStatus.className = 'form-status sending';
             }
         });

@@ -5,16 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lasclottes | Location de Vacances en France, Lot-et-Garonne | 12 Couchages</title>
     <meta name="description" content="Lasclottes est un magnifique corps de ferme sur les rives du Lot avec 7 chambres, 5 salles de bain, piscine privée, accès privé à la rivière et 2 hectares de jardins. 12 couchages. Idéal pour les grandes familles en Aquitaine, France.">
+    <meta name="robots" content="index, follow">
 
     <!-- Alternate language -->
     <link rel="alternate" hreflang="en" href="index.html">
     <link rel="alternate" hreflang="fr" href="fr.html">
+    <link rel="alternate" hreflang="x-default" href="https://lasclottes.com/">
     <link rel="canonical" href="https://lasclottes.com/fr.html">
 
     <!-- Open Graph -->
     <meta property="og:title" content="Lasclottes | Corps de Ferme sur les Rives du Lot">
     <meta property="og:description" content="7 chambres, piscine privée, accès privé à la rivière, 2 hectares de jardins. 12 couchages. Lot-et-Garonne, France.">
-    <meta property="og:image" content="Media/Site Files/Lasclottes front.jpg">
+    <meta property="og:image" content="https://lasclottes.com/Media/Site%20Files/Lasclottes%20front.jpg">
     <meta property="og:url" content="https://lasclottes.com/fr.html">
     <meta property="og:type" content="website">
 
@@ -22,7 +24,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Lasclottes | Corps de Ferme sur les Rives du Lot">
     <meta name="twitter:description" content="7 chambres, piscine privée, accès privé à la rivière, 2 hectares. 12 couchages.">
-    <meta name="twitter:image" content="Media/Site Files/Lasclottes front.jpg">
+    <meta name="twitter:image" content="https://lasclottes.com/Media/Site%20Files/Lasclottes%20front.jpg">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,23 +32,24 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
     <!-- Preload hero image -->
-    <link rel="preload" as="image" href="Media/Site Files/Lasclottes front.jpg">
+    <link rel="preload" as="image" href="Media/optimized/media_site_files_lasclottes_front_jpg-w1280.webp">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style_old.css">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "VacationRental",
-        "name": "Lasclottes",
+        "name": "French Riverside Holidays (Lasclottes)",
         "description": "Magnifique corps de ferme sur les rives du Lot avec 7 chambres, 5 salles de bain, piscine privée, accès privé à la rivière et 2 hectares de jardins.",
         "url": "https://lasclottes.com/fr.html",
-        "image": "Media/Site Files/Lasclottes front.jpg",
+        "image": "https://lasclottes.com/Media/Site%20Files/Lasclottes%20front.jpg",
         "address": {
             "@type": "PostalAddress",
-            "addressLocality": "St Sylvestre sur Lot",
+            "streetAddress": "Las Clottes",
+            "addressLocality": "Saint-Sylvestre-sur-Lot",
             "addressRegion": "Aquitaine",
             "postalCode": "47140",
             "addressCountry": "FR"
@@ -74,32 +77,33 @@
     <!-- ========== NAVIGATION ========== -->
     <header class="nav" id="nav">
         <div class="container nav__inner">
-            <a href="#" class="nav__logo">
-                <img src="Media/Logo/Lasclottes Logo 3 png.png" alt="Lasclottes" width="140" height="50">
+            <a href="#hero" class="nav__logo">
+                <img src="Media/Logo/Lasclottes Logo 3 png.png" alt="Lasclottes" class="nav__logo-img" decoding="async" loading="eager" width="661" height="249">
             </a>
-
-            <nav class="nav__menu" id="navMenu" aria-label="Navigation principale">
-                <ul class="nav__list">
-                    <li><a href="#welcome" class="nav__link">Bienvenue</a></li>
-                    <li><a href="#property" class="nav__link">La Propriété</a></li>
-                    <li><a href="#gallery" class="nav__link">Galerie</a></li>
-                    <li><a href="#activities" class="nav__link">Activités</a></li>
-                    <li><a href="#pricing" class="nav__link">Tarifs</a></li>
-                    <li><a href="#location" class="nav__link">Localisation</a></li>
-                    <li><a href="#contact" class="nav__link">Contact</a></li>
-                </ul>
-            </nav>
-
+            <ul class="nav__list">
+                <li><a href="#welcome" class="nav__link">Bienvenue</a></li>
+                <li><a href="#property" class="nav__link">La Propriété</a></li>
+                <li><a href="#gallery" class="nav__link">Galerie</a></li>
+                <li><a href="#activities" class="nav__link">Activités</a></li>
+                <li><a href="#pricing" class="nav__link">Tarifs</a></li>
+                <li><a href="#contact" class="nav__link">Réserver</a></li>
+            </ul>
             <div class="nav__actions">
                 <a href="index.html" class="nav__lang" title="English version">EN</a>
-                <a href="#contact" class="btn btn-primary nav__cta">Réserver</a>
+                <a href="#contact" class="nav__cta">Réserver</a>
             </div>
-
-            <button class="nav__hamburger" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
+            <button class="nav__hamburger" aria-label="Ouvrir le menu" aria-expanded="false">
+                <span></span><span></span><span></span>
             </button>
+        </div>
+        <div class="nav__menu">
+            <a href="#welcome" class="nav__link">Bienvenue</a>
+            <a href="#property" class="nav__link">La Propriété</a>
+            <a href="#gallery" class="nav__link">Galerie</a>
+            <a href="#activities" class="nav__link">Activités</a>
+            <a href="#pricing" class="nav__link">Tarifs</a>
+            <a href="#location" class="nav__link">Localisation</a>
+            <a href="#contact" class="nav__cta">Réserver</a>
         </div>
     </header>
 
@@ -108,12 +112,12 @@
         <!-- ========== HERO ========== -->
         <section class="hero" id="hero">
             <div class="hero__slideshow">
-                <div class="hero-slide active" style="background-image: url('Media/Site Files/Lasclottes front.jpg');" role="img" aria-label="Façade du corps de ferme Lasclottes"></div>
-                <div class="hero-slide" style="background-image: url('Media/Site Files/New Pool.jpg');" role="img" aria-label="Piscine privée"></div>
-                <div class="hero-slide" style="background-image: url('Media/Site Files/Lasclottes pool and garden.jpeg');" role="img" aria-label="Vue sur la piscine et le jardin"></div>
-                <div class="hero-slide" style="background-image: url('Media/Site Files/Leisure pontoon.jpg');" role="img" aria-label="Ponton de loisirs"></div>
-                <div class="hero-slide" style="background-image: url('Media/Site Files/Riverside.jpg');" role="img" aria-label="Les berges du Lot à Lasclottes"></div>
-                <div class="hero-slide" style="background-image: url('Media/Site Files/Garden View.jpg');" role="img" aria-label="Vue sur le jardin"></div>
+                <div class="hero-slide active" data-bg="Media/Site Files/Lasclottes front.jpg" style="background-image: url('Media/optimized/media_site_files_lasclottes_front_jpg-w1280.webp');" role="img" aria-label="Façade du corps de ferme Lasclottes"></div>
+                <div class="hero-slide" data-bg="Media/Site Files/New Pool.jpg" role="img" aria-label="Piscine privée"></div>
+                <div class="hero-slide" data-bg="Media/Site Files/Lasclottes pool and garden.jpeg" role="img" aria-label="Vue sur la piscine et le jardin"></div>
+                <div class="hero-slide" data-bg="Media/Site Files/Leisure pontoon.jpg" role="img" aria-label="Ponton de loisirs"></div>
+                <div class="hero-slide" data-bg="Media/Site Files/Riverside.jpg" role="img" aria-label="Les berges du Lot à Lasclottes"></div>
+                <div class="hero-slide" data-bg="Media/Site Files/Garden View.jpg" role="img" aria-label="Vue sur le jardin"></div>
             </div>
 
             <div class="hero__overlay"></div>
@@ -192,7 +196,7 @@
                 <!-- Main Farmhouse -->
                 <div class="property-block animate-on-scroll">
                     <div class="property-block__image">
-                        <img src="Media/Site Files/Lasclottes Farmhouse.jpeg" alt="Façade du corps de ferme principal de Lasclottes" loading="lazy" width="600" height="400">
+                        <img src="Media/optimized/media_site_files_lasclottes_farmhouse_jpeg-w960.webp" alt="Façade du corps de ferme principal de Lasclottes" loading="lazy" width="600" height="400" decoding="async" srcset="Media/optimized/media_site_files_lasclottes_farmhouse_jpeg-w480.webp 480w, Media/optimized/media_site_files_lasclottes_farmhouse_jpeg-w960.webp 960w, Media/optimized/media_site_files_lasclottes_farmhouse_jpeg-w1125.webp 1125w" sizes="(max-width: 768px) 100vw, 50vw">
                     </div>
                     <div class="property-block__text">
                         <h3>Le Corps de Ferme</h3>
@@ -210,7 +214,7 @@
                 <!-- Granary -->
                 <div class="property-block reverse animate-on-scroll">
                     <div class="property-block__image">
-                        <img src="Media/Site Files/Chambre - annex.jpeg" alt="Le Grenier — grange aménagée en hébergement" loading="lazy" width="600" height="400">
+                        <img src="Media/optimized/media_site_files_chambre_annex_jpeg-w960.webp" alt="Le Grenier — grange aménagée en hébergement" loading="lazy" width="600" height="400" decoding="async" srcset="Media/optimized/media_site_files_chambre_annex_jpeg-w480.webp 480w, Media/optimized/media_site_files_chambre_annex_jpeg-w960.webp 960w, Media/optimized/media_site_files_chambre_annex_jpeg-w1280.webp 1280w" sizes="(max-width: 768px) 100vw, 50vw">
                     </div>
                     <div class="property-block__text">
                         <h3>Le Grenier</h3>
@@ -228,7 +232,7 @@
                 <!-- Pool Area -->
                 <div class="property-block animate-on-scroll">
                     <div class="property-block__image">
-                        <img src="Media/Site Files/House and Garden.jpeg" alt="La maison et le jardin de Lasclottes" loading="lazy" width="600" height="400">
+                        <img src="Media/optimized/media_site_files_house_and_garden_jpeg-w960.webp" alt="La maison et le jardin de Lasclottes" loading="lazy" width="600" height="400" decoding="async" srcset="Media/optimized/media_site_files_house_and_garden_jpeg-w480.webp 480w, Media/optimized/media_site_files_house_and_garden_jpeg-w960.webp 960w, Media/optimized/media_site_files_house_and_garden_jpeg-w1280.webp 1280w" sizes="(max-width: 768px) 100vw, 50vw">
                     </div>
                     <div class="property-block__text">
                         <h3>La Maison et le Jardin</h3>
@@ -244,7 +248,7 @@
                 <!-- River & Gardens -->
                 <div class="property-block reverse animate-on-scroll">
                     <div class="property-block__image">
-                        <img src="Media/Site Files/River Lot at the bottom of the garden.jpeg" alt="Le Lot au fond du jardin de Lasclottes" loading="lazy" width="600" height="400">
+                        <img src="Media/optimized/media_site_files_river_lot_at_the_bottom_of_the_garden_jpeg-w960.webp" alt="Le Lot au fond du jardin de Lasclottes" loading="lazy" width="600" height="400" decoding="async" srcset="Media/optimized/media_site_files_river_lot_at_the_bottom_of_the_garden_jpeg-w480.webp 480w, Media/optimized/media_site_files_river_lot_at_the_bottom_of_the_garden_jpeg-w960.webp 960w, Media/optimized/media_site_files_river_lot_at_the_bottom_of_the_garden_jpeg-w1280.webp 1280w" sizes="(max-width: 768px) 100vw, 50vw">
                     </div>
                     <div class="property-block__text">
                         <h3>Rivière &amp; Jardins</h3>
@@ -329,88 +333,88 @@
                 <div class="gallery__grid">
                     <!-- Property -->
                     <div class="gallery-item" data-category="property">
-                        <img src="Media/Site Files/Front of House.jpg" alt="Façade du corps de ferme Lasclottes" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_front_of_house_jpg-w480.webp" alt="Façade du corps de ferme Lasclottes" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Front of House.jpg" srcset="Media/optimized/media_site_files_front_of_house_jpg-w480.webp 480w, Media/optimized/media_site_files_front_of_house_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="property">
-                        <img src="Media/Site Files/Lounge.jpg" alt="Salon du corps de ferme" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_lounge_jpg-w480.webp" alt="Salon du corps de ferme" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Lounge.jpg" srcset="Media/optimized/media_site_files_lounge_jpg-w480.webp 480w, Media/optimized/media_site_files_lounge_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="property">
-                        <img src="Media/New Images2021/Super Kingsize Bedroom.jpeg" alt="Chambre lit super king-size" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_new_images2021_super_kingsize_bedroom_jpeg-w480.webp" alt="Chambre lit super king-size" loading="lazy" width="400" height="300" decoding="async" data-full="Media/New Images2021/Super Kingsize Bedroom.jpeg" srcset="Media/optimized/media_new_images2021_super_kingsize_bedroom_jpeg-w480.webp 480w, Media/optimized/media_new_images2021_super_kingsize_bedroom_jpeg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="property">
-                        <img src="Media/Site Files/Double bedroom.jpg" alt="Chambre double" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_double_bedroom_jpg-w480.webp" alt="Chambre double" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Double bedroom.jpg" srcset="Media/optimized/media_site_files_double_bedroom_jpg-w480.webp 480w, Media/optimized/media_site_files_double_bedroom_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="property">
-                        <img src="Media/Site Files/Twin bedroom.jpg" alt="Chambre à deux lits" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_twin_bedroom_jpg-w480.webp" alt="Chambre à deux lits" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Twin bedroom.jpg" srcset="Media/optimized/media_site_files_twin_bedroom_jpg-w480.webp 480w, Media/optimized/media_site_files_twin_bedroom_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="property">
-                        <img src="Media/New Images2021/Farmhouse Kitchen.jpeg" alt="Intérieur de la cuisine du corps de ferme" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_new_images2021_farmhouse_kitchen_jpeg-w480.webp" alt="Intérieur de la cuisine du corps de ferme" loading="lazy" width="400" height="300" decoding="async" data-full="Media/New Images2021/Farmhouse Kitchen.jpeg" srcset="Media/optimized/media_new_images2021_farmhouse_kitchen_jpeg-w480.webp 480w, Media/optimized/media_new_images2021_farmhouse_kitchen_jpeg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="property">
-                        <img src="Media/Site Files/Bedroom.jpg" alt="Chambre" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_bedroom_jpg-w480.webp" alt="Chambre" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Bedroom.jpg" srcset="Media/optimized/media_site_files_bedroom_jpg-w480.webp 480w, Media/optimized/media_site_files_bedroom_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="property">
-                        <img src="Media/2025 Photos/Kitchen.jpeg" alt="Cuisine 2025" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_2025_photos_kitchen_jpeg-w480.webp" alt="Cuisine 2025" loading="lazy" width="400" height="300" decoding="async" data-full="Media/2025 Photos/Kitchen.jpeg" srcset="Media/optimized/media_2025_photos_kitchen_jpeg-w480.webp 480w, Media/optimized/media_2025_photos_kitchen_jpeg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="property">
-                        <img src="Media/Site Files/Games area.jpeg" alt="Salle de jeux" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_games_area_jpeg-w480.webp" alt="Salle de jeux" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Games area.jpeg" srcset="Media/optimized/media_site_files_games_area_jpeg-w480.webp 480w, Media/optimized/media_site_files_games_area_jpeg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="property">
-                        <img src="Media/Site Files/Lasclottes drive.jpg" alt="Allée d'accès" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_lasclottes_drive_jpg-w480.webp" alt="Allée d'accès" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Lasclottes drive.jpg" srcset="Media/optimized/media_site_files_lasclottes_drive_jpg-w480.webp 480w, Media/optimized/media_site_files_lasclottes_drive_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
 
                     <!-- Pool -->
                     <div class="gallery-item" data-category="pool">
-                        <img src="Media/Site Files/New Pool.jpg" alt="Piscine" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_new_pool_jpg-w480.webp" alt="Piscine" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/New Pool.jpg" srcset="Media/optimized/media_site_files_new_pool_jpg-w480.webp 480w, Media/optimized/media_site_files_new_pool_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="pool">
-                        <img src="Media/Site Files/Pool.jpg" alt="Vue de la piscine" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_pool_jpg-w480.webp" alt="Vue de la piscine" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Pool.jpg" srcset="Media/optimized/media_site_files_pool_jpg-w480.webp 480w, Media/optimized/media_site_files_pool_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="pool">
-                        <img src="Media/Site Files/Lasclottes pool and garden.jpeg" alt="Piscine et jardin" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_lasclottes_pool_and_garden_jpeg-w480.webp" alt="Piscine et jardin" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Lasclottes pool and garden.jpeg" srcset="Media/optimized/media_site_files_lasclottes_pool_and_garden_jpeg-w480.webp 480w, Media/optimized/media_site_files_lasclottes_pool_and_garden_jpeg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="pool">
-                        <img src="Media/Site Files/View of pool from the house.jpeg" alt="Vue de la piscine depuis la maison" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_view_of_pool_from_the_house_jpeg-w480.webp" alt="Vue de la piscine depuis la maison" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/View of pool from the house.jpeg" srcset="Media/optimized/media_site_files_view_of_pool_from_the_house_jpeg-w480.webp 480w, Media/optimized/media_site_files_view_of_pool_from_the_house_jpeg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
 
                     <!-- River -->
                     <div class="gallery-item" data-category="river">
-                        <img src="Media/Site Files/Riverside.jpg" alt="Les berges du Lot à Lasclottes" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_riverside_jpg-w480.webp" alt="Les berges du Lot à Lasclottes" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Riverside.jpg" srcset="Media/optimized/media_site_files_riverside_jpg-w480.webp 480w, Media/optimized/media_site_files_riverside_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="river">
-                        <img src="Media/Site Files/River Lot at the bottom of the garden.jpeg" alt="Le Lot vu depuis le jardin" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_river_lot_at_the_bottom_of_the_garden_jpeg-w480.webp" alt="Le Lot vu depuis le jardin" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/River Lot at the bottom of the garden.jpeg" srcset="Media/optimized/media_site_files_river_lot_at_the_bottom_of_the_garden_jpeg-w480.webp 480w, Media/optimized/media_site_files_river_lot_at_the_bottom_of_the_garden_jpeg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="river">
-                        <img src="Media/Site Files/Leisure pontoon.jpg" alt="Ponton de loisirs sur le Lot" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_leisure_pontoon_jpg-w480.webp" alt="Ponton de loisirs sur le Lot" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Leisure pontoon.jpg" srcset="Media/optimized/media_site_files_leisure_pontoon_jpg-w480.webp 480w, Media/optimized/media_site_files_leisure_pontoon_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="river">
-                        <img src="Media/Site Files/Fishing pontoon.jpeg" alt="Ponton de pêche" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_fishing_pontoon_jpeg-w480.webp" alt="Ponton de pêche" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Fishing pontoon.jpeg" srcset="Media/optimized/media_site_files_fishing_pontoon_jpeg-w480.webp 480w, Media/optimized/media_site_files_fishing_pontoon_jpeg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="river">
-                        <img src="Media/Site Files/River beach and cabin.jpeg" alt="Plage de rivière" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_river_beach_and_cabin_jpeg-w480.webp" alt="Plage de rivière" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/River beach and cabin.jpeg" srcset="Media/optimized/media_site_files_river_beach_and_cabin_jpeg-w480.webp 480w, Media/optimized/media_site_files_river_beach_and_cabin_jpeg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="river">
-                        <img src="Media/Site Files/P1011134 Relaxing beside the river.jpg" alt="Détente au bord de la rivière" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_p1011134_relaxing_beside_the_river_jpg-w480.webp" alt="Détente au bord de la rivière" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/P1011134 Relaxing beside the river.jpg" srcset="Media/optimized/media_site_files_p1011134_relaxing_beside_the_river_jpg-w480.webp 480w, Media/optimized/media_site_files_p1011134_relaxing_beside_the_river_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
 
                     <!-- Surroundings -->
                     <div class="gallery-item" data-category="surroundings">
-                        <img src="Media/Site Files/Garden View.jpg" alt="Vue sur le jardin" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_garden_view_jpg-w480.webp" alt="Vue sur le jardin" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Garden View.jpg" srcset="Media/optimized/media_site_files_garden_view_jpg-w480.webp 480w, Media/optimized/media_site_files_garden_view_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="surroundings">
-                        <img src="Media/Site Files/Front Garden.jpg" alt="Jardin de devant" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_front_garden_jpg-w480.webp" alt="Jardin de devant" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Front Garden.jpg" srcset="Media/optimized/media_site_files_front_garden_jpg-w480.webp 480w, Media/optimized/media_site_files_front_garden_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="surroundings">
-                        <img src="Media/Site Files/Hot air Balloons above Lasclottes.jpg" alt="Montgolfières au-dessus de Lasclottes" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_hot_air_balloons_above_lasclottes_jpg-w480.webp" alt="Montgolfières au-dessus de Lasclottes" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/Hot air Balloons above Lasclottes.jpg" srcset="Media/optimized/media_site_files_hot_air_balloons_above_lasclottes_jpg-w480.webp 480w, Media/optimized/media_site_files_hot_air_balloons_above_lasclottes_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="surroundings">
-                        <img src="Media/Site Files/St Sylvestre sur Lot.jpg" alt="Village de St Sylvestre sur Lot" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_st_sylvestre_sur_lot_jpg-w480.webp" alt="Village de St Sylvestre sur Lot" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/St Sylvestre sur Lot.jpg" srcset="Media/optimized/media_site_files_st_sylvestre_sur_lot_jpg-w480.webp 480w, Media/optimized/media_site_files_st_sylvestre_sur_lot_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="surroundings">
-                        <img src="Media/Site Files/P1011424 Swans on the River.jpg" alt="Cygnes sur le Lot" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_p1011424_swans_on_the_river_jpg-w480.webp" alt="Cygnes sur le Lot" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/P1011424 Swans on the River.jpg" srcset="Media/optimized/media_site_files_p1011424_swans_on_the_river_jpg-w480.webp 480w, Media/optimized/media_site_files_p1011424_swans_on_the_river_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                     <div class="gallery-item" data-category="surroundings">
-                        <img src="Media/Site Files/DSC03685 Hoopos at Lasclotte.jpg" alt="Huppe fasciée à Lasclottes" loading="lazy" width="400" height="300">
+                        <img src="Media/optimized/media_site_files_dsc03685_hoopos_at_lasclotte_jpg-w480.webp" alt="Huppe fasciée à Lasclottes" loading="lazy" width="400" height="300" decoding="async" data-full="Media/Site Files/DSC03685 Hoopos at Lasclotte.jpg" srcset="Media/optimized/media_site_files_dsc03685_hoopos_at_lasclotte_jpg-w480.webp 480w, Media/optimized/media_site_files_dsc03685_hoopos_at_lasclotte_jpg-w960.webp 960w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw">
                     </div>
                 </div>
             </div>
@@ -422,7 +426,7 @@
             <button class="lightbox__prev" aria-label="Image précédente">&#10094;</button>
             <button class="lightbox__next" aria-label="Image suivante">&#10095;</button>
             <div class="lightbox__content">
-                <img class="lightbox__image" src="" alt="">
+                <img class="lightbox__image" src="" alt="" decoding="async">
             </div>
             <div class="lightbox__counter"></div>
         </div>
@@ -434,77 +438,77 @@
                 <p class="section-subtitle animate-on-scroll">Des journées paisibles au bord de la rivière à la découverte des villages médiévaux</p>
 
                 <div class="activities__grid">
-                    <!-- Featured: Fishing -->
-                    <div class="activity-card featured animate-on-scroll" style="background-image: url('Media/Site Files/Fishing1.jpg');">
+                    <a href="activities/fishing.html" class="activity-card featured animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_fishing1_jpg-w960.webp');">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Pêche</h3>
                             <p>Pêchez directement depuis nos pontons privés sur le Lot. Carpes jusqu&rsquo;à 20 kg, silures jusqu&rsquo;à 38 kg, ainsi que brèmes, brochets et bien d&rsquo;autres. Apportez votre matériel ou louez-en sur place.</p>
                         </div>
-                    </div>
+                    </a>
 
-                    <!-- Featured: Cycling -->
-                    <div class="activity-card featured animate-on-scroll" style="background-image: url('Media/Site Files/People cyling landscape.jpg');">
+                    <a href="activities/cycling.html" class="activity-card featured animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_people_cyling_landscape_jpg-w960.webp');">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Cyclisme</h3>
                             <p>Explorez la vallée du Lot sur des routes de campagne tranquilles et des pistes cyclables dédiées. La Véloroute du Lot passe juste devant la propriété. Location de vélos disponible à proximité.</p>
                         </div>
-                    </div>
+                    </a>
 
-                    <!-- Canoeing -->
-                    <div class="activity-card animate-on-scroll" style="background-image: url('Media/Site Files/P1011128 Fun on the river.jpg');">
+                    <a href="activities/canoeing.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_p1011128_fun_on_the_river_jpg-w960.webp');">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Canoë &amp; Kayak</h3>
                             <p>Mettez à l&rsquo;eau depuis notre ponton ou louez des canoës à Penne d&rsquo;Agenais pour de magnifiques descentes de la rivière à travers la vallée.</p>
                         </div>
-                    </div>
+                    </a>
 
-                    <!-- Markets -->
-                    <div class="activity-card animate-on-scroll" style="background-image: url('Media/Site Files/Eating out.jpg');">
+                    <a href="activities/golf.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_lasclottes_pool_and_garden_jpeg-w960.webp');">
+                        <div class="activity-card__overlay"></div>
+                        <div class="activity-card__content">
+                            <h3>Golf</h3>
+                            <p>Plusieurs parcours sont accessibles en quelques minutes, dont le Golf de Villeneuve-sur-Lot à environ 15 minutes de la propriété.</p>
+                        </div>
+                    </a>
+
+                    <a href="activities/markets.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_eating_out_jpg-w640.webp');">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Marchés &amp; Gastronomie</h3>
                             <p>Marchés hebdomadaires à Villeneuve-sur-Lot et dans les villages alentour. Produits frais du terroir, artisanat local et excellents restaurants.</p>
                         </div>
-                    </div>
+                    </a>
 
-                    <!-- Wine -->
-                    <div class="activity-card animate-on-scroll" style="background-image: url('Media/Site Files/DSC03839 Chateau.jpg');">
+                    <a href="activities/wine.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_dsc03275_lastelsia_2_jpg-w960.webp');">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Vins &amp; Châteaux</h3>
                             <p>Visitez les vignobles locaux pour des dégustations, ou partez en excursion dans les célèbres régions viticoles de Bordeaux, Cahors ou Bergerac.</p>
                         </div>
-                    </div>
+                    </a>
 
-                    <!-- Villages -->
-                    <div class="activity-card animate-on-scroll" style="background-image: url('Media/Site Files/DSC03275 Lastelsia 2.jpg');">
+                    <a href="activities/villages.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_dsc03839_chateau_jpg-w960.webp');">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Villages Médiévaux</h3>
                             <p>Découvrez les bastides et les villages perchés. Pujols, Penne d&rsquo;Agenais et Tournon d&rsquo;Agenais sont tous facilement accessibles.</p>
                         </div>
-                    </div>
+                    </a>
 
-                    <!-- Hot Air Balloons -->
-                    <div class="activity-card animate-on-scroll" style="background-image: url('Media/Site Files/Hot air balloon.jpg');">
+                    <a href="activities/balloons.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_hot_air_balloon_jpg-w960.webp');">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Montgolfières</h3>
                             <p>Les vols en montgolfière décollent des champs voisins — vous pourrez souvent les observer survoler le jardin à l&rsquo;aube et au crépuscule.</p>
                         </div>
-                    </div>
+                    </a>
 
-                    <!-- Water sports -->
-                    <div class="activity-card animate-on-scroll" style="background-image: url('Media/Site Files/P1011168 Speed boat at Roche 2.jpg');">
+                    <a href="activities/watersports.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_p1011168_speed_boat_at_roche_2_jpg-w960.webp');">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Sports Nautiques</h3>
                             <p>Ski nautique et wakeboard sur des bases à proximité sur le Lot. Baignade dans notre piscine.</p>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </section>
@@ -610,7 +614,7 @@
                 <div class="reviews__platforms animate-on-scroll">
                     <p>Également disponible sur Airbnb (mai, juin &amp; septembre)</p>
                     <div class="reviews__badges">
-                        <a href="#" class="platform-badge" target="_blank" rel="noopener">Airbnb</a>
+                        <a href="#contact" class="platform-badge">Airbnb</a>
                     </div>
                 </div>
             </div>
@@ -625,18 +629,19 @@
                 <div class="location__content animate-on-scroll">
                     <div class="location__map">
                         <iframe
-                            data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11500!2d0.8!3d44.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12aeb8c8c8c8c8c8%3A0x0!2sSt+Sylvestre+sur+Lot!5e0!3m2!1sen!2sfr!4v1700000000000"
+                            data-src="https://www.google.com/maps?q=French+Riverside+Holidays,+Las+Clottes,+47140+Saint-Sylvestre-sur-Lot,+France,+9QRJ%2BCP&output=embed"
                             width="100%"
                             height="100%"
                             style="border:0;"
                             allowfullscreen=""
                             loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade"
-                            title="Localisation de Lasclottes sur Google Maps">
+                            title="Localisation de French Riverside Holidays (Las Clottes) sur Google Maps">
                         </iframe>
                     </div>
 
                     <div class="location__distances">
+                        <p style="margin-bottom: var(--space-sm);"><strong>what3words :</strong> <a href="https://what3words.com/aircrew.matrons.zipper" target="_blank" rel="noopener" style="color: var(--color-accent);">///aircrew.matrons.zipper</a></p>
                         <h3>Comment Venir</h3>
                         <ul class="location__list">
                             <li>
@@ -690,7 +695,11 @@
                     <!-- Direct Contact Form -->
                     <div class="contact__form-wrapper">
                         <h3>Contactez-nous Directement</h3>
-                        <form class="contact-form" id="contactForm" action="https://formspree.io/f/placeholder" method="POST">
+                        <form class="contact-form" id="contactForm" action="https://formsubmit.co/info@lasclottes.com" method="POST">
+                            <input type="hidden" name="_subject" value="Nouvelle demande de séjour — Lasclottes (FR)">
+                            <input type="hidden" name="_captcha" value="false">
+                            <input type="hidden" name="_template" value="table">
+                            <input type="hidden" name="_next" value="https://lasclottes.com/fr.html">
                             <div class="form-group">
                                 <label for="name">Nom <span class="required">*</span></label>
                                 <input type="text" id="name" name="name" required autocomplete="name" placeholder="Votre nom complet">
@@ -722,7 +731,7 @@
                     <div class="contact__platforms">
                         <h3>Réserver via Airbnb</h3>
                         <p style="font-size: 0.9rem; margin-bottom: var(--space-sm); opacity: 0.8;">Disponible en mai, juin &amp; septembre</p>
-                        <a href="#" class="btn btn-platform btn-airbnb" target="_blank" rel="noopener">
+                        <a href="#contact" class="btn btn-platform btn-airbnb">
                             <span>Réserver sur Airbnb</span>
                         </a>
 
@@ -752,7 +761,7 @@
     <footer class="footer">
         <div class="container footer__inner">
             <div class="footer__brand">
-                <img src="Media/Logo/Lasclottes Logo 3 png.png" alt="Lasclottes" width="120" height="43" class="footer__logo">
+                <img src="Media/Logo/Lasclottes Logo 3 png.png" alt="Lasclottes" width="120" height="43" class="footer__logo" decoding="async" loading="lazy">
                 <p>Un corps de ferme sur les rives du Lot</p>
                 <address>
                     St Sylvestre sur Lot<br>
@@ -801,6 +810,8 @@
         </a>
     </div>
 
-    <script src="js/main.js"></script>
+    <script src="js/main_old.js"></script>
 </body>
 </html>
+
+
