@@ -47,9 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /* ---- Hero Slideshow with dots ---- */
-    const slides = document.querySelectorAll('.hero-slide');
+    let slides = Array.from(document.querySelectorAll('.hero-slide'));
     const dotsContainer = document.querySelector('.hero__dots');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isCoarsePointerDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
     const devicePx = Math.ceil(window.innerWidth * Math.min(window.devicePixelRatio || 1, 2));
     const heroTargetWidth = devicePx <= 900 ? 768 : (devicePx <= 1400 ? 1280 : 1600);
     const supportsImageSet = typeof CSS !== 'undefined'
@@ -60,6 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     let currentSlide = 0;
     let slideTimer = null;
+
+    // Limit the number of hero slides on mobile/coarse-pointer devices to reduce
+    // layer memory pressure on Safari/iOS.
+    const mobileHeroSlideLimit = 4;
+    if ((isCoarsePointerDevice || window.innerWidth <= 900) && slides.length > mobileHeroSlideLimit) {
+        slides.slice(mobileHeroSlideLimit).forEach((slide) => slide.remove());
+        slides = slides.slice(0, mobileHeroSlideLimit);
+    }
 
     /* Build dot indicators */
     if (dotsContainer && slides.length > 1) {
@@ -72,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const dots = document.querySelectorAll('.hero__dot');
+    const dots = Array.from(document.querySelectorAll('.hero__dot'));
 
     const optimizedKey = (path) => path
         .toLowerCase()
@@ -193,31 +202,74 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /* ---- Gallery: Show-More + Filters ---- */
-    const filterBtns = document.querySelectorAll('.gallery-filter');
-    const galleryItems = document.querySelectorAll('.gallery-item');
+    const filterBtns = Array.from(document.querySelectorAll('.gallery-filter'));
+    let galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
+    const galleryGrid = document.querySelector('.gallery__grid');
     const showMoreBtn = document.getElementById('galleryShowMore');
     const INITIAL_SHOW = 12;
+    const MOBILE_GALLERY_DOM_LIMIT = 24;
     let galleryExpanded = false;
+    let deferredGalleryItems = [];
+
+    const itemMatchesFilter = (item, filter) => filter === 'all' || item.dataset.category === filter;
+    const applyGalleryItemCursor = () => {
+        galleryItems.forEach((item) => {
+            item.style.cursor = 'pointer';
+        });
+    };
+    const matchingItemCount = (filter) => {
+        const inDomCount = galleryItems.filter((item) => itemMatchesFilter(item, filter)).length;
+        const deferredCount = deferredGalleryItems.filter((item) => itemMatchesFilter(item, filter)).length;
+        return inDomCount + deferredCount;
+    };
+
+    // Keep initial mobile DOM light: defer part of the gallery until a user
+    // explicitly asks to view all photos.
+    if (galleryGrid && (isCoarsePointerDevice || window.innerWidth <= 900) && galleryItems.length > MOBILE_GALLERY_DOM_LIMIT) {
+        deferredGalleryItems = galleryItems.slice(MOBILE_GALLERY_DOM_LIMIT);
+        deferredGalleryItems.forEach((item) => item.remove());
+        galleryItems = galleryItems.slice(0, MOBILE_GALLERY_DOM_LIMIT);
+    }
+
+    const restoreDeferredGalleryItems = () => {
+        if (!galleryGrid || !deferredGalleryItems.length) return;
+        const fragment = document.createDocumentFragment();
+        deferredGalleryItems.forEach((item) => fragment.appendChild(item));
+        galleryGrid.appendChild(fragment);
+        deferredGalleryItems = [];
+        galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
+        applyGalleryItemCursor();
+    };
 
     /* Initial state: hide items beyond INITIAL_SHOW */
     const applyShowMore = () => {
         if (galleryExpanded) return;
         const activeFilter = document.querySelector('.gallery-filter.active')?.dataset.filter || 'all';
         let visibleCount = 0;
-        galleryItems.forEach(item => {
-            const matchesFilter = activeFilter === 'all' || item.dataset.category === activeFilter;
-            if (matchesFilter) {
-                visibleCount++;
-                if (visibleCount > INITIAL_SHOW) {
-                    item.classList.add('gallery-hidden');
-                } else {
-                    item.classList.remove('gallery-hidden');
-                }
-                item.style.display = item.classList.contains('gallery-hidden') ? 'none' : '';
+        let displayedCount = 0;
+
+        galleryItems.forEach((item) => {
+            const matches = itemMatchesFilter(item, activeFilter);
+            if (!matches) {
+                item.classList.remove('gallery-hidden');
+                item.style.display = 'none';
+                return;
+            }
+
+            visibleCount++;
+            if (visibleCount > INITIAL_SHOW) {
+                item.classList.add('gallery-hidden');
+                item.style.display = 'none';
+            } else {
+                item.classList.remove('gallery-hidden');
+                item.style.display = '';
+                displayedCount++;
             }
         });
+
         if (showMoreBtn) {
-            const remaining = visibleCount - INITIAL_SHOW;
+            const totalMatching = matchingItemCount(activeFilter);
+            const remaining = totalMatching - displayedCount;
             if (remaining > 0) {
                 showMoreBtn.parentElement.style.display = '';
                 showMoreBtn.textContent = `View All Photos (${remaining} more)`;
@@ -229,61 +281,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (showMoreBtn) {
         showMoreBtn.addEventListener('click', () => {
+            restoreDeferredGalleryItems();
             galleryExpanded = true;
-            galleryItems.forEach(item => {
+            const activeFilter = document.querySelector('.gallery-filter.active')?.dataset.filter || 'all';
+
+            galleryItems.forEach((item) => {
                 item.classList.remove('gallery-hidden');
-                if (!item.style.display || item.style.display === 'none') {
-                    const activeFilter = document.querySelector('.gallery-filter.active')?.dataset.filter || 'all';
-                    const matchesFilter = activeFilter === 'all' || item.dataset.category === activeFilter;
-                    item.style.display = matchesFilter ? '' : 'none';
-                }
+                item.style.display = itemMatchesFilter(item, activeFilter) ? '' : 'none';
             });
             showMoreBtn.parentElement.style.display = 'none';
         });
     }
 
     applyShowMore();
+    applyGalleryItemCursor();
 
     /* Smooth filter transitions */
-    filterBtns.forEach(btn => {
+    filterBtns.forEach((btn) => {
         btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
+            filterBtns.forEach((b) => b.classList.remove('active'));
             btn.classList.add('active');
 
             const filter = btn.dataset.filter;
 
             /* Fade out all visible items first */
-            galleryItems.forEach(item => item.classList.add('fade-out'));
+            galleryItems.forEach((item) => item.classList.add('fade-out'));
 
             setTimeout(() => {
-                galleryItems.forEach(item => {
-                    const matches = filter === 'all' || item.dataset.category === filter;
-                    item.style.display = matches ? '' : 'none';
+                let count = 0;
+                let displayedCount = 0;
+
+                galleryItems.forEach((item) => {
+                    const matches = itemMatchesFilter(item, filter);
                     item.classList.remove('gallery-hidden');
+
+                    if (!matches) {
+                        item.style.display = 'none';
+                        return;
+                    }
+
+                    if (!galleryExpanded) {
+                        count++;
+                        if (count > INITIAL_SHOW) {
+                            item.classList.add('gallery-hidden');
+                            item.style.display = 'none';
+                        } else {
+                            item.style.display = '';
+                            displayedCount++;
+                        }
+                    } else {
+                        item.style.display = '';
+                    }
                 });
 
-                /* Reset expanded state per filter if not already expanded */
-                if (!galleryExpanded) {
-                    let count = 0;
-                    galleryItems.forEach(item => {
-                        const matches = filter === 'all' || item.dataset.category === filter;
-                        if (matches) {
-                            count++;
-                            if (count > INITIAL_SHOW) {
-                                item.classList.add('gallery-hidden');
-                                item.style.display = 'none';
-                            }
-                        }
-                    });
-                    if (showMoreBtn) {
-                        const total = Array.from(galleryItems).filter(i => filter === 'all' || i.dataset.category === filter).length;
-                        const remaining = total - INITIAL_SHOW;
-                        if (remaining > 0) {
-                            showMoreBtn.parentElement.style.display = '';
-                            showMoreBtn.textContent = `View All Photos (${remaining} more)`;
-                        } else {
-                            showMoreBtn.parentElement.style.display = 'none';
-                        }
+                if (!galleryExpanded && showMoreBtn) {
+                    const totalMatching = matchingItemCount(filter);
+                    const remaining = totalMatching - displayedCount;
+                    if (remaining > 0) {
+                        showMoreBtn.parentElement.style.display = '';
+                        showMoreBtn.textContent = `View All Photos (${remaining} more)`;
+                    } else {
+                        showMoreBtn.parentElement.style.display = 'none';
                     }
                 } else if (showMoreBtn) {
                     showMoreBtn.parentElement.style.display = 'none';
@@ -291,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 /* Fade in after short delay */
                 requestAnimationFrame(() => {
-                    galleryItems.forEach(item => item.classList.remove('fade-out'));
+                    galleryItems.forEach((item) => item.classList.remove('fade-out'));
                 });
             }, 250);
         });
@@ -356,14 +414,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    galleryItems.forEach((item, i) => {
-        item.addEventListener('click', () => {
+    if (galleryGrid) {
+        galleryGrid.addEventListener('click', (event) => {
+            const item = event.target.closest('.gallery-item');
+            if (!item || !galleryGrid.contains(item)) return;
+            if (item.style.display === 'none') return;
+
             const visibleItems = Array.from(document.querySelectorAll('.gallery-item:not([style*="display: none"])'));
             const visibleIndex = visibleItems.indexOf(item);
-            openLightbox(visibleIndex >= 0 ? visibleIndex : i);
+            if (visibleIndex >= 0) {
+                openLightbox(visibleIndex);
+            }
         });
-        item.style.cursor = 'pointer';
-    });
+    }
 
     if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
     if (lightboxPrev) lightboxPrev.addEventListener('click', showLightboxPrev);
@@ -458,6 +521,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('iframe[data-src]').forEach(iframe => iframeObserver.observe(iframe));
 
+    /* ---- Lazy background images for activity cards ---- */
+    const activityCards = document.querySelectorAll('.activity-card[data-bg]');
+    const hydrateActivityCard = (card) => {
+        if (!card || card.dataset.bgApplied === '1') return;
+        const bg = card.getAttribute('data-bg');
+        if (!bg) return;
+        card.style.backgroundImage = `url('${bg}')`;
+        card.dataset.bgApplied = '1';
+    };
+
+    if (activityCards.length) {
+        const activityCardObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                hydrateActivityCard(entry.target);
+                activityCardObserver.unobserve(entry.target);
+            });
+        }, { rootMargin: '250px' });
+
+        activityCards.forEach(card => activityCardObserver.observe(card));
+    }
+
     /* ---- Form Validation ---- */
     const bookingForm = document.getElementById('bookingForm') || document.getElementById('contactForm');
     const formStatus = document.getElementById('formStatus');
@@ -466,35 +551,166 @@ document.addEventListener('DOMContentLoaded', () => {
     if (bookingForm) {
         const arrivalInput = document.getElementById('arrivalDate');
         const departureInput = document.getElementById('departureDate');
+        const adultsInput = document.getElementById('adults');
+        const childrenInput = document.getElementById('children');
+        const nightsOutput = document.getElementById('bookingNights');
+        const guestsOutput = document.getElementById('bookingGuests');
+        const totalOutput = document.getElementById('bookingTotal');
+        const depositOutput = document.getElementById('bookingDeposit');
+        const summaryWarning = document.getElementById('bookingSummaryWarning');
+        const hiddenNights = document.getElementById('stayNights');
+        const hiddenGuests = document.getElementById('totalGuests');
+        const hiddenTotal = document.getElementById('estimatedStayTotal');
+        const hiddenDeposit = document.getElementById('estimatedDeposit');
+        const redirectField = document.getElementById('formRedirect');
+        const wiseBaseUrl = bookingForm.dataset.wisePaymentUrl || '';
+
+        const formatGbp = (value) => {
+            if (!Number.isFinite(value) || value <= 0) return '-';
+            return `\u00A3${Math.round(value).toLocaleString('en-GB')}`;
+        };
+
+        const toDate = (value) => {
+            if (!value) return null;
+            const date = new Date(value);
+            return Number.isNaN(date.valueOf()) ? null : date;
+        };
+
+        const seasonForStay = (arrivalDate, departureDate) => {
+            if (!arrivalDate || !departureDate || departureDate <= arrivalDate) {
+                return { code: 'invalid' };
+            }
+            const months = new Set();
+            const cursor = new Date(arrivalDate);
+            while (cursor < departureDate) {
+                months.add(cursor.getMonth());
+                cursor.setDate(cursor.getDate() + 1);
+            }
+            const hasClosedMonth = [...months].some((month) => ![4, 5, 6, 7, 8].includes(month));
+            if (hasClosedMonth) return { code: 'closed', minNights: 0, rate: 0, label: 'Closed' };
+            const hasHighSeasonMonth = [...months].some((month) => [6, 7].includes(month));
+            if (hasHighSeasonMonth) return { code: 'high', minNights: 7, rate: 3300 / 7, label: 'High Season' };
+            return { code: 'mid', minNights: 4, rate: 250, reducedRate: 200, label: 'Spring & Autumn' };
+        };
+
+        const calculateQuote = () => {
+            const arrivalDate = toDate(arrivalInput?.value);
+            const departureDate = toDate(departureInput?.value);
+            const adults = Math.max(0, Number(adultsInput?.value || 0));
+            const children = Math.max(0, Number(childrenInput?.value || 0));
+            const guests = adults + children;
+            const nights = (arrivalDate && departureDate) ? Math.round((departureDate - arrivalDate) / (1000 * 60 * 60 * 24)) : 0;
+            const season = seasonForStay(arrivalDate, departureDate);
+
+            let total = 0;
+            let deposit = 0;
+            let warning = '';
+
+            if (season.code === 'closed') {
+                warning = isFrenchPage
+                    ? 'Hors saison : octobre \u00E0 avril non disponible actuellement.'
+                    : 'Out of season: October to April is currently closed.';
+            } else if (season.code === 'invalid') {
+                warning = '';
+            } else if (nights < season.minNights) {
+                warning = isFrenchPage
+                    ? `S\u00E9jour minimum : ${season.minNights} nuits pour cette p\u00E9riode.`
+                    : `Minimum stay: ${season.minNights} nights for this period.`;
+            } else if (guests < 1) {
+                warning = isFrenchPage
+                    ? 'Ajoutez au moins un adulte pour obtenir un tarif.'
+                    : 'Add at least one adult to calculate pricing.';
+            } else {
+                if (season.code === 'mid') {
+                    const nightlyRate = guests <= 6 ? season.reducedRate : season.rate;
+                    total = nightlyRate * nights;
+                } else {
+                    total = season.rate * nights;
+                }
+                deposit = total * 0.25;
+            }
+
+            if (nightsOutput) nightsOutput.textContent = nights > 0 ? String(nights) : '-';
+            if (guestsOutput) guestsOutput.textContent = guests > 0 ? String(guests) : '-';
+            if (totalOutput) totalOutput.textContent = formatGbp(total);
+            if (depositOutput) depositOutput.textContent = formatGbp(deposit);
+            if (summaryWarning) summaryWarning.textContent = warning;
+
+            if (hiddenNights) hiddenNights.value = nights > 0 ? String(nights) : '';
+            if (hiddenGuests) hiddenGuests.value = guests > 0 ? String(guests) : '';
+            if (hiddenTotal) hiddenTotal.value = total > 0 ? total.toFixed(2) : '';
+            if (hiddenDeposit) hiddenDeposit.value = deposit > 0 ? deposit.toFixed(2) : '';
+
+            return { arrivalDate, departureDate, adults, children, guests, nights, season, total, deposit, warning };
+        };
+
+        const updateDepartureMin = () => {
+            if (!arrivalInput || !departureInput) return;
+            departureInput.min = arrivalInput.value || arrivalInput.min;
+        };
 
         if (arrivalInput) {
             const today = new Date().toISOString().split('T')[0];
             arrivalInput.min = today;
             arrivalInput.addEventListener('change', () => {
-                if (departureInput) {
-                    departureInput.min = arrivalInput.value;
-                }
+                updateDepartureMin();
+                calculateQuote();
             });
         }
+        if (departureInput) departureInput.addEventListener('change', calculateQuote);
+        if (adultsInput) adultsInput.addEventListener('input', calculateQuote);
+        if (childrenInput) childrenInput.addEventListener('input', calculateQuote);
+
+        updateDepartureMin();
+        calculateQuote();
 
         bookingForm.addEventListener('submit', (e) => {
-            if (arrivalInput && departureInput) {
-                if (new Date(departureInput.value) <= new Date(arrivalInput.value)) {
-                    e.preventDefault();
-                    if (formStatus) {
-                        formStatus.textContent = isFrenchPage
-                            ? "La date de d\u00E9part doit \u00EAtre post\u00E9rieure \u00E0 la date d'arriv\u00E9e."
-                            : 'Departure date must be after arrival date.';
-                        formStatus.className = 'form-status error';
-                    }
-                    return;
+            const quote = calculateQuote();
+
+            if (quote.departureDate && quote.arrivalDate && quote.departureDate <= quote.arrivalDate) {
+                e.preventDefault();
+                if (formStatus) {
+                    formStatus.textContent = isFrenchPage
+                        ? "La date de d\u00E9part doit \u00EAtre post\u00E9rieure \u00E0 la date d'arriv\u00E9e."
+                        : 'Departure date must be after arrival date.';
+                    formStatus.className = 'form-status error';
+                }
+                return;
+            }
+
+            if (quote.warning || quote.total <= 0 || quote.deposit <= 0) {
+                e.preventDefault();
+                if (formStatus) {
+                    formStatus.textContent = quote.warning || (isFrenchPage
+                        ? 'Merci de compl\u00E9ter les dates et le nombre de personnes.'
+                        : 'Please complete dates and guest details first.');
+                    formStatus.className = 'form-status error';
+                }
+                return;
+            }
+
+            const wiseReady = Boolean(wiseBaseUrl) && !wiseBaseUrl.includes('REPLACE_WITH_YOUR_WISE_PAYMENT_LINK');
+
+            if (redirectField && wiseReady) {
+                try {
+                    const paymentUrl = new URL(wiseBaseUrl);
+                    paymentUrl.searchParams.set('amount', quote.deposit.toFixed(2));
+                    paymentUrl.searchParams.set('currency', 'GBP');
+                    paymentUrl.searchParams.set('source', 'website-booking');
+                    redirectField.value = paymentUrl.toString();
+                } catch (_) {
+                    redirectField.value = wiseBaseUrl;
                 }
             }
 
             if (formStatus) {
-                formStatus.textContent = isFrenchPage
-                    ? 'Envoi de votre demande de r\u00E9servation...'
-                    : 'Sending your booking request...';
+                formStatus.textContent = wiseReady
+                    ? (isFrenchPage
+                        ? 'Envoi des d\u00E9tails puis redirection vers le paiement s\u00E9curis\u00E9...'
+                        : 'Submitting details and redirecting to secure payment...')
+                    : (isFrenchPage
+                        ? 'Envoi de votre demande... (ajoutez votre lien Wise dans le formulaire pour activer la redirection paiement instantan\u00E9e).'
+                        : 'Sending your request... (add your Wise payment link in the form to enable instant payment redirect).');
                 formStatus.className = 'form-status sending';
             }
         });

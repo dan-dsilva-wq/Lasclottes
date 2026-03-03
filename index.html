@@ -6,10 +6,12 @@
     <title>Lasclottes | French Farmhouse on the River Lot | Sleeps 12</title>
     <meta name="description" content="Lasclottes is a stunning French farmhouse on the River Lot with 5 bedrooms, 4 bathrooms, private pool, private river access, and 5 acres of gardens. Sleeps 12. Perfect for families and fishing holidays in Aquitaine, France.">
     <meta name="robots" content="index, follow">
-    <link rel="alternate" hreflang="fr" href="fr.html">
-    <link rel="alternate" hreflang="en" href="index.html">
+    <link rel="alternate" hreflang="fr" href="https://lasclottes.com/fr.html">
+    <link rel="alternate" hreflang="nl" href="https://lasclottes.com/nl.html">
+    <link rel="alternate" hreflang="en" href="https://lasclottes.com/">
     <link rel="alternate" hreflang="x-default" href="https://lasclottes.com/">
     <link rel="canonical" href="https://lasclottes.com/">
+    <link rel="icon" href="favicon.ico" sizes="any">
     <meta property="og:title" content="Lasclottes | French Farmhouse on the River Lot">
     <meta property="og:description" content="5 bedrooms, private pool, private river access, 5 acres of gardens. Sleeps 12. Lot-et-Garonne, France.">
     <meta property="og:image" content="https://lasclottes.com/Media/Site%20Files/Lasclottes%20Pool.jpeg">
@@ -21,7 +23,9 @@
     <meta name="twitter:image" content="https://lasclottes.com/Media/Site%20Files/Lasclottes%20Pool.jpeg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap"></noscript>
     <link rel="preload" as="image" href="Media/optimized/media_site_files_lasclottes_pool_jpeg-w1280.webp">
     <link rel="stylesheet" href="css/style_old.css">
 
@@ -77,6 +81,7 @@
             </ul>
             <div class="nav__actions">
                 <a href="fr.html" class="nav__lang" title="Version française">FR</a>
+                <a href="nl.html" class="nav__lang" title="Nederlandse versie">NL</a>
                 <a href="#contact" class="nav__cta">Book Now</a>
             </div>
             <button class="nav__hamburger" aria-label="Toggle menu" aria-expanded="false">
@@ -428,6 +433,20 @@
             <div class="lightbox__counter"></div>
         </div>
 
+        <section class="media-feature section" id="video">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">See Lasclottes in Motion</h2>
+                <p class="section-subtitle animate-on-scroll">A short walk-through video from the property and riverbank</p>
+                <div class="media-feature__card animate-on-scroll">
+                    <video class="media-feature__video" controls preload="none" playsinline poster="Media/optimized/media_site_files_lasclottes_pool_jpeg-w1280.webp">
+                        <source src="Media/Videos/org_0ed7af30e437593d_1589822473000.mp4" type="video/mp4">
+                        Your browser does not support HTML5 video.
+                    </video>
+                    <p class="media-feature__caption">Tip: Tap full-screen on mobile for the best viewing experience.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- ========== THINGS TO DO ========== -->
         <section class="activities section" id="activities">
             <div class="container">
@@ -435,75 +454,93 @@
                 <p class="section-subtitle animate-on-scroll">From lazy river days to exploring medieval villages</p>
 
                 <div class="activities__grid">
-                    <a href="activities/fishing.html" class="activity-card featured animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_fishing1_jpg-w960.webp');">
+                    <a href="activities/fishing.html" class="activity-card featured animate-on-scroll" data-bg="Media/optimized/media_site_files_fishing1_jpg-w960.webp">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Fishing</h3>
                             <p>Fish directly from our private pontoons on the River Lot &mdash; carp to 44lb, catfish to 83lb, and a designated night fishing zone right past the property.</p>
+                            <span class="activity-card__cta">View Details</span>
                         </div>
                     </a>
 
-                    <a href="activities/cycling.html" class="activity-card featured animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_people_cyling_landscape_jpg-w960.webp');">
+                    <a href="activities/cycling.html" class="activity-card featured animate-on-scroll" data-bg="Media/optimized/media_site_files_people_cyling_landscape_jpg-w960.webp">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Cycling</h3>
                             <p>Explore the Lot valley on quiet country roads and dedicated cycle paths. The V&eacute;loroute du Lot runs right past the property. Bike hire available locally.</p>
+                            <span class="activity-card__cta">View Details</span>
                         </div>
                     </a>
 
-                    <a href="activities/canoeing.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_p1011128_fun_on_the_river_jpg-w960.webp');">
+                    <a href="activities/canoeing.html" class="activity-card animate-on-scroll" data-bg="Media/optimized/media_site_files_p1011128_fun_on_the_river_jpg-w960.webp">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Canoeing &amp; Kayaking</h3>
                             <p>Launch from our pontoon or hire canoes and leisure boats at nearby Penne d'Agenais for scenic river trips through the valley.</p>
+                            <span class="activity-card__cta">View Details</span>
                         </div>
                     </a>
 
-                    <a href="activities/golf.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_dsc03839_chateau_jpg-w960.webp');">
+                    <a href="activities/golf.html" class="activity-card animate-on-scroll" data-bg="Media/optimized/media_external_golf_villeneuve_parcours2_jpg-w640.webp">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Golf</h3>
                             <p>Several courses within easy reach, including Golf de Villeneuve-sur-Lot. Enjoy a round amidst the rolling hills and vineyards of Lot-et-Garonne.</p>
+                            <span class="activity-card__cta">View Details</span>
                         </div>
                     </a>
 
-                    <a href="activities/markets.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_eating_out_jpg-w640.webp');">
+                    <a href="activities/markets.html" class="activity-card animate-on-scroll" data-bg="Media/optimized/media_site_files_eating_out_rotated_jpg-w640.webp">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Markets &amp; Dining</h3>
                             <p>Weekly markets in Villeneuve-sur-Lot and surrounding villages. Fresh local produce, artisan goods, and excellent restaurants.</p>
+                            <span class="activity-card__cta">View Details</span>
                         </div>
                     </a>
 
-                    <a href="activities/wine.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_dsc03275_lastelsia_2_jpg-w960.webp');">
+                    <a href="activities/wine.html" class="activity-card animate-on-scroll" data-bg="Media/optimized/media_2025_photos_wine_avif-w960.webp">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Wine &amp; Ch&acirc;teaux</h3>
                             <p>Visit local vineyards for tastings, or take a day trip to the renowned wine regions of Bordeaux, Cahors, or Bergerac.</p>
+                            <span class="activity-card__cta">View Details</span>
                         </div>
                     </a>
 
-                    <a href="activities/villages.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_dsc03839_chateau_jpg-w960.webp');">
+                    <a href="activities/villages.html" class="activity-card animate-on-scroll" data-bg="Media/optimized/media_site_files_dsc03839_chateau_jpg-w960.webp">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Medieval Villages</h3>
                             <p>Explore bastide towns and hilltop perched villages. Pujols, Penne d'Agenais, and Tournon d'Agenais are all within easy reach.</p>
+                            <span class="activity-card__cta">View Details</span>
                         </div>
                     </a>
 
-                    <a href="activities/balloons.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_hot_air_balloon_jpg-w960.webp');">
+                    <a href="activities/balloons.html" class="activity-card animate-on-scroll" data-bg="Media/optimized/media_site_files_hot_air_balloon_jpg-w960.webp">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Hot Air Balloons</h3>
                             <p>Hot air balloons occasionally launch from nearby fields &mdash; if you're lucky, you may spot them drifting over the garden.</p>
+                            <span class="activity-card__cta">View Details</span>
                         </div>
                     </a>
 
-                    <a href="activities/watersports.html" class="activity-card animate-on-scroll" style="background-image: url('Media/optimized/media_site_files_p1011168_speed_boat_at_roche_2_jpg-w960.webp');">
+                    <a href="activities/watersports.html" class="activity-card animate-on-scroll" data-bg="Media/optimized/media_site_files_p1011168_speed_boat_at_roche_2_jpg-w960.webp">
                         <div class="activity-card__overlay"></div>
                         <div class="activity-card__content">
                             <h3>Water Sports</h3>
                             <p>Waterskiing, wakeboarding, and leisure boating at nearby bases on the Lot.</p>
+                            <span class="activity-card__cta">View Details</span>
+                        </div>
+                    </a>
+
+                    <a href="activities/children.html" class="activity-card animate-on-scroll" data-bg="Media/optimized/media_external_walygator_agen_jpg-w960.webp">
+                        <div class="activity-card__overlay"></div>
+                        <div class="activity-card__content">
+                            <h3>Children's Activities</h3>
+                            <p>Theme parks, crazy golf, treetop adventures, karting, and family days out within easy reach of Lasclottes.</p>
+                            <span class="activity-card__cta">View Details</span>
                         </div>
                     </a>
                 </div>
@@ -639,16 +676,20 @@
         <section class="contact section" id="contact">
             <div class="container">
                 <h2 class="section-title animate-on-scroll">Book Your Stay</h2>
-                <p class="section-subtitle animate-on-scroll">Reserve your dates and pay securely via Wise</p>
+                <p class="section-subtitle animate-on-scroll">Submit your details, see your live quote, and continue to secure payment</p>
 
                 <div class="contact__grid animate-on-scroll">
                     <div class="contact__form-wrapper">
                         <h3>Reserve &amp; Pay</h3>
-                        <form class="contact-form" id="bookingForm" action="https://formsubmit.co/info@lasclottes.com" method="POST">
+                        <form class="contact-form" id="bookingForm" action="https://formsubmit.co/info@lasclottes.com" method="POST" data-wise-payment-url="REPLACE_WITH_YOUR_WISE_PAYMENT_LINK">
                             <input type="hidden" name="_subject" value="New Booking Request — Lasclottes">
                             <input type="hidden" name="_captcha" value="false">
                             <input type="hidden" name="_template" value="table">
                             <input type="hidden" name="_next" id="formRedirect" value="https://lasclottes.com">
+                            <input type="hidden" name="stay_nights" id="stayNights" value="">
+                            <input type="hidden" name="total_guests" id="totalGuests" value="">
+                            <input type="hidden" name="estimated_stay_total_gbp" id="estimatedStayTotal" value="">
+                            <input type="hidden" name="estimated_deposit_gbp" id="estimatedDeposit" value="">
                             <h4 style="margin-bottom: var(--space-xs); color: var(--color-primary);">Booking Details</h4>
                             <div class="form-row">
                                 <div class="form-group">
@@ -704,8 +745,16 @@
                                 <textarea id="message" name="message" rows="3" placeholder="Any special requests or questions&hellip;"></textarea>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-lg form-submit" style="width: 100%;">Submit Booking &amp; Pay Deposit</button>
-                            <p style="font-size: 0.8rem; text-align: center; margin-top: var(--space-xs); opacity: 0.7;">Your booking details will be sent to us and you will be redirected to pay your 25% deposit securely via Wise.</p>
+                            <div class="booking-summary" aria-live="polite">
+                                <div class="booking-summary__line"><span>Nights</span><strong id="bookingNights">-</strong></div>
+                                <div class="booking-summary__line"><span>Total Guests</span><strong id="bookingGuests">-</strong></div>
+                                <div class="booking-summary__line"><span>Estimated Stay Total</span><strong id="bookingTotal">-</strong></div>
+                                <div class="booking-summary__line"><span>Deposit Due Now (25%)</span><strong id="bookingDeposit">-</strong></div>
+                                <p class="booking-summary__help">Pricing uses the season table on this page and updates as you complete your booking details.</p>
+                                <p class="booking-summary__warning" id="bookingSummaryWarning"></p>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg form-submit" style="width: 100%;">Continue to Secure Payment</button>
+                            <p style="font-size: 0.8rem; text-align: center; margin-top: var(--space-xs); opacity: 0.7;">Your booking details are submitted first, then you are redirected to pay your 25% deposit securely via Wise.</p>
                             <div class="form-status" id="formStatus" aria-live="polite"></div>
                         </form>
                     </div>
@@ -724,7 +773,7 @@
                         </div>
 
                         <div class="contact__social-proof">
-                            <p>Loved by 50+ families since 2016</p>
+                            <p>Loved by 70+ families since 2018</p>
                         </div>
                     </div>
                 </div>
@@ -738,7 +787,7 @@
         <div class="container">
             <div class="footer__inner">
                 <div class="footer__brand">
-                    <div class="footer__logo"><img src="Media/Logo/Lasclottes Logo 3 png.png" alt="Lasclottes Riverside Holidays" class="footer__logo-img" decoding="async" loading="lazy" width="120" height="43"></div>
+                    <div class="footer__logo"><img src="Media/Logo/Lasclottes Logo 3 png.png" alt="Lasclottes Riverside Holidays" class="footer__logo-img" decoding="async" loading="lazy" width="220" height="83"></div>
                     <p class="footer__description">A French farmhouse on the River Lot, perfect for family holidays and fishing breaks.</p>
                     <address>St Sylvestre sur Lot, Lot-et-Garonne<br>Aquitaine 47140, France</address>
                 </div>
@@ -766,6 +815,7 @@
                     <p>&copy; 2026 Lasclottes. All rights reserved.</p>
                     <div class="footer__links">
                         <a href="fr.html">Fran&ccedil;ais</a>
+                        <a href="nl.html">Nederlands</a>
                     </div>
                 </div>
             </div>
