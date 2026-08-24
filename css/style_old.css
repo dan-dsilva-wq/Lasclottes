@@ -1005,6 +1005,23 @@ cite.review-card__author {
   transition: opacity 1.2s ease-in-out;
 }
 
+/* Give the first slide a responsive background before JavaScript starts. */
+.hero-slide:first-child {
+  background-image: url('../Media/optimized/media_site_files_lasclottes_pool_jpeg-w1280.webp');
+}
+
+@media (max-width: 900px) {
+  .hero-slide:first-child {
+    background-image: url('../Media/optimized/media_site_files_lasclottes_pool_jpeg-w768.webp');
+  }
+}
+
+@media (min-width: 1401px) {
+  .hero-slide:first-child {
+    background-image: url('../Media/optimized/media_site_files_lasclottes_pool_jpeg-w1600.webp');
+  }
+}
+
 @keyframes kenBurns {
   0%   { transform: scale(1); }
   100% { transform: scale(1.06); }

@@ -53,12 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const isCoarsePointerDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
     const devicePx = Math.ceil(window.innerWidth * Math.min(window.devicePixelRatio || 1, 2));
     const heroTargetWidth = devicePx <= 900 ? 768 : (devicePx <= 1400 ? 1280 : 1600);
-    const supportsImageSet = typeof CSS !== 'undefined'
-        && typeof CSS.supports === 'function'
-        && (
-            CSS.supports('background-image', 'image-set(url("x.webp") 1x)')
-            || CSS.supports('background-image', '-webkit-image-set(url("x.webp") 1x)')
-        );
     let currentSlide = 0;
     let slideTimer = null;
 
@@ -90,10 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .replace(/[^a-z0-9]+/g, '_')
         .replace(/^_+|_+$/g, '');
 
-    const optimizedImagePath = (originalPath, format) => {
+    const optimizedImagePath = (originalPath) => {
         const key = optimizedKey(originalPath);
         const relPrefix = originalPath.startsWith('../') ? '../' : '';
-        return `${relPrefix}Media/optimized/${key}-w${heroTargetWidth}.${format}`;
+        return `${relPrefix}Media/optimized/${key}-w${heroTargetWidth}.webp`;
     };
 
     const hydrateSlideBackground = (slide) => {
@@ -101,14 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const bg = slide.getAttribute('data-bg');
         if (!bg) return;
         if (slide.dataset.bgApplied === '1') return;
-        const webp = optimizedImagePath(bg, 'webp');
-        const avif = optimizedImagePath(bg, 'avif');
-        if (supportsImageSet) {
-            slide.style.backgroundImage = `-webkit-image-set(url('${avif}') type('image/avif'), url('${webp}') type('image/webp'), url('${bg}'))`;
-            slide.style.backgroundImage = `image-set(url('${avif}') type('image/avif'), url('${webp}') type('image/webp'), url('${bg}'))`;
-        } else {
-            slide.style.backgroundImage = `url('${bg}')`;
-        }
+        const webp = optimizedImagePath(bg);
+        slide.style.backgroundImage = `url('${webp}')`;
         slide.dataset.bgApplied = '1';
         slide.removeAttribute('data-bg');
     };
