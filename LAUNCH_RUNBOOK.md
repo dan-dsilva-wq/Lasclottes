@@ -62,6 +62,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [ ] The guest and the owner each receive one confirmation email containing dates, guests, amount paid, later balance/due date, tourist tax and contact details.
 - [ ] Failed email delivery is visible to the owner and retryable without creating a duplicate booking or charge.
 - [x] Signed Resend delivery callbacks are verified against the raw body, protected from replay, de-duplicated and stored as delivered, delayed, bounced, complained, failed or suppressed audit outcomes.
+- [x] The hosted Preview Resend endpoint rejects forged signatures and accepts a valid synthetic delivery exactly once; the disposable booking, delivery and event rows were removed after verification.
 - [x] Concurrent webhook retries and email-delivery claims use leases so they cannot send the same notification twice while another attempt is still running.
 - [x] No card details, secrets or unnecessary personal information appear in logs or public availability responses.
 - [ ] Only after all the above pass, set `BOOKING_PAYMENTS_ENABLED=true` in the production environment and redeploy.
