@@ -22,6 +22,20 @@ test('high-season weekly booking is priced by the server', () => {
     assert.equal(quote.touristTaxEur, 78.96);
 });
 
+test('near-term bookings charge the full stay and refundable damage deposit', () => {
+    const quote = calculateQuote({
+        arrivalDate: '2027-05-20',
+        departureDate: '2027-05-24',
+        adults: 4,
+        children: 0
+    }, new Date('2027-04-01T12:00:00Z'));
+    assert.equal(quote.stayTotal, 800);
+    assert.equal(quote.amountDueNow, 1300);
+    assert.equal(quote.balanceDueLater, 0);
+    assert.equal(quote.paymentStage, 'full_payment_now');
+    assert.equal(quote.touristTaxEur, 22.56);
+});
+
 test('blocked dates and invalid seasonal patterns are rejected', () => {
     assert.throws(() => calculateQuote({
         arrivalDate: '2027-07-10',

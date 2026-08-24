@@ -90,12 +90,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Defer rendering work for off-screen sections on supporting browsers */
-.section {
-  content-visibility: auto;
-  contain-intrinsic-size: 900px;
-}
-
 img,
 picture,
 video,

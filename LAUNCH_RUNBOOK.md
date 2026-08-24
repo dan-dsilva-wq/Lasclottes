@@ -9,7 +9,7 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - The domain is registered at Wix and currently uses Wix nameservers.
 - Google Workspace email uses the domain's existing MX and TXT records. Those records must not be removed or replaced during the website cutover.
 - Vercel is the selected host, matching the existing VXVO deployment workflow. The public domain will still be `lasclottes.com`.
-- Online payments remain disabled until the database, Stripe, email delivery, webhook and owner approvals are all complete.
+- Production online payments remain disabled. The payment switch is enabled only on the isolated Preview environment for sandbox acceptance testing.
 
 ## Owner decisions required before payments are enabled
 
@@ -30,43 +30,48 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Provision the `lasclottes-stripe-test` Stripe sandbox for Preview and Development only. Its credentials use the `TEST_` prefix.
 - [x] Provision the `lasclottes-bookings` Neon Free database in Frankfurt for Preview and Development only, with preview branching and the `BOOKINGS_` prefix.
 - [x] Provision the `lasclottes-email-test` Resend Free service in Ireland for Preview and Development only, with the `TEST_EMAIL_` prefix.
+- [x] Configure a Preview-only Stripe webhook and verify signed callbacks, rejected invalid signatures and retry idempotency.
+- [ ] Upgrade the Vercel team from Hobby to Pro before commercial launch. Vercel's current Hobby terms permit only personal or non-commercial use.
 - [ ] Pull the provisioned development environment locally without displaying or committing secret values.
-- [ ] Apply the reviewed database migration and seed the authoritative blocked-date ranges once.
+- [x] Apply the reviewed booking schema automatically to the isolated Preview database branch.
+- [ ] Confirm and seed the authoritative blocked-date ranges once from the owner's booking diary.
 - [ ] Verify the email-sending domain using only the DNS records supplied by Resend. Preserve all Google Workspace MX, SPF and verification records.
 - [ ] Set the booking-notification inbox and verified sender address as encrypted Vercel environment variables.
-- [ ] Keep `BOOKING_PAYMENTS_ENABLED` false until every payment test below passes.
+- [x] Keep `BOOKING_PAYMENTS_ENABLED` true only in Preview for sandbox testing and absent/false in Production.
 
 ## Payment and booking acceptance tests
 
-- [ ] A quote for May, June or September enforces four nights and applies GBP 200/night for up to six guests or GBP 250/night for seven to twelve guests.
-- [ ] A July or August quote only accepts Saturday-to-Saturday weekly blocks at GBP 3,300/week.
-- [ ] October through April cannot be booked unless the owner explicitly changes the rule.
-- [ ] More than 60 days before arrival charges 25% of accommodation now and states the later balance and damage-deposit due date.
-- [ ] Within 60 days charges the full accommodation price plus the GBP 500 damage deposit.
-- [ ] Tourist tax remains clearly separate in EUR and is never silently added to a GBP card charge.
-- [ ] The server rejects altered browser prices, invalid dates, excessive occupancy and blocked dates.
-- [ ] Two simultaneous attempts for overlapping dates cannot both create payable reservations.
-- [ ] A pending checkout hold expires and releases its dates after the documented timeout.
-- [ ] Stripe's successful test card marks the reservation paid exactly once, even if the webhook is retried.
-- [ ] Stripe decline, cancellation, expiry and refund events produce the correct booking state.
-- [ ] The return page checks the server-side payment state; it never treats a URL visit alone as proof of payment.
+- [x] A quote for May, June or September enforces four nights and applies GBP 200/night for up to six guests or GBP 250/night for seven to twelve guests.
+- [x] A July or August quote only accepts Saturday-to-Saturday weekly blocks at GBP 3,300/week.
+- [x] October through April cannot be booked unless the owner explicitly changes the rule.
+- [x] More than 60 days before arrival charges 25% of accommodation now and states the later balance and damage-deposit due date.
+- [x] Within 60 days charges the full accommodation price plus the GBP 500 damage deposit.
+- [x] Tourist tax remains clearly separate in EUR and is never silently added to a GBP card charge.
+- [x] The server rejects altered browser prices, invalid dates, excessive occupancy and blocked dates.
+- [x] Two simultaneous attempts for overlapping dates cannot both create payable reservations.
+- [x] A pending checkout hold expires and releases its dates after the documented timeout.
+- [x] Stripe's successful test card marks the reservation paid exactly once, even if the webhook is retried.
+- [x] Stripe declined-card and expiry flows leave the booking unconfirmed and release the dates.
+- [ ] Define and test the owner-approved cancellation and refund workflow before launch.
+- [x] The return page checks the server-side payment state; it never treats a URL visit alone as proof of payment.
 - [ ] The guest and the owner each receive one confirmation email containing dates, guests, amount paid, later balance/due date, tourist tax and contact details.
 - [ ] Failed email delivery is visible to the owner and retryable without creating a duplicate booking or charge.
-- [ ] No card details, secrets or unnecessary personal information appear in logs or public availability responses.
+- [x] No card details, secrets or unnecessary personal information appear in logs or public availability responses.
 - [ ] Only after all the above pass, set `BOOKING_PAYMENTS_ENABLED=true` in the production environment and redeploy.
 
 Use Stripe test mode for all pre-launch tests. Do not submit a real card payment merely to test the website.
 
 ## Website acceptance tests
 
-- [ ] All English, French and Dutch home-page links, navigation, forms and language switches work on desktop and mobile.
-- [ ] All activity pages load, and their current-information warnings and external links are correct.
-- [ ] Every referenced image and video loads from the hosted review deployment.
-- [ ] Keyboard navigation, focus visibility, labels, alternative text, headings and colour contrast pass accessibility checks.
-- [ ] There are no browser console errors, mixed-content requests, missing files or broken internal anchors.
-- [ ] The custom 404 page is returned with HTTP 404, not 200.
-- [ ] Security headers, caching rules, robots.txt and sitemap.xml are correct on the hosted deployment.
-- [ ] Each former Wix URL returns a permanent redirect to its closest new equivalent.
+- [x] All English, French and Dutch home-page links, navigation, forms and language switches work in the hosted responsive browser checks.
+- [x] All activity pages load and display their current-information warnings.
+- [ ] The owner reviews time-sensitive activity details and external providers immediately before launch.
+- [x] Every referenced image and video loads from the hosted review deployment.
+- [x] Keyboard navigation, focus visibility, labels, alternative text, headings and colour contrast pass the automated/static checks.
+- [x] There are no browser console errors, mixed-content requests, missing files or broken internal anchors.
+- [x] The custom 404 page is returned with HTTP 404, not 200.
+- [x] Security headers, caching rules, robots.txt and sitemap.xml are correct on the hosted deployment.
+- [x] Each former Wix URL returns a permanent redirect to its closest new equivalent.
 - [ ] The owner reviews the final wording, prices, photographs, telephone numbers and booking availability.
 
 ## Domain and email cutover
