@@ -8,7 +8,8 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - Development work is isolated on `codex/site-review-2026-08-24` and is automatically deployed to a Vercel preview.
 - The domain is registered at Wix and currently uses Wix nameservers.
 - Google Workspace email uses the domain's existing MX and TXT records. Those records must not be removed or replaced during the website cutover.
-- Vercel is the selected host, matching the existing VXVO deployment workflow. The public domain will still be `lasclottes.com`.
+- Vercel Hobby is the review host only. It must not serve the commercial live site under Vercel's current non-commercial Hobby terms.
+- Cloudflare Workers with Static Assets is the selected no-monthly-fee production target. The public domain will still be `lasclottes.com`; no production Cloudflare account, deployment or DNS change has been made yet.
 - Production online payments remain disabled. The payment switch is enabled only on the isolated Preview environment for sandbox acceptance testing.
 
 ## Owner decisions required before payments are enabled
@@ -31,11 +32,12 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Provision the `lasclottes-bookings` Neon Free database in Frankfurt for Preview and Development only, with preview branching and the `BOOKINGS_` prefix.
 - [x] Provision the `lasclottes-email-test` Resend Free service in Ireland for Preview and Development only, with the `TEST_EMAIL_` prefix.
 - [x] Configure a Preview-only Stripe webhook and verify signed callbacks, rejected invalid signatures and retry idempotency.
-- [ ] Upgrade the Vercel team from Hobby to Pro before commercial launch. Vercel's current Hobby terms permit only personal or non-commercial use.
+- [x] Keep Vercel on Hobby and restrict it to non-live review deployments; do not upgrade to Pro.
 - [ ] Pull the provisioned development environment locally without displaying or committing secret values.
 - [x] Apply the reviewed booking schema automatically to the isolated Preview database branch.
 - [ ] Confirm and seed the authoritative blocked-date ranges once from the owner's booking diary.
-- [ ] Verify the email-sending domain using only the DNS records supplied by Resend. Preserve all Google Workspace MX, SPF and verification records.
+- [ ] Move authoritative DNS from Wix to Cloudflare Free while initially preserving every Wix website and Google Workspace record. Resend reports that Wix cannot create the required subdomain MX record, so Resend verification cannot finish while Wix hosts DNS.
+- [ ] After the Cloudflare DNS zone is active, add only Resend's DKIM TXT, `send` MX and `send` SPF TXT records, then verify the domain. Keep all root Google Workspace MX, SPF and verification records unchanged.
 - [ ] Set the booking-notification inbox and verified sender address as encrypted Vercel environment variables.
 - [x] Keep `BOOKING_PAYMENTS_ENABLED` true only in Preview for sandbox testing and absent/false in Production.
 
@@ -76,18 +78,24 @@ Use Stripe test mode for all pre-launch tests. Do not submit a real card payment
 
 ## Domain and email cutover
 
-The safest first cutover leaves the domain registration and nameservers at Wix. Only the website records change.
+The domain registration can remain at Wix, but authoritative DNS must move to Cloudflare Free. This is required both for the free Cloudflare production host and because Wix cannot create Resend's required MX record on the `send` subdomain. The DNS move and website launch should be separate changes: first move DNS while keeping the Wix website records, then switch the website only after all records and email have been verified.
 
 1. Record screenshots/exports of the complete Wix DNS zone and the current Vercel production deployment.
-2. At least 24 hours before cutover, lower only the website record TTLs to 300 seconds where Wix permits it.
-3. Add `lasclottes.com` and `www.lasclottes.com` to the Vercel project and complete Vercel's ownership verification if requested.
-4. Confirm Vercel's exact required A/AAAA/CNAME values in the project dashboard on the day of cutover; do not use remembered values.
-5. In Wix DNS, change only the apex website A record(s) and the `www` CNAME to the Vercel values.
-6. Leave every Google Workspace MX and TXT record unchanged. Also preserve Google site verification and any email DKIM/DMARC records.
-7. Verify the apex and `www` site over HTTPS from more than one network. Verify inbound and outbound email for both known Lasclottes mailboxes.
-8. Check booking, payment, webhook and confirmation email once in production using a deliberately low-risk owner-approved test, then refund it if appropriate.
-9. Monitor hosting errors, Stripe webhooks, booking notifications, DNS and email for at least seven days.
-10. Keep the Wix site/account available as a rollback path for at least fourteen days. Do not cancel the Wix domain registration.
+2. Add `lasclottes.com` to a Cloudflare Free account and review Cloudflare's imported zone before changing nameservers. Add any missing records manually.
+3. Confirm the Cloudflare zone contains all three Wix apex A records, the Wix `www` CNAME, every Google Workspace MX/TXT record, Google verification, and any existing DKIM/DMARC records.
+4. Change only the nameservers at Wix to the exact pair assigned by Cloudflare. Do not transfer or cancel the Wix domain registration.
+5. While the site still points to Wix, verify the current website and inbound/outbound email for both known Lasclottes mailboxes from more than one network.
+6. Add Resend's exact DKIM TXT, `send` MX and `send` SPF TXT records in Cloudflare, verify the Resend domain, and send an isolated test message. These subdomain records do not replace Google's root-domain mail records.
+7. Deploy the reviewed branch to a Cloudflare Workers staging hostname with test Stripe, test Resend and the isolated Neon branch. Run the full browser, payment, webhook and email acceptance suite there.
+8. Add production-only secrets to Cloudflare, leaving `BOOKING_PAYMENTS_ENABLED` false until all owner decisions and data checks pass.
+9. At least 24 hours before website cutover, lower only the website record TTLs to 300 seconds where possible.
+10. Add `lasclottes.com` and `www.lasclottes.com` as Cloudflare Worker custom domains, then replace only the old Wix website A/CNAME routing. Leave all email records unchanged.
+11. Verify the apex and `www` site over HTTPS from more than one network and re-test both known Lasclottes mailboxes.
+12. Enable production booking payments only after the final gate. Complete one deliberately low-risk owner-approved payment, webhook and confirmation-email test, then refund it if appropriate.
+13. Monitor Cloudflare errors, Stripe webhooks, booking notifications, DNS and email for at least seven days.
+14. Keep the Wix site/account available as a rollback path for at least fourteen days. Do not cancel the Wix domain registration.
+
+Cloudflare Free has no monthly hosting charge and no automatic paid overage for the Workers Free allowance. It has no service-level guarantee or priority support, so availability and usage must be monitored. The current site fits the documented Free limits: fewer than 20,000 assets, every asset under 25 MiB, and an expected booking API volume far below 100,000 requests per day.
 
 ### Recorded pre-cutover website values
 

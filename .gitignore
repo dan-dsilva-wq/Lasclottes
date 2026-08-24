@@ -1,4 +1,6 @@
 .vercel
+.wrangler/
 .env*.local
 node_modules/
+dist/
 npm-debug.log*

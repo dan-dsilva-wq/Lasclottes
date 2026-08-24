@@ -1,15 +1,17 @@
-import { createRequire } from 'node:module';
+import configModule from '../lib/config.js';
+import databaseModule from '../lib/database.js';
+import paymentsModule from '../lib/payments.js';
+import stripeModule from '../lib/stripe.js';
 
-const require = createRequire(import.meta.url);
-const { config: bookingConfig } = require('../lib/config');
+const { config: bookingConfig } = configModule;
 const {
     beginWebhookEvent,
     cancelBooking,
     completeWebhookEvent,
     failWebhookEvent
-} = require('../lib/database');
-const { bookingForSession, confirmPaidSession } = require('../lib/payments');
-const { verifyStripeSignature } = require('../lib/stripe');
+} = databaseModule;
+const { bookingForSession, confirmPaidSession } = paymentsModule;
+const { verifyStripeSignature } = stripeModule;
 
 const respond = (status, payload) => new Response(JSON.stringify(payload), {
     status,
