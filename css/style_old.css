@@ -1903,14 +1903,6 @@ a.activity-card {
   color: var(--color-accent);
 }
 
-.price-was {
-  text-decoration: line-through;
-  color: var(--color-text-light);
-  opacity: 0.6;
-  font-size: 0.85em;
-  margin-right: 0.25em;
-}
-
 /* Included / Not Included Lists */
 .pricing__details {
   display: grid;

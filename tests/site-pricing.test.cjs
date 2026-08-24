@@ -1,0 +1,59 @@
+'use strict';
+
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const { BOOKING_RULES } = require('../lib/booking');
+
+const root = path.resolve(__dirname, '..');
+const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), 'utf8');
+const pricingSection = (relativePath) => {
+    const html = read(relativePath);
+    return html.match(/<section\b[^>]*\bid=["']pricing["'][\s\S]*?<\/section>/i)?.[0] || '';
+};
+
+test('all localized price tables agree with the server currency and rates', () => {
+    const pages = {
+        'index.html': {
+            weekly: `&pound;${BOOKING_RULES.highSeasonWeeklyRate.toLocaleString('en-GB')} per week`,
+            standard: `&pound;${BOOKING_RULES.midSeasonNightlyRate}/night`,
+            reduced: `&pound;${BOOKING_RULES.midSeasonReducedNightlyRate}/night`
+        },
+        'fr.html': {
+            weekly: `&pound;${BOOKING_RULES.highSeasonWeeklyRate.toLocaleString('fr-FR').replace(/[\u00a0\u202f]/g, ' ')} par semaine`,
+            standard: `&pound;${BOOKING_RULES.midSeasonNightlyRate}/nuit`,
+            reduced: `&pound;${BOOKING_RULES.midSeasonReducedNightlyRate}/nuit`
+        },
+        'nl.html': {
+            weekly: `£ ${BOOKING_RULES.highSeasonWeeklyRate.toLocaleString('nl-NL')} per week`,
+            standard: `£ ${BOOKING_RULES.midSeasonNightlyRate}/nacht`,
+            reduced: `£ ${BOOKING_RULES.midSeasonReducedNightlyRate}/nacht`
+        }
+    };
+
+    for (const [pagePath, expected] of Object.entries(pages)) {
+        const pricing = pricingSection(pagePath);
+        assert.ok(pricing, `${pagePath} has a pricing section`);
+        assert.ok(pricing.includes(expected.weekly), `${pagePath} shows the server high-season weekly rate`);
+        assert.ok(pricing.includes(expected.standard), `${pagePath} shows the server standard nightly rate`);
+        assert.ok(pricing.includes(expected.reduced), `${pagePath} shows the server reduced nightly rate`);
+        assert.doesNotMatch(pricing, /price-was|text-decoration\s*:\s*line-through/i, `${pagePath} does not expose obsolete prices`);
+        assert.doesNotMatch(pricing, /€\s*3[,. ]?300|3[,. ]?300\s*€/i, `${pagePath} does not label GBP rates as euros`);
+    }
+});
+
+test('browser-side quote constants mirror the authoritative server rules', () => {
+    const script = read('js/main_old.js');
+
+    assert.match(script, new RegExp(`const touristTaxEurPerAdultNight = ${BOOKING_RULES.touristTaxEurPerAdultNight}`));
+    assert.match(script, new RegExp(`const refundableDamageDeposit = ${BOOKING_RULES.refundableDamageDeposit}`));
+    assert.match(script, new RegExp(`const depositRate = ${BOOKING_RULES.depositRate}`));
+    assert.match(script, new RegExp(`const fullPaymentWindowDays = ${BOOKING_RULES.fullPaymentWindowDays}`));
+    assert.match(script, new RegExp(`const maxGuests = ${BOOKING_RULES.maxGuests}`));
+    assert.match(script, new RegExp(`rate: ${BOOKING_RULES.highSeasonWeeklyRate} / 7`));
+    assert.match(script, new RegExp(`rate: ${BOOKING_RULES.midSeasonNightlyRate}`));
+    assert.match(script, new RegExp(`reducedRate: ${BOOKING_RULES.midSeasonReducedNightlyRate}`));
+    assert.match(script, /stayTotal \* depositRate/);
+});

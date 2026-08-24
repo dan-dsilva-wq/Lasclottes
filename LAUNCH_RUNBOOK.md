@@ -84,6 +84,7 @@ Use Stripe test mode for all pre-launch tests. Do not submit a real card payment
 - [x] Typography and photographs are self-hosted, and Google Maps makes no request until a visitor explicitly chooses to load it; this is checked in English, French, Dutch, desktop and mobile layouts.
 - [x] Booking forms submit only to the same-origin booking API; the obsolete third-party form fallback was removed and checkout remains disabled if the booking script does not initialize.
 - [x] Optional guest messages are limited, server-normalized, stored with the booking and safely included in both guest and owner confirmation emails.
+- [x] English, French and Dutch price tables use GBP consistently, omit obsolete crossed-out rates and are regression-checked against the server and browser quote rules.
 - [x] Executable JavaScript is served from local files and the production content-security policy no longer permits inline scripts.
 - [x] Keyboard navigation, focus visibility, labels, alternative text, headings and colour contrast pass the automated/static checks.
 - [x] There are no browser console errors, mixed-content requests, missing files or broken internal anchors.

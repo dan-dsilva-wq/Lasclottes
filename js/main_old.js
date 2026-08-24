@@ -586,6 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const stripeCheckoutEndpoint = bookingForm.dataset.stripeCheckoutEndpoint || '/api/create-stripe-checkout';
         const touristTaxEurPerAdultNight = 1.41;
         const refundableDamageDeposit = 500;
+        const depositRate = 0.25;
         const fullPaymentWindowDays = 60;
         const maxGuests = 12;
         const availabilityStatus = document.getElementById('availabilityStatus');
@@ -762,7 +763,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     amountDueNow = stayTotal + damageDeposit;
                     balanceDueLater = 0;
                 } else {
-                    amountDueNow = stayTotal * 0.25;
+                    amountDueNow = stayTotal * depositRate;
                     balanceDueLater = (stayTotal - amountDueNow) + damageDeposit;
                 }
             }
