@@ -77,6 +77,7 @@ Use Stripe test mode for all pre-launch tests. Do not submit a real card payment
 - [x] Every referenced image and video loads from the hosted review deployment.
 - [x] A no-secret temporary Cloudflare Workers deployment passed HTTPS page, language, activity, redirect, 404, security-header, gallery and video checks on Cloudflare's real network. A permanent account deployment with test service secrets remains pending.
 - [x] Full-screen gallery links use web-sized images and the 100-second walkthrough uses a 640x360 web copy instead of downloading 5–24 MiB originals.
+- [x] Typography and photographs are self-hosted, and Google Maps makes no request until a visitor explicitly chooses to load it; this is checked in English, French, Dutch, desktop and mobile layouts.
 - [x] Keyboard navigation, focus visibility, labels, alternative text, headings and colour contrast pass the automated/static checks.
 - [x] There are no browser console errors, mixed-content requests, missing files or broken internal anchors.
 - [x] The custom 404 page is returned with HTTP 404, not 200.

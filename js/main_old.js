@@ -494,20 +494,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
 
-    /* ---- Lazy Load Iframes ---- */
-    const iframeObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const iframe = entry.target;
-                if (iframe.dataset.src) {
-                    iframe.src = iframe.dataset.src;
-                    iframeObserver.unobserve(iframe);
-                }
-            }
-        });
-    }, { rootMargin: '200px' });
+    /* ---- Load Google Maps only after a visitor explicitly chooses it ---- */
+    document.querySelectorAll('.map-consent[data-map-src]').forEach(map => {
+        const loadButton = map.querySelector('.map-consent__load');
+        if (!loadButton) return;
 
-    document.querySelectorAll('iframe[data-src]').forEach(iframe => iframeObserver.observe(iframe));
+        loadButton.addEventListener('click', () => {
+            if (map.dataset.loaded === '1') return;
+
+            const iframe = document.createElement('iframe');
+            iframe.src = map.dataset.mapSrc;
+            iframe.title = map.dataset.mapTitle || 'Lasclottes on Google Maps';
+            iframe.loading = 'lazy';
+            iframe.referrerPolicy = 'no-referrer';
+            iframe.allowFullscreen = true;
+
+            map.replaceChildren(iframe);
+            map.dataset.loaded = '1';
+        }, { once: true });
+    });
 
     /* ---- Lazy background images for activity cards ---- */
     const activityCards = document.querySelectorAll('.activity-card[data-bg]');
