@@ -55,6 +55,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Stripe's successful test card marks the reservation paid exactly once, even if the webhook is retried.
 - [x] Stripe declined-card and expiry flows leave the booking unconfirmed and release the dates.
 - [ ] Define and test the owner-approved cancellation and refund workflow before launch.
+- [x] Record partial and full Stripe refund events for audit without automatically cancelling the booking or releasing its dates.
 - [x] The return page checks the server-side payment state; it never treats a URL visit alone as proof of payment.
 - [ ] The guest and the owner each receive one confirmation email containing dates, guests, amount paid, later balance/due date, tourist tax and contact details.
 - [ ] Failed email delivery is visible to the owner and retryable without creating a duplicate booking or charge.

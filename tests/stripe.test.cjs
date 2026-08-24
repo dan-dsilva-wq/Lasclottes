@@ -29,3 +29,17 @@ test('stale webhook signatures are rejected', () => {
         .digest('hex');
     assert.equal(verifyStripeSignature(body, `t=${timestamp},v1=${signature}`, secret), false);
 });
+
+test('refund events produce an audit record without deciding cancellation', async () => {
+    const { refundRecordFromCharge } = await import('../api/stripe-webhook.mjs');
+    assert.deepEqual(refundRecordFromCharge({
+        payment_intent: 'pi_test123',
+        amount_refunded: 82500,
+        refunded: true
+    }), {
+        paymentIntentId: 'pi_test123',
+        amountRefunded: 82500,
+        fullyRefunded: true
+    });
+    assert.throws(() => refundRecordFromCharge({ payment_intent: '', amount_refunded: -1 }));
+});

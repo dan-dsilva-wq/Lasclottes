@@ -27,6 +27,9 @@ CREATE TABLE IF NOT EXISTS bookings (
     stripe_checkout_session_id text UNIQUE,
     stripe_payment_intent_id text,
     paid_at timestamptz,
+    refund_status text,
+    refunded_amount_pence integer NOT NULL DEFAULT 0,
+    refunded_at timestamptz,
     created_at timestamptz NOT NULL DEFAULT now(),
     updated_at timestamptz NOT NULL DEFAULT now(),
     CHECK (departure > arrival),
@@ -35,6 +38,10 @@ CREATE TABLE IF NOT EXISTS bookings (
     CHECK (guests = adults + children),
     CHECK (amount_due_now_pence > 0)
 );
+
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS refund_status text;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS refunded_amount_pence integer NOT NULL DEFAULT 0;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS refunded_at timestamptz;
 
 DO $$
 BEGIN

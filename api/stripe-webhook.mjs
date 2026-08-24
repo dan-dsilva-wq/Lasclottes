@@ -8,7 +8,8 @@ const {
     beginWebhookEvent,
     cancelBooking,
     completeWebhookEvent,
-    failWebhookEvent
+    failWebhookEvent,
+    recordRefundForPaymentIntent
 } = databaseModule;
 const { bookingForSession, confirmPaidSession } = paymentsModule;
 const { verifyStripeSignature } = stripeModule;
@@ -20,6 +21,19 @@ const respond = (status, payload) => new Response(JSON.stringify(payload), {
         'Content-Type': 'application/json; charset=utf-8'
     }
 });
+
+export const refundRecordFromCharge = (charge) => {
+    const paymentIntentId = typeof charge?.payment_intent === 'string' ? charge.payment_intent : '';
+    const amountRefunded = Number(charge?.amount_refunded);
+    if (!/^pi_[A-Za-z0-9]+$/.test(paymentIntentId) || !Number.isInteger(amountRefunded) || amountRefunded < 0) {
+        throw new Error('Invalid Stripe refund event.');
+    }
+    return {
+        paymentIntentId,
+        amountRefunded,
+        fullyRefunded: charge?.refunded === true
+    };
+};
 
 export async function POST(request) {
     const webhookSecret = bookingConfig.stripeWebhookSecret();
@@ -62,6 +76,8 @@ export async function POST(request) {
         } else if (event.type === 'checkout.session.expired') {
             const booking = await bookingForSession(session);
             if (booking) await cancelBooking(booking.id, 'expired');
+        } else if (event.type === 'charge.refunded') {
+            await recordRefundForPaymentIntent(refundRecordFromCharge(session));
         }
         await completeWebhookEvent(event.id);
         return respond(200, { received: true });
