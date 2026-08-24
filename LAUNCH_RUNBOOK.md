@@ -8,6 +8,7 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - Development work is isolated on `codex/site-review-2026-08-24` and is automatically deployed to a Vercel preview.
 - The domain is registered at Wix and currently uses Wix nameservers.
 - Google Workspace email uses the domain's existing MX and TXT records. Those records must not be removed or replaced during the website cutover.
+- Vercel is the selected host, matching the existing VXVO deployment workflow. The public domain will still be `lasclottes.com`.
 - Online payments remain disabled until the database, Stripe, email delivery, webhook and owner approvals are all complete.
 
 ## Owner decisions required before payments are enabled
@@ -24,11 +25,11 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 
 ## Vercel project gates
 
-- [ ] Sign in to the Vercel project dashboard.
-- [ ] In Project Settings > Git, enable Git Large File Storage (LFS), then redeploy the review branch. Confirm that the logo, photographs and video render as media rather than LFS pointer text.
-- [ ] Provision Stripe through the project's Vercel Marketplace integration in test/sandbox mode first.
-- [ ] Provision Neon Postgres through the project's Vercel Marketplace integration.
-- [ ] Provision Resend through the project's Vercel Marketplace integration.
+- [x] Sign in to the Vercel project dashboard.
+- [x] In Project Settings > Git, enable Git Large File Storage (LFS), redeploy the review branch, and confirm hosted media contains real image bytes.
+- [x] Provision the `lasclottes-stripe-test` Stripe sandbox for Preview and Development only. Its credentials use the `TEST_` prefix.
+- [x] Provision the `lasclottes-bookings` Neon Free database in Frankfurt for Preview and Development only, with preview branching and the `BOOKINGS_` prefix.
+- [x] Provision the `lasclottes-email-test` Resend Free service in Ireland for Preview and Development only, with the `TEST_EMAIL_` prefix.
 - [ ] Pull the provisioned development environment locally without displaying or committing secret values.
 - [ ] Apply the reviewed database migration and seed the authoritative blocked-date ranges once.
 - [ ] Verify the email-sending domain using only the DNS records supplied by Resend. Preserve all Google Workspace MX, SPF and verification records.

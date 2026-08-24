@@ -586,6 +586,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const availabilityStatus = document.getElementById('availabilityStatus');
         let availabilityState = 'loading';
         let blockedDateRanges = [];
+        let checkoutPayloadSignature = '';
+        let checkoutRequestId = '';
+
+        const newCheckoutRequestId = () => {
+            if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+            const bytes = new Uint8Array(16);
+            window.crypto.getRandomValues(bytes);
+            return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+        };
 
         const formatGbp = (value) => {
             if (!Number.isFinite(value) || value <= 0) return '-';
@@ -835,7 +844,14 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDepartureMin();
         calculateQuote();
 
-        fetch('/data/availability.json', { cache: 'no-store' })
+        const fetchAvailability = () => fetch('/api/availability', { cache: 'no-store' })
+            .then((response) => {
+                if (!response.ok) throw new Error('Live availability request failed');
+                return response;
+            })
+            .catch(() => fetch('/data/availability.json', { cache: 'no-store' }));
+
+        fetchAvailability()
             .then((response) => {
                 if (!response.ok) throw new Error('Availability request failed');
                 return response.json();
@@ -864,38 +880,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 calculateQuote();
             });
-
-        const sendBookingDetails = () => {
-            const detailsEndpoint = bookingForm.getAttribute('action');
-            if (!detailsEndpoint || !detailsEndpoint.includes('formsubmit.co')) return;
-
-            const formData = new FormData(bookingForm);
-            const detailsPayload = new URLSearchParams();
-            formData.forEach((value, key) => {
-                if (typeof value === 'string') detailsPayload.append(key, value);
-            });
-
-            let beaconQueued = false;
-            if (navigator.sendBeacon) {
-                try {
-                    beaconQueued = navigator.sendBeacon(detailsEndpoint, detailsPayload);
-                } catch (_) {
-                    beaconQueued = false;
-                }
-            }
-
-            if (!beaconQueued) {
-                fetch(detailsEndpoint, {
-                    method: 'POST',
-                    body: detailsPayload,
-                    keepalive: true,
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                    }
-                }).catch(() => {});
-            }
-        };
 
         bookingForm.addEventListener('submit', async (e) => {
             const quote = calculateQuote();
@@ -977,6 +961,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     lang: pageLang.slice(0, 2)
                 };
 
+                const signature = JSON.stringify([
+                    payload.firstName,
+                    payload.lastName,
+                    payload.email,
+                    payload.phone,
+                    payload.arrivalDate,
+                    payload.departureDate,
+                    payload.adults,
+                    payload.children
+                ]);
+                if (signature !== checkoutPayloadSignature) {
+                    checkoutPayloadSignature = signature;
+                    checkoutRequestId = newCheckoutRequestId();
+                }
+                payload.requestId = checkoutRequestId;
+
                 const response = await fetch(stripeCheckoutEndpoint, {
                     method: 'POST',
                     headers: {
@@ -997,8 +997,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error(message);
                 }
 
-                // Send the enquiry only after a valid, server-priced Stripe session exists.
-                sendBookingDetails();
                 window.location.assign(data.url);
             } catch (error) {
                 if (formStatus) {
