@@ -2,9 +2,10 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const { checkoutFingerprint, requestAddress } = require('../lib/abuse');
+const { configuredOrigins, requestOriginAllowed, trustedOrigin } = require('../lib/config');
 const bookingStatusHandler = require('../api/booking-status');
 const handler = require('../api/create-stripe-checkout');
-const { trustedOrigin } = require('../lib/config');
 
 const makeResponse = () => {
     const state = { status: null, body: null };
@@ -78,6 +79,51 @@ test('preview checkout returns to the branch that created it', () => {
             else process.env[name] = value;
         }
     }
+});
+
+test('checkout accepts only configured site origins', () => {
+    const previous = {
+        PUBLIC_SITE_URL: process.env.PUBLIC_SITE_URL,
+        SITE_URL: process.env.SITE_URL,
+        VERCEL_BRANCH_URL: process.env.VERCEL_BRANCH_URL,
+        VERCEL_URL: process.env.VERCEL_URL,
+        VERCEL_PROJECT_PRODUCTION_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL
+    };
+    try {
+        process.env.PUBLIC_SITE_URL = 'https://lasclottes.com';
+        process.env.VERCEL_BRANCH_URL = 'review.example.vercel.app';
+        process.env.VERCEL_URL = 'deployment.example.vercel.app';
+        delete process.env.SITE_URL;
+        delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
+        assert.deepEqual(configuredOrigins(), [
+            'https://lasclottes.com',
+            'https://review.example.vercel.app',
+            'https://deployment.example.vercel.app'
+        ]);
+        assert.equal(requestOriginAllowed('https://review.example.vercel.app'), true);
+        assert.equal(requestOriginAllowed('https://evil.example'), false);
+        assert.equal(requestOriginAllowed('null'), false);
+    } finally {
+        for (const [name, value] of Object.entries(previous)) {
+            if (value === undefined) delete process.env[name];
+            else process.env[name] = value;
+        }
+    }
+});
+
+test('checkout rate-limit fingerprints do not retain visitor addresses', () => {
+    const request = {
+        headers: {
+            'cf-connecting-ip': '203.0.113.42',
+            'user-agent': 'Lasclottes test browser'
+        }
+    };
+    const fingerprint = checkoutFingerprint(request, 'test-secret');
+    assert.equal(requestAddress(request.headers), '203.0.113.42');
+    assert.match(fingerprint, /^[a-f0-9]{64}$/);
+    assert.equal(fingerprint.includes('203.0.113.42'), false);
+    assert.equal(checkoutFingerprint(request, 'test-secret'), fingerprint);
+    assert.notEqual(checkoutFingerprint(request, 'different-secret'), fingerprint);
 });
 
 test('booking dates stay ISO formatted when the database returns Date objects', () => {

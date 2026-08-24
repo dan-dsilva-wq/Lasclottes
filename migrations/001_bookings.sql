@@ -77,3 +77,10 @@ CREATE TABLE IF NOT EXISTS email_deliveries (
     updated_at timestamptz NOT NULL DEFAULT now(),
     UNIQUE (booking_id, kind)
 );
+
+CREATE TABLE IF NOT EXISTS booking_rate_limits (
+    fingerprint text PRIMARY KEY,
+    window_started_at timestamptz NOT NULL DEFAULT now(),
+    attempts integer NOT NULL DEFAULT 1,
+    updated_at timestamptz NOT NULL DEFAULT now()
+);

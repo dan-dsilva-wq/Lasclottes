@@ -7,11 +7,14 @@ const {
     publicReference,
     validateContact
 } = require('../lib/booking');
-const { config, trustedOrigin } = require('../lib/config');
+const { checkoutFingerprint } = require('../lib/abuse');
+const { config, requestOriginAllowed, trustedOrigin } = require('../lib/config');
 const {
     BookingConflictError,
+    BookingRateLimitError,
     DatabaseUnavailableError,
     cancelBooking,
+    consumeCheckoutAttempt,
     createBookingHold,
     markCheckoutPending
 } = require('../lib/database');
@@ -84,7 +87,8 @@ const handler = async (req, res) => {
     }
 
     const stripeSecretKey = config.stripeSecretKey();
-    if (!stripeSecretKey || !config.databaseUrl()) {
+    const stripeWebhookSecret = config.stripeWebhookSecret();
+    if (!stripeSecretKey || !stripeWebhookSecret || !config.databaseUrl()) {
         return json(res, 503, { error: 'Secure card checkout is not configured yet.' });
     }
 
@@ -106,6 +110,23 @@ const handler = async (req, res) => {
         origin = trustedOrigin();
     } catch (_) {
         return json(res, 503, { error: 'Secure card checkout is not configured yet.' });
+    }
+    if (!requestOriginAllowed(req.headers?.origin)) {
+        return json(res, 403, { error: 'This booking request did not come from the Lasclottes website.' });
+    }
+
+    try {
+        await consumeCheckoutAttempt(checkoutFingerprint(req, stripeWebhookSecret));
+    } catch (error) {
+        if (error instanceof BookingRateLimitError) {
+            res.setHeader('Retry-After', '900');
+            return json(res, 429, { error: error.message, code: error.code });
+        }
+        if (error instanceof DatabaseUnavailableError) {
+            return json(res, 503, { error: 'Live availability is temporarily unavailable.' });
+        }
+        console.error('Booking abuse protection failed.', error?.code || error?.name || 'Error');
+        return json(res, 503, { error: 'Secure card checkout is temporarily unavailable.' });
     }
 
     const idempotencyKey = normalizeRequestId(body.requestId);
