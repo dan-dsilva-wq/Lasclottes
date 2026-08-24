@@ -1,13 +1,14 @@
-# Exclude videos (not used on the site)
-Media/Videos
-
 # Exclude HEIC files (iOS format, not web compatible)
 *.heic
 *.HEIC
 
-# Exclude unused photo folders
-Media/New Images 2020
+# Exclude raw source video above Vercel's 100MB/file limit
+Media/Videos/org_0ed7af30e437593d_1589822473000.mp4
 
 # Exclude backup/archive files
 *.zip
 *.rar
+
+# Exclude local reference copies and experiments
+discarded/
+Lasclottes French Farmhouse*

@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap"></noscript>
     <link rel="preload" as="image" href="Media/optimized/media_site_files_lasclottes_pool_jpeg-w1280.webp">
-    <link rel="stylesheet" href="css/style_old.css">
+    <link rel="stylesheet" href="css/style_old.css?v=20260824">
 
     <script type="application/ld+json">
     {
@@ -94,6 +94,9 @@
             <a href="#gallery" class="nav__link">Gallery</a>
             <a href="#activities" class="nav__link">Activities</a>
             <a href="#pricing" class="nav__link">Pricing</a>
+            <a href="index.html" class="nav__link">English</a>
+            <a href="fr.html" class="nav__link">Français</a>
+            <a href="nl.html" class="nav__link">Nederlands</a>
             <a href="#contact" class="nav__cta">Book Now</a>
         </div>
     </header>
@@ -439,7 +442,7 @@
                 <p class="section-subtitle animate-on-scroll">A short walk-through video from the property and riverbank</p>
                 <div class="media-feature__card animate-on-scroll">
                     <video class="media-feature__video" controls preload="none" playsinline poster="Media/optimized/media_site_files_lasclottes_pool_jpeg-w1280.webp">
-                        <source src="Media/Videos/org_0ed7af30e437593d_1589822473000.mp4" type="video/mp4">
+                        <source src="Media/Videos/org_0ed7af30e437593d_1589822473000_web.mp4" type="video/mp4">
                         Your browser does not support HTML5 video.
                     </video>
                     <p class="media-feature__caption">Tip: Tap full-screen on mobile for the best viewing experience.</p>
@@ -602,7 +605,7 @@
 
                 <div class="pricing__terms animate-on-scroll">
                     <h3>Booking Terms</h3>
-                    <p>A 25% deposit secures your booking. The balance is due 8 weeks before arrival.</p>
+                    <p>A 25% deposit secures your booking when arrival is more than 60 days away. Within 60 days, full payment is due at booking. July and August are weekly Saturday-to-Saturday stays. Maximum occupancy is 12 guests.</p>
                 </div>
             </div>
         </section>
@@ -681,7 +684,7 @@
                 <div class="contact__grid animate-on-scroll">
                     <div class="contact__form-wrapper">
                         <h3>Reserve &amp; Pay</h3>
-                        <form class="contact-form" id="bookingForm" action="https://formsubmit.co/info@lasclottes.com" method="POST" data-wise-payment-url="REPLACE_WITH_YOUR_WISE_PAYMENT_LINK">
+                        <form class="contact-form" id="bookingForm" action="https://formsubmit.co/info@lasclottes.com" method="POST" data-stripe-checkout-endpoint="/api/create-stripe-checkout">
                             <input type="hidden" name="_subject" value="New Booking Request — Lasclottes">
                             <input type="hidden" name="_captcha" value="false">
                             <input type="hidden" name="_template" value="table">
@@ -690,6 +693,11 @@
                             <input type="hidden" name="total_guests" id="totalGuests" value="">
                             <input type="hidden" name="estimated_stay_total_gbp" id="estimatedStayTotal" value="">
                             <input type="hidden" name="estimated_deposit_gbp" id="estimatedDeposit" value="">
+                            <input type="hidden" name="tourist_tax_eur" id="touristTax" value="">
+                            <input type="hidden" name="damage_deposit_gbp" id="damageDeposit" value="">
+                            <input type="hidden" name="amount_due_now_gbp" id="amountDueNow" value="">
+                            <input type="hidden" name="balance_due_later_gbp" id="balanceDueLater" value="">
+                            <input type="hidden" name="payment_stage" id="paymentStage" value="">
                             <h4 style="margin-bottom: var(--space-xs); color: var(--color-primary);">Booking Details</h4>
                             <div class="form-row">
                                 <div class="form-group">
@@ -701,6 +709,7 @@
                                     <input type="date" id="departureDate" name="departure_date" required>
                                 </div>
                             </div>
+                            <p class="availability-status" id="availabilityStatus" role="status">Checking current availability…</p>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="adults">Number of Adults <span class="required">*</span></label>
@@ -736,7 +745,7 @@
                             <div class="form-group agreement-box">
                                 <label class="agreement-label" for="equipmentAgreement">
                                     <input type="checkbox" id="equipmentAgreement" name="equipment_agreement" required class="agreement-checkbox">
-                                    <span>I agree to check all equipment (pool, garden furniture, sports equipment, kitchen appliances, and all property facilities) before use and confirm that I accept responsibility for any damage caused during our stay. I understand that I am responsible for the supervision and safety of all children in my party at all times, including at the pool, river, and throughout the property grounds. <span class="required">*</span></span>
+                                    <span>I have read the <a href="booking-terms.html" target="_blank" rel="noopener">booking terms</a> and <a href="privacy.html" target="_blank" rel="noopener">privacy notice</a>. I agree to check all equipment before use, report problems promptly, and accept responsibility for damage caused by our party. I understand that I am responsible for supervising all children in my party at all times, including around the pool, river, and grounds. <span class="required">*</span></span>
                                 </label>
                             </div>
 
@@ -744,17 +753,19 @@
                                 <label for="message">Additional Message</label>
                                 <textarea id="message" name="message" rows="3" placeholder="Any special requests or questions&hellip;"></textarea>
                             </div>
-
                             <div class="booking-summary" aria-live="polite">
                                 <div class="booking-summary__line"><span>Nights</span><strong id="bookingNights">-</strong></div>
                                 <div class="booking-summary__line"><span>Total Guests</span><strong id="bookingGuests">-</strong></div>
                                 <div class="booking-summary__line"><span>Estimated Stay Total</span><strong id="bookingTotal">-</strong></div>
-                                <div class="booking-summary__line"><span>Deposit Due Now (25%)</span><strong id="bookingDeposit">-</strong></div>
-                                <p class="booking-summary__help">Pricing uses the season table on this page and updates as you complete your booking details.</p>
+                                <div class="booking-summary__line"><span>Tourist Tax (Adults 18+)</span><strong id="bookingTouristTax">-</strong></div>
+                                <div class="booking-summary__line"><span>Refundable Damage Deposit</span><strong id="bookingDamageDeposit">-</strong></div>
+                                <div class="booking-summary__line"><span id="bookingDepositLabel">Deposit Due Now (25%)</span><strong id="bookingDeposit">-</strong></div>
+                                <div class="booking-summary__line"><span id="bookingBalanceLabel">Balance Due 60 Days Before Arrival</span><strong id="bookingBalance">-</strong></div>
+                                <p class="booking-summary__help">Bookings made more than 60 days before arrival pay 25% now. Bookings within 60 days pay in full now. July and August stays must run Saturday to Saturday. The statutory tourist tax (&euro;1.41 per adult per night) is shown separately in euros and is not included in the GBP card figures; we will confirm how it is paid with your booking. The refundable &pound;500 damage deposit is included in the balance/full-payment figure. Maximum occupancy: 12 guests.</p>
                                 <p class="booking-summary__warning" id="bookingSummaryWarning"></p>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-lg form-submit" style="width: 100%;">Continue to Secure Payment</button>
-                            <p style="font-size: 0.8rem; text-align: center; margin-top: var(--space-xs); opacity: 0.7;">Your booking details are submitted first, then you are redirected to pay your 25% deposit securely via Wise.</p>
+                            <button type="submit" class="btn btn-primary btn-lg form-submit" style="width: 100%;">Continue to Secure Card Payment</button>
+                            <p style="font-size: 0.8rem; text-align: center; margin-top: var(--space-xs); opacity: 0.7;">When you continue, you go to secure Stripe card checkout for the amount due now shown above. Remaining balance is settled by bank transfer.</p>
                             <div class="form-status" id="formStatus" aria-live="polite"></div>
                         </form>
                     </div>
@@ -764,11 +775,15 @@
                             <h3>Contact Directly</h3>
                             <a href="tel:+447572017287" class="contact__phone">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-                                +44 7572 017 287
+                                +44 (0)7572 017 287 (English)
+                            </a>
+                            <a href="tel:+33645265319" class="contact__phone">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                                +33 6 45 26 53 19 (French)
                             </a>
                             <a href="https://wa.me/447572017287" class="btn btn-whatsapp" target="_blank" rel="noopener">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                                Message on WhatsApp
+                                Message on WhatsApp (English)
                             </a>
                         </div>
 
@@ -804,7 +819,8 @@
                 <div class="footer__contact">
                     <h4 class="footer__column-title">Contact</h4>
                     <ul class="footer__links">
-                        <li><a href="tel:+447572017287">+44 7572 017 287</a></li>
+                        <li><a href="tel:+447572017287">+44 (0)7572 017 287 (English)</a></li>
+                        <li><a href="tel:+33645265319">+33 6 45 26 53 19 (French)</a></li>
                         <li><a href="https://wa.me/447572017287">WhatsApp</a></li>
                         <li><a href="mailto:info@lasclottes.com">info@lasclottes.com</a></li>
                     </ul>
@@ -814,6 +830,8 @@
                 <div class="container footer__bottom-inner">
                     <p>&copy; 2026 Lasclottes. All rights reserved.</p>
                     <div class="footer__links">
+                        <a href="privacy.html">Privacy</a>
+                        <a href="booking-terms.html">Booking terms</a>
                         <a href="fr.html">Fran&ccedil;ais</a>
                         <a href="nl.html">Nederlands</a>
                     </div>
@@ -833,7 +851,7 @@
         </div>
     </div>
 
-    <script src="js/main_old.js"></script>
+    <script src="js/main_old.js?v=20260824"></script>
 </body>
 </html>
 

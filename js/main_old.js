@@ -543,10 +543,26 @@ document.addEventListener('DOMContentLoaded', () => {
         activityCards.forEach(card => activityCardObserver.observe(card));
     }
 
+    /* ---- Activity information freshness notice ---- */
+    const activityContainer = document.querySelector('.activity-content > .container');
+    if (activityContainer) {
+        const currentInfoNotice = document.createElement('p');
+        currentInfoNotice.className = 'activity-current-info';
+        currentInfoNotice.textContent = 'Opening times, availability and prices can change. Please check the linked official website before travelling.';
+        activityContainer.appendChild(currentInfoNotice);
+    }
+
     /* ---- Form Validation ---- */
     const bookingForm = document.getElementById('bookingForm') || document.getElementById('contactForm');
     const formStatus = document.getElementById('formStatus');
-    const isFrenchPage = document.documentElement.lang?.toLowerCase().startsWith('fr');
+    const pageLang = document.documentElement.lang?.toLowerCase() || 'en';
+    const isFrenchPage = pageLang.startsWith('fr');
+    const isDutchPage = pageLang.startsWith('nl');
+    const i18n = (en, fr, nl) => {
+        if (isFrenchPage) return fr;
+        if (isDutchPage) return nl;
+        return en;
+    };
 
     if (bookingForm) {
         const arrivalInput = document.getElementById('arrivalDate');
@@ -557,23 +573,62 @@ document.addEventListener('DOMContentLoaded', () => {
         const guestsOutput = document.getElementById('bookingGuests');
         const totalOutput = document.getElementById('bookingTotal');
         const depositOutput = document.getElementById('bookingDeposit');
+        const depositLabelOutput = document.getElementById('bookingDepositLabel');
+        const touristTaxOutput = document.getElementById('bookingTouristTax');
+        const damageDepositOutput = document.getElementById('bookingDamageDeposit');
+        const balanceOutput = document.getElementById('bookingBalance');
+        const balanceLabelOutput = document.getElementById('bookingBalanceLabel');
         const summaryWarning = document.getElementById('bookingSummaryWarning');
         const hiddenNights = document.getElementById('stayNights');
         const hiddenGuests = document.getElementById('totalGuests');
         const hiddenTotal = document.getElementById('estimatedStayTotal');
         const hiddenDeposit = document.getElementById('estimatedDeposit');
-        const redirectField = document.getElementById('formRedirect');
-        const wiseBaseUrl = bookingForm.dataset.wisePaymentUrl || '';
+        const hiddenTouristTax = document.getElementById('touristTax');
+        const hiddenDamageDeposit = document.getElementById('damageDeposit');
+        const hiddenDueNow = document.getElementById('amountDueNow');
+        const hiddenBalanceLater = document.getElementById('balanceDueLater');
+        const hiddenPaymentStage = document.getElementById('paymentStage');
+        const agreementInput = document.getElementById('equipmentAgreement');
+        const submitButton = bookingForm.querySelector('button[type="submit"]');
+        const stripeCheckoutEndpoint = bookingForm.dataset.stripeCheckoutEndpoint || '/api/create-stripe-checkout';
+        const touristTaxEurPerAdultNight = 1.41;
+        const refundableDamageDeposit = 500;
+        const fullPaymentWindowDays = 60;
+        const maxGuests = 12;
+        const availabilityStatus = document.getElementById('availabilityStatus');
+        let availabilityState = 'loading';
+        let blockedDateRanges = [];
 
         const formatGbp = (value) => {
             if (!Number.isFinite(value) || value <= 0) return '-';
-            return `\u00A3${Math.round(value).toLocaleString('en-GB')}`;
+            return `\u00A3${value.toLocaleString('en-GB', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })}`;
+        };
+
+        const formatEur = (value) => {
+            if (!Number.isFinite(value) || value <= 0) return '-';
+            return `\u20AC${value.toLocaleString('en-GB', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })}`;
         };
 
         const toDate = (value) => {
             if (!value) return null;
-            const date = new Date(value);
-            return Number.isNaN(date.valueOf()) ? null : date;
+            const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+            if (!match) return null;
+            const year = Number(match[1]);
+            const month = Number(match[2]);
+            const day = Number(match[3]);
+            const date = new Date(Date.UTC(year, month - 1, day));
+            if (
+                date.getUTCFullYear() !== year
+                || date.getUTCMonth() !== month - 1
+                || date.getUTCDate() !== day
+            ) return null;
+            return date;
         };
 
         const seasonForStay = (arrivalDate, departureDate) => {
@@ -583,14 +638,31 @@ document.addEventListener('DOMContentLoaded', () => {
             const months = new Set();
             const cursor = new Date(arrivalDate);
             while (cursor < departureDate) {
-                months.add(cursor.getMonth());
-                cursor.setDate(cursor.getDate() + 1);
+                months.add(cursor.getUTCMonth());
+                cursor.setUTCDate(cursor.getUTCDate() + 1);
             }
             const hasClosedMonth = [...months].some((month) => ![4, 5, 6, 7, 8].includes(month));
             if (hasClosedMonth) return { code: 'closed', minNights: 0, rate: 0, label: 'Closed' };
             const hasHighSeasonMonth = [...months].some((month) => [6, 7].includes(month));
-            if (hasHighSeasonMonth) return { code: 'high', minNights: 7, rate: 3300 / 7, label: 'High Season' };
+            if (hasHighSeasonMonth) {
+                return {
+                    code: 'high',
+                    minNights: 7,
+                    rate: 3300 / 7,
+                    label: 'High Season',
+                    requiresSaturdayTurnover: true
+                };
+            }
             return { code: 'mid', minNights: 4, rate: 250, reducedRate: 200, label: 'Spring & Autumn' };
+        };
+
+        const unavailableRangeForStay = (arrivalDate, departureDate) => {
+            if (!arrivalDate || !departureDate || departureDate <= arrivalDate) return null;
+            return blockedDateRanges.find((range) => {
+                const blockStart = toDate(range.start);
+                const blockEnd = toDate(range.end);
+                return blockStart && blockEnd && arrivalDate < blockEnd && departureDate > blockStart;
+            }) || null;
         };
 
         const calculateQuote = () => {
@@ -602,46 +674,157 @@ document.addEventListener('DOMContentLoaded', () => {
             const nights = (arrivalDate && departureDate) ? Math.round((departureDate - arrivalDate) / (1000 * 60 * 60 * 24)) : 0;
             const season = seasonForStay(arrivalDate, departureDate);
 
-            let total = 0;
-            let deposit = 0;
+            let stayTotal = 0;
+            let amountDueNow = 0;
+            let balanceDueLater = 0;
+            let touristTax = 0;
+            let damageDeposit = 0;
             let warning = '';
+            let daysUntilArrival = null;
+            let withinFullPaymentWindow = false;
+            let validHighSeasonPattern = true;
+            const unavailableRange = unavailableRangeForStay(arrivalDate, departureDate);
+
+            if (arrivalDate) {
+                const today = toDate(new Date().toISOString().slice(0, 10));
+                daysUntilArrival = Math.ceil((arrivalDate - today) / (1000 * 60 * 60 * 24));
+                withinFullPaymentWindow = daysUntilArrival <= fullPaymentWindowDays;
+            }
+
+            if (season.code === 'high' && arrivalDate && departureDate) {
+                validHighSeasonPattern = arrivalDate.getUTCDay() === 6
+                    && departureDate.getUTCDay() === 6
+                    && nights % 7 === 0;
+            }
 
             if (season.code === 'closed') {
-                warning = isFrenchPage
-                    ? 'Hors saison : octobre \u00E0 avril non disponible actuellement.'
-                    : 'Out of season: October to April is currently closed.';
+                warning = i18n(
+                    'Out of season: October to April is currently closed.',
+                    'Hors saison : octobre \u00E0 avril non disponible actuellement.',
+                    'Buiten het seizoen: oktober tot april is momenteel gesloten.'
+                );
             } else if (season.code === 'invalid') {
                 warning = '';
+            } else if (availabilityState === 'loading') {
+                warning = i18n(
+                    'Checking live availability…',
+                    'Vérification des disponibilités…',
+                    'Beschikbaarheid controleren…'
+                );
+            } else if (availabilityState === 'error') {
+                warning = i18n(
+                    'Availability could not be checked. Please contact us before booking.',
+                    'Les disponibilités ne peuvent pas être vérifiées. Merci de nous contacter avant de réserver.',
+                    'De beschikbaarheid kon niet worden gecontroleerd. Neem contact met ons op voordat u boekt.'
+                );
+            } else if (unavailableRange) {
+                warning = i18n(
+                    'Those dates are already booked or unavailable. Please choose different dates.',
+                    'Ces dates sont déjà réservées ou indisponibles. Merci d’en choisir d’autres.',
+                    'Deze datums zijn al geboekt of niet beschikbaar. Kies andere datums.'
+                );
+            } else if (guests > maxGuests) {
+                warning = i18n(
+                    `Maximum occupancy is ${maxGuests} guests.`,
+                    `La capacit\u00E9 maximale est de ${maxGuests} personnes.`,
+                    `De maximale bezetting is ${maxGuests} gasten.`
+                );
             } else if (nights < season.minNights) {
-                warning = isFrenchPage
-                    ? `S\u00E9jour minimum : ${season.minNights} nuits pour cette p\u00E9riode.`
-                    : `Minimum stay: ${season.minNights} nights for this period.`;
+                warning = i18n(
+                    `Minimum stay: ${season.minNights} nights for this period.`,
+                    `S\u00E9jour minimum : ${season.minNights} nuits pour cette p\u00E9riode.`,
+                    `Minimaal verblijf: ${season.minNights} nachten voor deze periode.`
+                );
+            } else if (season.code === 'high' && !validHighSeasonPattern) {
+                warning = i18n(
+                    'July and August bookings must run Saturday to Saturday (weekly blocks).',
+                    'En juillet et ao\u00FBt, les s\u00E9jours doivent aller du samedi au samedi (par semaines).',
+                    'Boekingen in juli en augustus moeten van zaterdag tot zaterdag lopen (wekelijkse blokken).'
+                );
             } else if (guests < 1) {
-                warning = isFrenchPage
-                    ? 'Ajoutez au moins un adulte pour obtenir un tarif.'
-                    : 'Add at least one adult to calculate pricing.';
+                warning = i18n(
+                    'Add at least one adult to calculate pricing.',
+                    'Ajoutez au moins un adulte pour obtenir un tarif.',
+                    'Voeg minimaal één volwassene toe om de prijs te berekenen.'
+                );
             } else {
                 if (season.code === 'mid') {
                     const nightlyRate = guests <= 6 ? season.reducedRate : season.rate;
-                    total = nightlyRate * nights;
+                    stayTotal = nightlyRate * nights;
                 } else {
-                    total = season.rate * nights;
+                    stayTotal = season.rate * nights;
                 }
-                deposit = total * 0.25;
+                damageDeposit = refundableDamageDeposit;
+                touristTax = adults * nights * touristTaxEurPerAdultNight;
+                if (withinFullPaymentWindow) {
+                    amountDueNow = stayTotal + damageDeposit;
+                    balanceDueLater = 0;
+                } else {
+                    amountDueNow = stayTotal * 0.25;
+                    balanceDueLater = (stayTotal - amountDueNow) + damageDeposit;
+                }
             }
 
             if (nightsOutput) nightsOutput.textContent = nights > 0 ? String(nights) : '-';
             if (guestsOutput) guestsOutput.textContent = guests > 0 ? String(guests) : '-';
-            if (totalOutput) totalOutput.textContent = formatGbp(total);
-            if (depositOutput) depositOutput.textContent = formatGbp(deposit);
+            if (totalOutput) totalOutput.textContent = formatGbp(stayTotal);
+            if (touristTaxOutput) touristTaxOutput.textContent = formatEur(touristTax);
+            if (damageDepositOutput) damageDepositOutput.textContent = formatGbp(damageDeposit);
+            if (depositOutput) depositOutput.textContent = formatGbp(amountDueNow);
+            if (balanceOutput) balanceOutput.textContent = formatGbp(balanceDueLater);
+            if (depositLabelOutput) {
+                depositLabelOutput.textContent = withinFullPaymentWindow
+                    ? i18n(
+                        'Full Amount Due Now',
+                        'Montant Total à Régler Maintenant',
+                        'Volledig Bedrag Nu Verschuldigd'
+                    )
+                    : i18n(
+                        'Deposit Due Now (25%)',
+                        'Acompte à Régler Maintenant (25%)',
+                        'Aanbetaling Nu Verschuldigd (25%)'
+                    );
+            }
+            if (balanceLabelOutput) {
+                balanceLabelOutput.textContent = i18n(
+                    `Balance Due ${fullPaymentWindowDays} Days Before Arrival`,
+                    `Solde dû ${fullPaymentWindowDays} jours avant l'arrivée`,
+                    `Restsaldo ${fullPaymentWindowDays} dagen voor aankomst verschuldigd`
+                );
+            }
             if (summaryWarning) summaryWarning.textContent = warning;
 
             if (hiddenNights) hiddenNights.value = nights > 0 ? String(nights) : '';
             if (hiddenGuests) hiddenGuests.value = guests > 0 ? String(guests) : '';
-            if (hiddenTotal) hiddenTotal.value = total > 0 ? total.toFixed(2) : '';
-            if (hiddenDeposit) hiddenDeposit.value = deposit > 0 ? deposit.toFixed(2) : '';
+            if (hiddenTotal) hiddenTotal.value = stayTotal > 0 ? stayTotal.toFixed(2) : '';
+            if (hiddenDeposit) hiddenDeposit.value = amountDueNow > 0 ? amountDueNow.toFixed(2) : '';
+            if (hiddenTouristTax) hiddenTouristTax.value = touristTax > 0 ? touristTax.toFixed(2) : '';
+            if (hiddenDamageDeposit) hiddenDamageDeposit.value = damageDeposit > 0 ? damageDeposit.toFixed(2) : '';
+            if (hiddenDueNow) hiddenDueNow.value = amountDueNow > 0 ? amountDueNow.toFixed(2) : '';
+            if (hiddenBalanceLater) hiddenBalanceLater.value = balanceDueLater > 0 ? balanceDueLater.toFixed(2) : '';
+            if (hiddenPaymentStage) {
+                hiddenPaymentStage.value = withinFullPaymentWindow
+                    ? 'full_payment_now'
+                    : 'deposit_now_balance_later';
+            }
 
-            return { arrivalDate, departureDate, adults, children, guests, nights, season, total, deposit, warning };
+            return {
+                arrivalDate,
+                departureDate,
+                adults,
+                children,
+                guests,
+                nights,
+                season,
+                stayTotal,
+                amountDueNow,
+                balanceDueLater,
+                touristTax,
+                damageDeposit,
+                warning,
+                daysUntilArrival,
+                withinFullPaymentWindow
+            };
         };
 
         const updateDepartureMin = () => {
@@ -664,54 +847,185 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDepartureMin();
         calculateQuote();
 
-        bookingForm.addEventListener('submit', (e) => {
+        fetch('/data/availability.json', { cache: 'no-store' })
+            .then((response) => {
+                if (!response.ok) throw new Error('Availability request failed');
+                return response.json();
+            })
+            .then((data) => {
+                if (!Array.isArray(data.blocked)) throw new Error('Availability data is invalid');
+                blockedDateRanges = data.blocked;
+                availabilityState = 'ready';
+                if (availabilityStatus) {
+                    availabilityStatus.textContent = i18n(
+                        `Availability last checked ${data.updated}. Your chosen dates are checked automatically.`,
+                        `Disponibilités mises à jour le ${data.updated}. Les dates choisies sont vérifiées automatiquement.`,
+                        `Beschikbaarheid bijgewerkt op ${data.updated}. De gekozen datums worden automatisch gecontroleerd.`
+                    );
+                }
+                calculateQuote();
+            })
+            .catch(() => {
+                availabilityState = 'error';
+                if (availabilityStatus) {
+                    availabilityStatus.textContent = i18n(
+                        'Availability is temporarily unavailable. Please contact us before booking.',
+                        'Les disponibilités sont temporairement indisponibles. Merci de nous contacter avant de réserver.',
+                        'De beschikbaarheid is tijdelijk niet beschikbaar. Neem contact met ons op voordat u boekt.'
+                    );
+                }
+                calculateQuote();
+            });
+
+        const sendBookingDetails = () => {
+            const detailsEndpoint = bookingForm.getAttribute('action');
+            if (!detailsEndpoint || !detailsEndpoint.includes('formsubmit.co')) return;
+
+            const formData = new FormData(bookingForm);
+            const detailsPayload = new URLSearchParams();
+            formData.forEach((value, key) => {
+                if (typeof value === 'string') detailsPayload.append(key, value);
+            });
+
+            let beaconQueued = false;
+            if (navigator.sendBeacon) {
+                try {
+                    beaconQueued = navigator.sendBeacon(detailsEndpoint, detailsPayload);
+                } catch (_) {
+                    beaconQueued = false;
+                }
+            }
+
+            if (!beaconQueued) {
+                fetch(detailsEndpoint, {
+                    method: 'POST',
+                    body: detailsPayload,
+                    keepalive: true,
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                    }
+                }).catch(() => {});
+            }
+        };
+
+        bookingForm.addEventListener('submit', async (e) => {
             const quote = calculateQuote();
 
             if (quote.departureDate && quote.arrivalDate && quote.departureDate <= quote.arrivalDate) {
                 e.preventDefault();
                 if (formStatus) {
-                    formStatus.textContent = isFrenchPage
-                        ? "La date de d\u00E9part doit \u00EAtre post\u00E9rieure \u00E0 la date d'arriv\u00E9e."
-                        : 'Departure date must be after arrival date.';
+                    formStatus.textContent = i18n(
+                        'Departure date must be after arrival date.',
+                        "La date de d\u00E9part doit \u00EAtre post\u00E9rieure \u00E0 la date d'arriv\u00E9e.",
+                        'Vertrekdatum moet na de aankomstdatum liggen.'
+                    );
                     formStatus.className = 'form-status error';
                 }
                 return;
             }
 
-            if (quote.warning || quote.total <= 0 || quote.deposit <= 0) {
+            if (quote.warning || quote.stayTotal <= 0 || quote.amountDueNow <= 0) {
                 e.preventDefault();
                 if (formStatus) {
-                    formStatus.textContent = quote.warning || (isFrenchPage
-                        ? 'Merci de compl\u00E9ter les dates et le nombre de personnes.'
-                        : 'Please complete dates and guest details first.');
+                    formStatus.textContent = quote.warning || i18n(
+                        'Please complete dates and guest details first.',
+                        'Merci de compl\u00E9ter les dates et le nombre de personnes.',
+                        'Vul eerst de datums en gastgegevens in.'
+                    );
                     formStatus.className = 'form-status error';
                 }
                 return;
             }
 
-            const wiseReady = Boolean(wiseBaseUrl) && !wiseBaseUrl.includes('REPLACE_WITH_YOUR_WISE_PAYMENT_LINK');
-
-            if (redirectField && wiseReady) {
-                try {
-                    const paymentUrl = new URL(wiseBaseUrl);
-                    paymentUrl.searchParams.set('amount', quote.deposit.toFixed(2));
-                    paymentUrl.searchParams.set('currency', 'GBP');
-                    paymentUrl.searchParams.set('source', 'website-booking');
-                    redirectField.value = paymentUrl.toString();
-                } catch (_) {
-                    redirectField.value = wiseBaseUrl;
+            if (!stripeCheckoutEndpoint) {
+                e.preventDefault();
+                if (formStatus) {
+                    formStatus.textContent = i18n(
+                        'Secure card checkout is unavailable. Please contact us directly.',
+                        'Le paiement carte n\u2019est pas disponible pour le moment. Merci de nous contacter directement.',
+                        'Beveiligde kaartbetaling is momenteel niet beschikbaar. Neem rechtstreeks contact met ons op.'
+                    );
+                    formStatus.className = 'form-status error';
                 }
+                return;
+            }
+
+            e.preventDefault();
+
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.setAttribute('aria-busy', 'true');
             }
 
             if (formStatus) {
-                formStatus.textContent = wiseReady
-                    ? (isFrenchPage
-                        ? 'Envoi des d\u00E9tails puis redirection vers le paiement s\u00E9curis\u00E9...'
-                        : 'Submitting details and redirecting to secure payment...')
-                    : (isFrenchPage
-                        ? 'Envoi de votre demande... (ajoutez votre lien Wise dans le formulaire pour activer la redirection paiement instantan\u00E9e).'
-                        : 'Sending your request... (add your Wise payment link in the form to enable instant payment redirect).');
+                formStatus.textContent = i18n(
+                    'Redirecting to secure Stripe payment...',
+                    'Redirection vers le paiement s\u00E9curis\u00E9 Stripe...',
+                    'U wordt doorgestuurd naar de beveiligde Stripe-betaling...'
+                );
                 formStatus.className = 'form-status sending';
+            }
+
+            try {
+                const payload = {
+                    amountDueNow: quote.amountDueNow,
+                    stayTotal: quote.stayTotal,
+                    balanceDueLater: quote.balanceDueLater,
+                    touristTaxEur: quote.touristTax,
+                    damageDeposit: quote.damageDeposit,
+                    paymentStage: quote.withinFullPaymentWindow ? 'full_payment_now' : 'deposit_now_balance_later',
+                    firstName: document.getElementById('firstName')?.value?.trim() || '',
+                    lastName: document.getElementById('lastName')?.value?.trim() || '',
+                    email: document.getElementById('email')?.value?.trim() || '',
+                    phone: document.getElementById('phone')?.value?.trim() || '',
+                    arrivalDate: arrivalInput?.value || '',
+                    departureDate: departureInput?.value || '',
+                    adults: quote.adults,
+                    children: quote.children,
+                    guests: quote.guests,
+                    nights: quote.nights,
+                    agreementAccepted: Boolean(agreementInput?.checked),
+                    lang: pageLang.slice(0, 2)
+                };
+
+                const response = await fetch(stripeCheckoutEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || !data.url) {
+                    const message = data.code === 'payments_disabled'
+                        ? i18n(
+                            'Online payments are being prepared. Please contact us directly to reserve these dates.',
+                            'Le paiement en ligne est en cours de préparation. Merci de nous contacter directement pour réserver ces dates.',
+                            'Online betalen wordt voorbereid. Neem rechtstreeks contact met ons op om deze datums te reserveren.'
+                        )
+                        : (data.error || `Checkout setup failed (${response.status})`);
+                    throw new Error(message);
+                }
+
+                // Send the enquiry only after a valid, server-priced Stripe session exists.
+                sendBookingDetails();
+                window.location.assign(data.url);
+            } catch (error) {
+                if (formStatus) {
+                    const genericMessage = i18n(
+                        'Could not start secure card checkout. Please try again or contact us directly.',
+                        'Impossible de d\u00E9marrer le paiement carte s\u00E9curis\u00E9. Merci de r\u00E9essayer ou de nous contacter directement.',
+                        'De beveiligde kaartbetaling kon niet worden gestart. Probeer het opnieuw of neem direct contact met ons op.'
+                    );
+                    formStatus.textContent = error?.message || genericMessage;
+                    formStatus.className = 'form-status error';
+                }
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.removeAttribute('aria-busy');
+                }
             }
         });
     }

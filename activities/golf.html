@@ -32,7 +32,7 @@
         "primaryImageOfPage": "https://lasclottes.com/Media/external/golf_villeneuve_parcours2.jpg"
     }
     </script>
-    <link rel="stylesheet" href="../css/style_old.css">
+    <link rel="stylesheet" href="../css/style_old.css?v=20260824">
     <style>
         .activity-hero {
             position: relative;
@@ -100,6 +100,12 @@
             margin-bottom: var(--space-xs);
             font-size: 1.2rem;
         }
+        .course-card h3 a {
+            color: inherit;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
         .course-meta {
             color: var(--color-accent);
             font-weight: 600;
@@ -120,6 +126,10 @@
         .course-card .course-details span {
             display: block;
             margin-bottom: 4px;
+        }
+        .course-card__cta {
+            margin-top: var(--space-sm);
+            width: fit-content;
         }
         .info-grid {
             display: grid;
@@ -211,7 +221,7 @@
 
             <div class="course-grid">
                 <div class="course-card">
-                    <h3>Golf de Villeneuve-sur-Lot</h3>
+                    <h3><a href="https://www.vslgolf.com/" target="_blank" rel="noopener">Golf de Villeneuve-sur-Lot</a></h3>
                     <p class="course-meta">15&ndash;20 minutes from Lasclottes</p>
                     <p>The closest course and a real gem. An 18-hole, Par 72 layout set in beautiful rolling countryside with mature trees and water features. Well-maintained and welcoming to visitors.</p>
                     <div class="course-details">
@@ -219,10 +229,11 @@
                         <span><strong>Green fee:</strong> Approximately &euro;62&ndash;&euro;70</span>
                         <span><strong>Club hire:</strong> Available</span>
                     </div>
+                    <a href="https://www.vslgolf.com/" class="btn btn-outline course-card__cta" target="_blank" rel="noopener">Visit Course Website</a>
                 </div>
 
                 <div class="course-card">
-                    <h3>Golf de Barthe, Tombeboeuf</h3>
+                    <h3><a href="https://www.golfdebarthe.com/" target="_blank" rel="noopener">Golf de Barthe, Tombeboeuf</a></h3>
                     <p class="course-meta">25&ndash;30 minutes from Lasclottes</p>
                     <p>A charming 9-hole course in rolling countryside surrounded by farms and gentle hills. Excellent greens, water hazards on several holes, and a friendly, relaxed atmosphere. Very affordable and welcoming to visitors of all levels. Can be played twice for an 18-hole round.</p>
                     <div class="course-details">
@@ -230,10 +241,11 @@
                         <span><strong>Green fee:</strong> &euro;20&ndash;&euro;35</span>
                         <span><strong>Club hire:</strong> Available</span>
                     </div>
+                    <a href="https://www.golfdebarthe.com/" class="btn btn-outline course-card__cta" target="_blank" rel="noopener">Visit Course Website</a>
                 </div>
 
                 <div class="course-card">
-                    <h3>Albret Golf Experience, Barbaste</h3>
+                    <h3><a href="https://golf-albret.fr/" target="_blank" rel="noopener">Albret Golf Experience, Barbaste</a></h3>
                     <p class="course-meta">35&ndash;40 minutes from Lasclottes</p>
                     <p>A full 18-hole, Par 72 course set amid century-old oaks with panoramic views over the Buzet vineyards and bastide villages. Sandy soil means it's playable year-round. Recently revitalised with a bistro restaurant, hotel, and padel courts on site.</p>
                     <div class="course-details">
@@ -241,10 +253,11 @@
                         <span><strong>Green fee:</strong> &euro;34&ndash;&euro;60</span>
                         <span><strong>Club hire:</strong> Available</span>
                     </div>
+                    <a href="https://golf-albret.fr/" class="btn btn-outline course-card__cta" target="_blank" rel="noopener">Visit Course Website</a>
                 </div>
 
                 <div class="course-card">
-                    <h3>Golf d'Agen Bon-Encontre</h3>
+                    <h3><a href="https://golfagen1983.wixsite.com/golfagen" target="_blank" rel="noopener">Golf d'Agen Bon-Encontre</a></h3>
                     <p class="course-meta">30&ndash;35 minutes from Lasclottes</p>
                     <p>A hilly 9-hole course on high ground overlooking the Garonne valley near Agen. Suitable for all levels, with a driving range, putting green, restaurant, and pro shop. A good option for a half-day round.</p>
                     <div class="course-details">
@@ -252,10 +265,11 @@
                         <span><strong>Green fee:</strong> &euro;34 (9 holes)</span>
                         <span><strong>Club hire:</strong> Available</span>
                     </div>
+                    <a href="https://golfagen1983.wixsite.com/golfagen" class="btn btn-outline course-card__cta" target="_blank" rel="noopener">Visit Course Website</a>
                 </div>
 
                 <div class="course-card">
-                    <h3>Golf du Ch&acirc;teau d'Allot, Agen-Bo&eacute;</h3>
+                    <h3><a href="https://www.golf-agen-allot.fr/" target="_blank" rel="noopener">Golf du Ch&acirc;teau d'Allot, Agen-Bo&eacute;</a></h3>
                     <p class="course-meta">40 minutes from Lasclottes</p>
                     <p>The top-rated course in the Agen area, expanded to 18 holes in 2024. A modern Par 70 layout alongside the Garonne with century-old cedars and mature parkland. Full practice facilities and clubhouse.</p>
                     <div class="course-details">
@@ -263,6 +277,7 @@
                         <span><strong>Green fee:</strong> &euro;39&ndash;&euro;60</span>
                         <span><strong>Club hire:</strong> Available</span>
                     </div>
+                    <a href="https://www.golf-agen-allot.fr/" class="btn btn-outline course-card__cta" target="_blank" rel="noopener">Visit Course Website</a>
                 </div>
             </div>
 
@@ -319,8 +334,11 @@
         </div>
     </main>
 
-    <script src="../js/main_old.js"></script>
+    <script src="../js/main_old.js?v=20260824"></script>
+    <script src="../js/activity_lang.js?v=20260824"></script>
 </body>
 </html>
+
+
 
 
