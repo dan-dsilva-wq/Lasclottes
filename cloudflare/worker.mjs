@@ -3,6 +3,9 @@ import bookingStatusHandler from '../api/booking-status.js';
 import checkoutHandler from '../api/create-stripe-checkout.js';
 import { POST as resendWebhookHandler } from '../api/resend-webhook.mjs';
 import { POST as stripeWebhookHandler } from '../api/stripe-webhook.mjs';
+import configModule from '../lib/config.js';
+
+const { setRuntimeConfig } = configModule;
 
 const API_ROUTES = new Map([
     ['/api/availability', availabilityHandler],
@@ -58,6 +61,7 @@ const assetRewrite = (request, pathname) => {
 
 export default {
     async fetch(request, env) {
+        setRuntimeConfig(env);
         const url = new URL(request.url);
         if (url.pathname === '/api/stripe-webhook') {
             return stripeWebhookHandler(request);

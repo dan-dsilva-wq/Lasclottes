@@ -79,6 +79,7 @@ Use Stripe test mode for all pre-launch tests. Do not submit a real card payment
 - [x] All local responsive-image candidates exist; desktop and phone layouts were rechecked after repairing the missing children's hero size.
 - [x] Time-sensitive activity links were rechecked on 24 August 2026 and obsolete destinations were replaced with current official or tourism-authority pages.
 - [x] A no-secret temporary Cloudflare Workers deployment passed HTTPS page, language, activity, redirect, 404, security-header, gallery and video checks on Cloudflare's real network. A permanent account deployment with test service secrets remains pending.
+- [x] The Cloudflare Worker explicitly consumes its own runtime bindings; a temporary deployment recognized the payment switch and still failed closed when the required secrets were absent.
 - [x] Full-screen gallery links use web-sized images and the 100-second walkthrough uses a 640x360 web copy instead of downloading 5–24 MiB originals.
 - [x] Typography and photographs are self-hosted, and Google Maps makes no request until a visitor explicitly chooses to load it; this is checked in English, French, Dutch, desktop and mobile layouts.
 - [x] Booking forms submit only to the same-origin booking API; the obsolete third-party form fallback was removed and checkout remains disabled if the booking script does not initialize.
