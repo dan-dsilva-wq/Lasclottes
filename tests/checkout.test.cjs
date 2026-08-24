@@ -2,7 +2,9 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const bookingStatusHandler = require('../api/booking-status');
 const handler = require('../api/create-stripe-checkout');
+const { trustedOrigin } = require('../lib/config');
 
 const makeResponse = () => {
     const state = { status: null, body: null };
@@ -53,4 +55,35 @@ test('Stripe line items use the database amount, not browser totals', () => {
     assert.equal(params.get('metadata[stay_total_gbp]'), '800.00');
     assert.equal(params.get('metadata[tourist_tax_eur]'), '22.56');
     assert.match(params.get('success_url'), /^https:\/\/preview\.example\/payment-success\.html/);
+});
+
+test('preview checkout returns to the branch that created it', () => {
+    const previous = {
+        PUBLIC_SITE_URL: process.env.PUBLIC_SITE_URL,
+        SITE_URL: process.env.SITE_URL,
+        VERCEL_BRANCH_URL: process.env.VERCEL_BRANCH_URL,
+        VERCEL_URL: process.env.VERCEL_URL,
+        VERCEL_PROJECT_PRODUCTION_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL
+    };
+    try {
+        delete process.env.PUBLIC_SITE_URL;
+        delete process.env.SITE_URL;
+        process.env.VERCEL_BRANCH_URL = 'preview.example.vercel.app';
+        process.env.VERCEL_URL = 'deployment.example.vercel.app';
+        process.env.VERCEL_PROJECT_PRODUCTION_URL = 'production.example.vercel.app';
+        assert.equal(trustedOrigin(), 'https://preview.example.vercel.app');
+    } finally {
+        for (const [name, value] of Object.entries(previous)) {
+            if (value === undefined) delete process.env[name];
+            else process.env[name] = value;
+        }
+    }
+});
+
+test('booking dates stay ISO formatted when the database returns Date objects', () => {
+    assert.equal(
+        bookingStatusHandler.publicDate(new Date('2027-05-20T00:00:00.000Z')),
+        '2027-05-20'
+    );
+    assert.equal(bookingStatusHandler.publicDate('2027-05-24'), '2027-05-24');
 });

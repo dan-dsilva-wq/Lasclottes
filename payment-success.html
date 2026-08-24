@@ -31,7 +31,7 @@
             const params = new URLSearchParams(window.location.search);
             const sessionId = params.get('session_id') || '';
             const lang = (params.get('lang') || 'en').slice(0, 2);
-            const copy = {
+            const copies = {
                 en: {
                     confirmedTitle: 'Booking confirmed',
                     confirmed: (reference) => `Thank you. Your payment was received and your Lasclottes booking is confirmed${reference ? ` under reference ${reference}` : ''}.`,
@@ -65,18 +65,8 @@
                     problem: 'Het betalingsresultaat kon vanaf deze pagina niet worden geverifieerd.',
                     problemHelp: 'Betaal niet opnieuw. Neem contact op met info@lasclottes.com en vermeld het tijdstip van betaling.'
                 }
-            }[lang] || null;
-            const text = copy || copy?.en || {
-                confirmedTitle: 'Booking confirmed',
-                confirmed: (reference) => `Thank you. Your booking is confirmed${reference ? ` under reference ${reference}` : ''}.`,
-                confirmedHelp: 'A written confirmation will be emailed to you.',
-                processingTitle: 'Payment is being confirmed',
-                processing: 'The secure confirmation is still processing.',
-                processingHelp: 'Please wait. Do not submit another payment.',
-                problemTitle: 'We could not confirm the booking',
-                problem: 'The payment result could not be verified from this page.',
-                problemHelp: 'Do not pay again. Contact info@lasclottes.com.'
             };
+            const text = copies[lang] || copies.en;
             const title = document.getElementById('status-title');
             const message = document.getElementById('status-message');
             const help = document.getElementById('status-help');
