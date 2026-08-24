@@ -6,8 +6,7 @@
   "scripts": {
     "test": "node --test tests/*.test.cjs",
     "build:js": "esbuild js/main_old.js --minify --outfile=js/main.js",
-    "build:css": "esbuild css/style_old.css --minify --outfile=css/style.css",
-    "build": "npm run build:js && npm run build:css"
+    "build:css": "esbuild css/style_old.css --minify --outfile=css/style.css"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0"
