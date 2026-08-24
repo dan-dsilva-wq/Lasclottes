@@ -1,6 +1,7 @@
-'use strict';
+import { createRequire } from 'node:module';
 
-const { config } = require('../lib/config');
+const require = createRequire(import.meta.url);
+const { config: bookingConfig } = require('../lib/config');
 const {
     beginWebhookEvent,
     cancelBooking,
@@ -11,13 +12,15 @@ const { json, readRawBody } = require('../lib/http');
 const { bookingForSession, confirmPaidSession } = require('../lib/payments');
 const { verifyStripeSignature } = require('../lib/stripe');
 
+export const config = { api: { bodyParser: false } };
+
 const handler = async (req, res) => {
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
         return json(res, 405, { error: 'Method not allowed.' });
     }
-    const webhookSecret = config.stripeWebhookSecret();
-    if (!webhookSecret || !config.databaseUrl()) {
+    const webhookSecret = bookingConfig.stripeWebhookSecret();
+    if (!webhookSecret || !bookingConfig.databaseUrl()) {
         return json(res, 503, { error: 'Webhook processing is not configured.' });
     }
 
@@ -66,5 +69,4 @@ const handler = async (req, res) => {
     }
 };
 
-handler.config = { api: { bodyParser: false } };
-module.exports = handler;
+export default handler;
