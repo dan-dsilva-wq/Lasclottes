@@ -1,4 +1,71 @@
 {
+  "redirects": [
+    {
+      "source": "/familyholidaysinfrance",
+      "destination": "/#welcome",
+      "permanent": true
+    },
+    {
+      "source": "/familyholidays",
+      "destination": "/#property",
+      "permanent": true
+    },
+    {
+      "source": "/holidaylocation",
+      "destination": "/#activities",
+      "permanent": true
+    },
+    {
+      "source": "/golfing-holidays",
+      "destination": "/activities/golf.html",
+      "permanent": true
+    },
+    {
+      "source": "/lasclottes-reviews",
+      "destination": "/#reviews",
+      "permanent": true
+    },
+    {
+      "source": "/riverholidaysinfrance",
+      "destination": "/#gallery",
+      "permanent": true
+    },
+    {
+      "source": "/availibility-pricing",
+      "destination": "/#pricing",
+      "permanent": true
+    },
+    {
+      "source": "/availability-pricing",
+      "destination": "/#pricing",
+      "permanent": true
+    },
+    {
+      "source": "/frenchholidaycontact",
+      "destination": "/#contact",
+      "permanent": true
+    },
+    {
+      "source": "/copy-of-fishing-holidays",
+      "destination": "/activities/cycling.html",
+      "permanent": true
+    },
+    {
+      "source": "/fishing-holidays",
+      "destination": "/activities/fishing.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "destination": "/#activities",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:path*",
+      "destination": "/#activities",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/fr",
