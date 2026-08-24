@@ -32,8 +32,9 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Provision the `lasclottes-bookings` Neon Free database in Frankfurt for Preview and Development only, with preview branching and the `BOOKINGS_` prefix.
 - [x] Provision the `lasclottes-email-test` Resend Free service in Ireland for Preview and Development only, with the `TEST_EMAIL_` prefix.
 - [x] Configure a Preview-only Stripe webhook and verify signed callbacks, rejected invalid signatures and retry idempotency.
+- [ ] Configure the Preview-only Resend delivery webhook after its reviewed endpoint is deployed; keep its signing secret Preview-only.
 - [x] Keep Vercel on Hobby and restrict it to non-live review deployments; do not upgrade to Pro.
-- [ ] Pull the provisioned development environment locally without displaying or committing secret values.
+- [x] Pull the provisioned Preview environment locally into the ignored `.vercel` directory without displaying or committing secret values.
 - [x] Apply the reviewed booking schema automatically to the isolated Preview database branch.
 - [ ] Confirm and seed the authoritative blocked-date ranges once from the owner's booking diary.
 - [ ] Move authoritative DNS from Wix to Cloudflare Free while initially preserving every Wix website and Google Workspace record. Resend reports that Wix cannot create the required subdomain MX record, so Resend verification cannot finish while Wix hosts DNS.
@@ -60,6 +61,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] The return page checks the server-side payment state; it never treats a URL visit alone as proof of payment.
 - [ ] The guest and the owner each receive one confirmation email containing dates, guests, amount paid, later balance/due date, tourist tax and contact details.
 - [ ] Failed email delivery is visible to the owner and retryable without creating a duplicate booking or charge.
+- [x] Signed Resend delivery callbacks are verified against the raw body, protected from replay, de-duplicated and stored as delivered, delayed, bounced, complained, failed or suppressed audit outcomes.
 - [x] Concurrent webhook retries and email-delivery claims use leases so they cannot send the same notification twice while another attempt is still running.
 - [x] No card details, secrets or unnecessary personal information appear in logs or public availability responses.
 - [ ] Only after all the above pass, set `BOOKING_PAYMENTS_ENABLED=true` in the production environment and redeploy.

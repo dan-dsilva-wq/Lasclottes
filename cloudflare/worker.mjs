@@ -1,6 +1,7 @@
 import availabilityHandler from '../api/availability.js';
 import bookingStatusHandler from '../api/booking-status.js';
 import checkoutHandler from '../api/create-stripe-checkout.js';
+import { POST as resendWebhookHandler } from '../api/resend-webhook.mjs';
 import { POST as stripeWebhookHandler } from '../api/stripe-webhook.mjs';
 
 const API_ROUTES = new Map([
@@ -60,6 +61,9 @@ export default {
         const url = new URL(request.url);
         if (url.pathname === '/api/stripe-webhook') {
             return stripeWebhookHandler(request);
+        }
+        if (url.pathname === '/api/resend-webhook') {
+            return resendWebhookHandler(request);
         }
         const nodeHandler = API_ROUTES.get(url.pathname);
         if (nodeHandler) return nodeHandlerResponse(nodeHandler, request);

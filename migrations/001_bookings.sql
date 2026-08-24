@@ -72,11 +72,34 @@ CREATE TABLE IF NOT EXISTS email_deliveries (
     status text NOT NULL,
     attempts integer NOT NULL DEFAULT 1,
     provider_id text,
+    provider_status text,
+    provider_status_detail text,
+    last_provider_event_at timestamptz,
     last_error text,
     sent_at timestamptz,
     updated_at timestamptz NOT NULL DEFAULT now(),
     UNIQUE (booking_id, kind)
 );
+
+ALTER TABLE email_deliveries ADD COLUMN IF NOT EXISTS provider_status text;
+ALTER TABLE email_deliveries ADD COLUMN IF NOT EXISTS provider_status_detail text;
+ALTER TABLE email_deliveries ADD COLUMN IF NOT EXISTS last_provider_event_at timestamptz;
+
+CREATE TABLE IF NOT EXISTS resend_webhook_events (
+    event_id text PRIMARY KEY,
+    event_type text NOT NULL,
+    provider_id text NOT NULL,
+    provider_status text NOT NULL,
+    event_created_at timestamptz NOT NULL,
+    status_detail text,
+    attempts integer NOT NULL DEFAULT 1,
+    last_attempt_at timestamptz NOT NULL DEFAULT now(),
+    processed_at timestamptz,
+    last_error text
+);
+
+CREATE INDEX IF NOT EXISTS resend_webhook_events_provider_idx
+    ON resend_webhook_events (provider_id, event_created_at DESC);
 
 CREATE TABLE IF NOT EXISTS booking_rate_limits (
     fingerprint text PRIMARY KEY,
