@@ -51,6 +51,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Tourist tax remains clearly separate in EUR and is never silently added to a GBP card charge.
 - [x] The server rejects altered browser prices, invalid dates, excessive occupancy and blocked dates.
 - [x] Two simultaneous attempts for overlapping dates cannot both create payable reservations.
+- [x] The public checkout rejects requests from untrusted origins, rate-limits repeated attempts without retaining raw visitor addresses, and releases the test dates after checkout expiry.
 - [x] A pending checkout hold expires and releases its dates after the documented timeout.
 - [x] Stripe's successful test card marks the reservation paid exactly once, even if the webhook is retried.
 - [x] Stripe declined-card and expiry flows leave the booking unconfirmed and release the dates.
@@ -59,6 +60,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] The return page checks the server-side payment state; it never treats a URL visit alone as proof of payment.
 - [ ] The guest and the owner each receive one confirmation email containing dates, guests, amount paid, later balance/due date, tourist tax and contact details.
 - [ ] Failed email delivery is visible to the owner and retryable without creating a duplicate booking or charge.
+- [x] Concurrent webhook retries and email-delivery claims use leases so they cannot send the same notification twice while another attempt is still running.
 - [x] No card details, secrets or unnecessary personal information appear in logs or public availability responses.
 - [ ] Only after all the above pass, set `BOOKING_PAYMENTS_ENABLED=true` in the production environment and redeploy.
 
