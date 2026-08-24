@@ -32,7 +32,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Provision the `lasclottes-bookings` Neon Free database in Frankfurt for Preview and Development only, with preview branching and the `BOOKINGS_` prefix.
 - [x] Provision the `lasclottes-email-test` Resend Free service in Ireland for Preview and Development only, with the `TEST_EMAIL_` prefix.
 - [x] Configure a Preview-only Stripe webhook and verify signed callbacks, rejected invalid signatures and retry idempotency.
-- [ ] Configure the Preview-only Resend delivery webhook after its reviewed endpoint is deployed; keep its signing secret Preview-only.
+- [x] Configure the Preview-only Resend delivery webhook for sent, delivered, delayed, bounced, complained, failed and suppressed events; keep its signing secret scoped to the review branch.
 - [x] Keep Vercel on Hobby and restrict it to non-live review deployments; do not upgrade to Pro.
 - [x] Pull the provisioned Preview environment locally into the ignored `.vercel` directory without displaying or committing secret values.
 - [x] Apply the reviewed booking schema automatically to the isolated Preview database branch.
