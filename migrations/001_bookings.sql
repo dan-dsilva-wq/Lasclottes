@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     email text NOT NULL,
     phone text NOT NULL,
     language text NOT NULL DEFAULT 'en',
+    guest_message text NOT NULL DEFAULT '',
     adults integer NOT NULL,
     children integer NOT NULL DEFAULT 0,
     guests integer NOT NULL,
@@ -42,6 +43,7 @@ CREATE TABLE IF NOT EXISTS bookings (
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS refund_status text;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS refunded_amount_pence integer NOT NULL DEFAULT 0;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS refunded_at timestamptz;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS guest_message text NOT NULL DEFAULT '';
 
 DO $$
 BEGIN

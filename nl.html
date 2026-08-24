@@ -634,11 +634,8 @@
 <div class="contact__grid animate-on-scroll">
 <div class="contact__form-wrapper">
 <h3>Reserveren &amp; Betalen</h3>
-<form action="https://formsubmit.co/info@lasclottes.com" class="contact-form" data-stripe-checkout-endpoint="/api/create-stripe-checkout" id="bookingForm" method="POST">
-<input name="_subject" type="hidden" value="New Booking Request — Lasclottes"/>
-<input name="_captcha" type="hidden" value="false"/>
-<input name="_template" type="hidden" value="table"/>
-<input id="formRedirect" name="_next" type="hidden" value="https://lasclottes.com"/>
+<form action="/api/create-stripe-checkout" class="contact-form" data-stripe-checkout-endpoint="/api/create-stripe-checkout" id="bookingForm" method="POST">
+<noscript><p class="form-status error">Voor de online prijsopgave en veilige betaling is JavaScript vereist. <a href="mailto:info@lasclottes.com">E-mail ons</a> of bel ons om te boeken.</p></noscript>
 <input id="stayNights" name="stay_nights" type="hidden" value=""/>
 <input id="totalGuests" name="total_guests" type="hidden" value=""/>
 <input id="estimatedStayTotal" name="estimated_stay_total_gbp" type="hidden" value=""/>
@@ -698,7 +695,7 @@
 </div>
 <div class="form-group">
 <label for="message">Aanvullend bericht</label>
-<textarea id="message" name="message" placeholder="Eventuele speciale verzoeken of vragen…" rows="3"></textarea>
+<textarea id="message" maxlength="1500" name="message" placeholder="Eventuele speciale verzoeken of vragen…" rows="3"></textarea>
 </div>
 <div aria-live="polite" class="booking-summary">
 <div class="booking-summary__line"><span>Nachten</span><strong id="bookingNights">-</strong></div>
@@ -711,7 +708,7 @@
 <p class="booking-summary__help">Meer dan 60 dagen voor aankomst is nu 25% verschuldigd. Binnen 60 dagen is het volledige bedrag direct verschuldigd. In juli en augustus lopen verblijven van zaterdag tot zaterdag. De wettelijke toeristenbelasting (&euro;1,41 per volwassene per nacht) wordt apart in euro's getoond en is niet inbegrepen in de GBP-kaartbedragen; we bevestigen bij de boeking hoe deze wordt betaald. De terugbetaalbare borg van £500 is opgenomen in het restsaldo of de volledige betaling. Maximale bezetting: 12 gasten.</p>
 <p class="booking-summary__warning" id="bookingSummaryWarning"></p>
 </div>
-<button class="btn btn-primary btn-lg form-submit" style="width: 100%;" type="submit">Ga verder naar veilige kaartbetaling</button>
+<button class="btn btn-primary btn-lg form-submit" disabled style="width: 100%;" type="submit">Ga verder naar veilige kaartbetaling</button>
 <p style="font-size: 0.8rem; text-align: center; margin-top: var(--space-xs); opacity: 0.7;">U wordt doorgestuurd naar Stripe om het hierboven weergegeven bedrag veilig per kaart te betalen. Een eventueel restsaldo wordt later per bankoverschrijving voldaan.</p>
 <div aria-live="polite" class="form-status" id="formStatus"></div>
 </form>
@@ -782,6 +779,6 @@
             </a>
 </div>
 </div>
-<script src="js/main.js?v=20260824e"></script>
+<script src="js/main.js?v=20260824f"></script>
 </body>
 </html>

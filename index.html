@@ -693,11 +693,8 @@
                 <div class="contact__grid animate-on-scroll">
                     <div class="contact__form-wrapper">
                         <h3>Reserve &amp; Pay</h3>
-                        <form class="contact-form" id="bookingForm" action="https://formsubmit.co/info@lasclottes.com" method="POST" data-stripe-checkout-endpoint="/api/create-stripe-checkout">
-                            <input type="hidden" name="_subject" value="New Booking Request — Lasclottes">
-                            <input type="hidden" name="_captcha" value="false">
-                            <input type="hidden" name="_template" value="table">
-                            <input type="hidden" name="_next" id="formRedirect" value="https://lasclottes.com">
+                        <form class="contact-form" id="bookingForm" action="/api/create-stripe-checkout" method="POST" data-stripe-checkout-endpoint="/api/create-stripe-checkout">
+                            <noscript><p class="form-status error">Online quoting and secure payment require JavaScript. Please <a href="mailto:info@lasclottes.com">email us</a> or call us to book.</p></noscript>
                             <input type="hidden" name="stay_nights" id="stayNights" value="">
                             <input type="hidden" name="total_guests" id="totalGuests" value="">
                             <input type="hidden" name="estimated_stay_total_gbp" id="estimatedStayTotal" value="">
@@ -760,7 +757,7 @@
 
                             <div class="form-group">
                                 <label for="message">Additional Message</label>
-                                <textarea id="message" name="message" rows="3" placeholder="Any special requests or questions&hellip;"></textarea>
+                                <textarea id="message" name="message" rows="3" maxlength="1500" placeholder="Any special requests or questions&hellip;"></textarea>
                             </div>
                             <div class="booking-summary" aria-live="polite">
                                 <div class="booking-summary__line"><span>Nights</span><strong id="bookingNights">-</strong></div>
@@ -773,7 +770,7 @@
                                 <p class="booking-summary__help">Bookings made more than 60 days before arrival pay 25% now. Bookings within 60 days pay in full now. July and August stays must run Saturday to Saturday. The statutory tourist tax (&euro;1.41 per adult per night) is shown separately in euros and is not included in the GBP card figures; we will confirm how it is paid with your booking. The refundable &pound;500 damage deposit is included in the balance/full-payment figure. Maximum occupancy: 12 guests.</p>
                                 <p class="booking-summary__warning" id="bookingSummaryWarning"></p>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-lg form-submit" style="width: 100%;">Continue to Secure Card Payment</button>
+                            <button type="submit" class="btn btn-primary btn-lg form-submit" style="width: 100%;" disabled>Continue to Secure Card Payment</button>
                             <p style="font-size: 0.8rem; text-align: center; margin-top: var(--space-xs); opacity: 0.7;">When you continue, you go to secure Stripe card checkout for the amount due now shown above. Remaining balance is settled by bank transfer.</p>
                             <div class="form-status" id="formStatus" aria-live="polite"></div>
                         </form>
@@ -860,7 +857,7 @@
         </div>
     </div>
 
-    <script src="js/main.js?v=20260824e"></script>
+    <script src="js/main.js?v=20260824f"></script>
 </body>
 </html>
 

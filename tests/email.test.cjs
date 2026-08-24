@@ -17,6 +17,7 @@ const booking = {
     last_name: 'Guest',
     email: 'guest@example.test',
     phone: '+44 7000 000 000',
+    guest_message: 'Please prepare a cot & keep <script> out.',
     language: 'en',
     arrival: new Date('2027-07-17T00:00:00.000Z'),
     departure: '2027-07-24',
@@ -39,6 +40,9 @@ test('confirmation email shows exact amounts and the 60-day balance deadline', (
     assert.match(content.text, /€78\.96/);
     assert.match(content.text, /2027-05-18/);
     assert.match(content.html, /guest@example\.test/);
+    assert.match(content.text, /Please prepare a cot & keep <script> out\./);
+    assert.match(content.html, /Please prepare a cot &amp; keep &lt;script&gt; out\./);
+    assert.doesNotMatch(content.html, /<script> out/);
 });
 
 test('owner notification contains booking and contact details', () => {
@@ -47,6 +51,7 @@ test('owner notification contains booking and contact details', () => {
     assert.match(content.text, /Test Guest/);
     assert.match(content.text, /guest@example\.test/);
     assert.match(content.text, /deposit_now_balance_later/);
+    assert.match(content.text, /Please prepare a cot & keep <script> out\./);
 });
 
 test('email helpers normalize dates and reject unsafe sender domains', () => {

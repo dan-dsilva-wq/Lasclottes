@@ -729,11 +729,8 @@
                 <div class="contact__grid animate-on-scroll">
                     <div class="contact__form-wrapper">
                         <h3>Réserver &amp; Payer</h3>
-                        <form class="contact-form" id="bookingForm" action="https://formsubmit.co/info@lasclottes.com" method="POST" data-stripe-checkout-endpoint="/api/create-stripe-checkout">
-                            <input type="hidden" name="_subject" value="Nouvelle demande de réservation — Lasclottes (FR)">
-                            <input type="hidden" name="_captcha" value="false">
-                            <input type="hidden" name="_template" value="table">
-                            <input type="hidden" name="_next" id="formRedirect" value="https://lasclottes.com/fr.html">
+                        <form class="contact-form" id="bookingForm" action="/api/create-stripe-checkout" method="POST" data-stripe-checkout-endpoint="/api/create-stripe-checkout">
+                            <noscript><p class="form-status error">Le devis en ligne et le paiement sécurisé nécessitent JavaScript. Merci de nous <a href="mailto:info@lasclottes.com">envoyer un e-mail</a> ou de nous appeler pour réserver.</p></noscript>
                             <input type="hidden" name="stay_nights" id="stayNights" value="">
                             <input type="hidden" name="total_guests" id="totalGuests" value="">
                             <input type="hidden" name="estimated_stay_total_gbp" id="estimatedStayTotal" value="">
@@ -796,7 +793,7 @@
 
                             <div class="form-group">
                                 <label for="message">Message Complémentaire</label>
-                                <textarea id="message" name="message" rows="3" placeholder="Demandes particulières ou questions…"></textarea>
+                                <textarea id="message" name="message" rows="3" maxlength="1500" placeholder="Demandes particulières ou questions…"></textarea>
                             </div>
 
                             <div class="booking-summary" aria-live="polite">
@@ -811,7 +808,7 @@
                                 <p class="booking-summary__warning" id="bookingSummaryWarning"></p>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-lg form-submit">Continuer vers le Paiement Carte Sécurisé</button>
+                            <button type="submit" class="btn btn-primary btn-lg form-submit" disabled>Continuer vers le Paiement Carte Sécurisé</button>
                             <p style="font-size: 0.8rem; text-align: center; margin-top: var(--space-xs); opacity: 0.7;">En continuant, vous êtes dirigé vers Stripe pour régler le montant dû maintenant affiché ci-dessus. Le solde restant se règle ensuite par virement bancaire.</p>
                             <div class="form-status" id="formStatus" aria-live="polite"></div>
                         </form>
@@ -901,7 +898,7 @@
         </a>
     </div>
 
-    <script src="js/main.js?v=20260824e"></script>
+    <script src="js/main.js?v=20260824f"></script>
 </body>
 </html>
 

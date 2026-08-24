@@ -886,6 +886,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 calculateQuote();
             });
 
+        if (submitButton) submitButton.disabled = false;
+
         bookingForm.addEventListener('submit', async (e) => {
             const quote = calculateQuote();
 
@@ -956,6 +958,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     lastName: document.getElementById('lastName')?.value?.trim() || '',
                     email: document.getElementById('email')?.value?.trim() || '',
                     phone: document.getElementById('phone')?.value?.trim() || '',
+                    message: document.getElementById('message')?.value?.trim() || '',
                     arrivalDate: arrivalInput?.value || '',
                     departureDate: departureInput?.value || '',
                     adults: quote.adults,
@@ -971,6 +974,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     payload.lastName,
                     payload.email,
                     payload.phone,
+                    payload.message,
                     payload.arrivalDate,
                     payload.departureDate,
                     payload.adults,

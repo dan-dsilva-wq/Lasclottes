@@ -58,6 +58,7 @@ test('contact data and checkout request IDs are normalized', () => {
         lastName: ' Spencer ',
         email: 'SALLY@EXAMPLE.COM',
         phone: '+44 123',
+        message: '  Please prepare the cot.  ',
         agreementAccepted: true,
         lang: 'fr'
     });
@@ -66,8 +67,18 @@ test('contact data and checkout request IDs are normalized', () => {
         lastName: 'Spencer',
         email: 'sally@example.com',
         phone: '+44 123',
+        message: 'Please prepare the cot.',
         lang: 'fr'
     });
+    assert.equal(validateContact({
+        firstName: 'Sally',
+        lastName: 'Spencer',
+        email: 'sally@example.com',
+        phone: '+44 123',
+        message: 'x'.repeat(1600),
+        agreementAccepted: true,
+        lang: 'en'
+    }).message.length, 1500);
     assert.equal(normalizeRequestId('abcdefghijklmnop'), 'abcdefghijklmnop');
     assert.match(normalizeRequestId('bad'), /^[0-9a-f-]{36}$/);
 });

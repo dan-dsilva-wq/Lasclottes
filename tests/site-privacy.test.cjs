@@ -60,3 +60,58 @@ test('fonts and the content security policy are fully self-hosted', () => {
     assert.match(headers, /img-src 'self' data:/);
     assert.doesNotMatch(headers, /fonts\.(?:googleapis|gstatic)\.com|z-animoland|destination-agen/i);
 });
+
+test('booking details never fall back to an unnecessary third-party form service', () => {
+    for (const pagePath of ['index.html', 'fr.html', 'nl.html']) {
+        const html = read(pagePath);
+        const form = html.match(/<form\b[^>]*\bid=["']bookingForm["'][\s\S]*?<\/form>/i)?.[0] || '';
+        assert.match(form, /\baction=["']\/api\/create-stripe-checkout["']/i, pagePath);
+        assert.match(form, /<textarea\b[^>]*\bid=["']message["'][^>]*\bmaxlength=["']1500["']/i, pagePath);
+        assert.match(form, /<button\b[^>]*\btype=["']submit["'][^>]*\bdisabled\b|<button\b[^>]*\bdisabled\b[^>]*\btype=["']submit["']/i, pagePath);
+        assert.doesNotMatch(form, /formsubmit\.co|name=["']_(?:subject|captcha|template|next)["']/i, pagePath);
+    }
+
+    const mainScript = read(path.join('js', 'main_old.js'));
+    assert.match(mainScript, /message:\s*document\.getElementById\('message'\)/);
+    assert.match(mainScript, /payload\.message/);
+    assert.match(mainScript, /submitButton\.disabled\s*=\s*false/);
+});
+
+test('guest special requests are validated, persisted, and included in both booking emails', () => {
+    const bookingSource = read(path.join('lib', 'booking.js'));
+    const databaseSource = read(path.join('lib', 'database.js'));
+    const emailSource = read(path.join('lib', 'email.js'));
+
+    assert.match(bookingSource, /safeString\(input\.message,\s*1500\)/);
+    assert.match(databaseSource, /guest_message text NOT NULL DEFAULT ''/);
+    assert.match(databaseSource, /contact\.message/);
+    assert.match(emailSource, /booking\.guest_message/);
+    assert.ok(fs.existsSync(path.join(root, 'migrations', '002_guest_message.sql')));
+});
+
+test('executable scripts are external and the CSP does not allow inline JavaScript', () => {
+    for (const pagePath of pagePaths) {
+        const html = read(pagePath);
+        for (const match of html.matchAll(/<script\b([^>]*)>/gi)) {
+            const attributes = match[1];
+            assert.ok(
+                /\bsrc=["'][^"']+["']/i.test(attributes)
+                    || /\btype=["']application\/ld\+json["']/i.test(attributes),
+                `${pagePath}: inline executable script`
+            );
+        }
+    }
+
+    const cloudflareHeaders = read(path.join('cloudflare', '_headers'));
+    const vercelConfig = read('vercel.json');
+    for (const configText of [cloudflareHeaders, vercelConfig]) {
+        assert.match(configText, /script-src 'self'[;"\\]/);
+        assert.match(configText, /connect-src 'self'[;"\\]/);
+        assert.match(configText, /form-action 'self'[;"\\]/);
+        assert.doesNotMatch(configText, /script-src[^;"\\]*'unsafe-inline'|formsubmit\.co/i);
+    }
+
+    assert.match(read('payment-success.html'), /src=["']js\/payment-status\.js\?v=20260824f["']/);
+    assert.match(read(path.join('scripts', 'build-cloudflare.cjs')), /'payment-status\.js'/);
+    assert.doesNotMatch(read('privacy.html'), /FormSubmit/i);
+});
