@@ -24,6 +24,9 @@ CREATE TABLE IF NOT EXISTS bookings (
     balance_due_later_pence integer NOT NULL,
     damage_deposit_pence integer NOT NULL,
     tourist_tax_eur_cents integer NOT NULL,
+    agreement_version text,
+    agreement_accepted_at timestamptz,
+    agreement_snapshot jsonb,
     hold_expires_at timestamptz,
     stripe_checkout_session_id text UNIQUE,
     stripe_payment_intent_id text,
@@ -44,6 +47,9 @@ ALTER TABLE bookings ADD COLUMN IF NOT EXISTS refund_status text;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS refunded_amount_pence integer NOT NULL DEFAULT 0;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS refunded_at timestamptz;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS guest_message text NOT NULL DEFAULT '';
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS agreement_version text;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS agreement_accepted_at timestamptz;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS agreement_snapshot jsonb;
 
 DO $$
 BEGIN

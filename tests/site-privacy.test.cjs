@@ -70,6 +70,21 @@ test('legal pages identify the verified accommodation operator', () => {
     }
 });
 
+test('booking terms and database preserve the agreement accepted at checkout', () => {
+    const termsPage = read('booking-terms.html');
+    const databaseSource = read(path.join('lib', 'database.js'));
+    const checkoutSource = read(path.join('api', 'create-stripe-checkout.js'));
+
+    assert.match(termsPage, /data-terms-version="2026-08-25-draft-1"/);
+    assert.match(termsPage, /five bedrooms, four bathrooms and a maximum occupancy of 12 people/i);
+    assert.match(termsPage, /Farmhouse[^.]*not included in a current booking/i);
+    assert.match(databaseSource, /agreement_version text/);
+    assert.match(databaseSource, /agreement_accepted_at timestamptz/);
+    assert.match(databaseSource, /agreement_snapshot jsonb/);
+    assert.match(checkoutSource, /bookingAgreementSnapshot/);
+    assert.ok(fs.existsSync(path.join(root, 'migrations', '003_booking_agreement.sql')));
+});
+
 test('booking details never fall back to an unnecessary third-party form service', () => {
     for (const pagePath of ['index.html', 'fr.html', 'nl.html']) {
         const html = read(pagePath);

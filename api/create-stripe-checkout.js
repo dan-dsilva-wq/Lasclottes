@@ -20,6 +20,15 @@ const {
 } = require('../lib/database');
 const { json, parseBody } = require('../lib/http');
 const { createCheckoutSession, retrieveCheckoutSession } = require('../lib/stripe');
+const {
+    BOOKING_TERMS_VERSION,
+    bookingAgreementSnapshot
+} = require('../lib/terms');
+
+const termsApprovalRequired = (origin, approved) => (
+    ['https://lasclottes.com', 'https://www.lasclottes.com'].includes(origin)
+    && approved !== true
+);
 
 const checkoutParams = ({ booking, quote, contact, origin }) => {
     const successUrl = process.env.STRIPE_SUCCESS_URL
@@ -65,6 +74,7 @@ const checkoutParams = ({ booking, quote, contact, origin }) => {
         balance_due_later_gbp: quote.balanceDueLater.toFixed(2),
         payment_stage: quote.paymentStage,
         safety_agreement: 'accepted',
+        booking_terms_version: BOOKING_TERMS_VERSION,
         language: contact.lang
     };
     Object.entries(metadata).forEach(([key, value]) => {
@@ -114,6 +124,13 @@ const handler = async (req, res) => {
     if (!requestOriginAllowed(req.headers?.origin)) {
         return json(res, 403, { error: 'This booking request did not come from the Lasclottes website.' });
     }
+    const requestOrigin = new URL(req.headers.origin).origin;
+    if (termsApprovalRequired(requestOrigin, config.bookingTermsApproved())) {
+        return json(res, 503, {
+            error: 'Online booking terms are awaiting final owner approval.',
+            code: 'booking_terms_not_approved'
+        });
+    }
 
     try {
         await consumeCheckoutAttempt(checkoutFingerprint(req, stripeWebhookSecret));
@@ -130,6 +147,8 @@ const handler = async (req, res) => {
     }
 
     const idempotencyKey = normalizeRequestId(body.requestId);
+    const reference = publicReference();
+    const agreementSnapshot = bookingAgreementSnapshot({ quote, publicReference: reference });
     let booking;
     let reused = false;
     try {
@@ -137,7 +156,9 @@ const handler = async (req, res) => {
             quote,
             contact,
             idempotencyKey,
-            publicReference: publicReference()
+            publicReference: reference,
+            agreementVersion: BOOKING_TERMS_VERSION,
+            agreementSnapshot
         }));
     } catch (error) {
         if (error instanceof BookingConflictError) {
@@ -182,4 +203,5 @@ const handler = async (req, res) => {
 
 handler.calculateQuote = calculateQuote;
 handler.checkoutParams = checkoutParams;
+handler.termsApprovalRequired = termsApprovalRequired;
 module.exports = handler;

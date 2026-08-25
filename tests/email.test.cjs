@@ -30,7 +30,13 @@ const booking = {
     balance_due_later_pence: 297500,
     damage_deposit_pence: 50000,
     tourist_tax_eur_cents: 7896,
-    payment_stage: 'deposit_now_balance_later'
+    payment_stage: 'deposit_now_balance_later',
+    agreement_version: '2026-08-25-draft-1',
+    agreement_accepted_at: '2026-08-25T18:00:00.000Z',
+    agreement_snapshot: {
+        propertyDescription: 'Five bedrooms, four bathrooms and the Annex when quoted.',
+        termsText: 'Making a booking: payment and written confirmation are required.'
+    }
 };
 
 test('confirmation email shows exact amounts and the 60-day balance deadline', () => {
@@ -45,6 +51,9 @@ test('confirmation email shows exact amounts and the 60-day balance deadline', (
     assert.match(content.text, /Please prepare a cot & keep <script> out\./);
     assert.match(content.html, /Please prepare a cot &amp; keep &lt;script&gt; out\./);
     assert.doesNotMatch(content.html, /<script> out/);
+    assert.match(content.text, /Terms accepted/);
+    assert.match(content.text, /2026-08-25-draft-1/);
+    assert.match(content.text, /Making a booking: payment and written confirmation are required\./);
 });
 
 test('owner notification contains booking and contact details', () => {
@@ -54,6 +63,7 @@ test('owner notification contains booking and contact details', () => {
     assert.match(content.text, /guest@example\.test/);
     assert.match(content.text, /deposit_now_balance_later/);
     assert.match(content.text, /Please prepare a cot & keep <script> out\./);
+    assert.match(content.text, /Terms version: 2026-08-25-draft-1/);
 });
 
 test('email helpers normalize dates and reject unsafe sender domains', () => {

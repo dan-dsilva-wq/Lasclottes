@@ -8,6 +8,10 @@ const {
     normalizeRequestId,
     validateContact
 } = require('../lib/booking');
+const {
+    BOOKING_TERMS_VERSION,
+    bookingAgreementSnapshot
+} = require('../lib/terms');
 
 test('high-season weekly booking is priced by the server', () => {
     const quote = calculateQuote({
@@ -81,4 +85,24 @@ test('contact data and checkout request IDs are normalized', () => {
     }).message.length, 1500);
     assert.equal(normalizeRequestId('abcdefghijklmnop'), 'abcdefghijklmnop');
     assert.match(normalizeRequestId('bad'), /^[0-9a-f-]{36}$/);
+});
+
+test('the server creates an exact booking-agreement snapshot from its own quote', () => {
+    const quote = calculateQuote({
+        arrivalDate: '2027-07-17',
+        departureDate: '2027-07-24',
+        adults: 8,
+        children: 2
+    }, new Date('2026-08-24T12:00:00Z'));
+    const agreement = bookingAgreementSnapshot({ quote, publicReference: 'LC-AGREEMENT1' });
+
+    assert.equal(agreement.termsVersion, BOOKING_TERMS_VERSION);
+    assert.equal(agreement.booking.reference, 'LC-AGREEMENT1');
+    assert.equal(agreement.booking.guests, 10);
+    assert.equal(agreement.price.accommodationTotalMinorUnits, 330000);
+    assert.equal(agreement.price.amountDueNowMinorUnits, 82500);
+    assert.equal(agreement.price.touristTaxMinorUnits, 7896);
+    assert.match(agreement.propertyDescription, /five bedrooms, four bathrooms/i);
+    assert.match(agreement.propertyDescription, /Farmhouse[^.]*not included/i);
+    assert.match(agreement.termsText, /Cancellation:/);
 });
