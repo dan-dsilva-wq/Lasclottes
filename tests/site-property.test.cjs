@@ -42,6 +42,9 @@ test('each language accurately distinguishes the current accommodation from the 
     const dutch = read('nl.html');
     assert.doesNotMatch(dutch, />Bijlage<|zonder bijlage|The Granary/i);
     assert.match(dutch, /<span class="hero__stat-number">2<\/span>\s*<span class="hero__stat-label">Hectare<\/span>/i);
+    assert.match(dutch, /2 hectare aan tuinen/i);
+    assert.doesNotMatch(dutch, /5 hectare|vijf hectare/i);
+    assert.doesNotMatch(dutch, /privégevel/i);
     assert.doesNotMatch(dutch, />Acres</i);
 });
 

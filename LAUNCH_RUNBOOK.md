@@ -12,6 +12,7 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - Cloudflare Workers with Static Assets is the selected no-monthly-fee production target. The public domain will still be `lasclottes.com`. The Free zone has been prepared with the current Wix and Google Workspace records in DNS-only mode, but Cloudflare is not authoritative yet.
 - A permanent Free-plan staging Worker is deployed at `https://lasclottes.super-bread-8b96.workers.dev` with encrypted test-only Stripe, Neon and Resend settings. Production online payments remain disabled; the payment switch is enabled only on the isolated Vercel Preview and Cloudflare staging environments.
 - Until Resend can verify `lasclottes.com` after the DNS move, Cloudflare staging uses Resend's provider test sender and the provider account's permitted test inbox. Production remains configured conceptually for `bookings@lasclottes.com` to guests and `info@lasclottes.com` to the owner.
+- The temporary `workers.dev` hostname sends a host-specific `X-Robots-Tag: noindex` header. That rule does not apply to the future `lasclottes.com` custom domain, so staging cannot compete with the public site in search results.
 
 ## Owner decisions required before payments are enabled
 
@@ -93,6 +94,9 @@ Use Stripe test mode for all pre-launch tests. Do not submit a real card payment
 - [x] All local responsive-image candidates exist; desktop and phone layouts were rechecked after repairing the missing children's hero size.
 - [x] Time-sensitive activity links were rechecked on 24 August 2026 and obsolete destinations were replaced with current official or tourism-authority pages.
 - [x] The permanent Cloudflare staging Worker passed HTTPS page, language, activity, redirect, 404, security-header, gallery, video, responsive review, booking, Stripe test payment/refund, Neon agreement and signed Resend/Stripe webhook checks on Cloudflare's real network.
+- [x] A hosted crawler rechecked all 15 sitemap pages, 21 unique internal destinations and 13 former-Wix redirects on 25 August 2026: all sitemap pages and internal destinations returned successfully, every redirect was permanent, and the custom missing-page response remained a real HTTP 404.
+- [x] The English, French and Dutch home pages each expose parseable `LodgingBusiness` structured data for the current accommodation, with a stable identity, operator registration, verified public listing, capacity and amenities. The incomplete, ineligible `VacationRental` rich-result markup was removed.
+- [x] Lighthouse on the final Cloudflare staging build scored 90 performance, 100 accessibility and 100 best practices on simulated mobile, and 100/100/100 on desktop. The only failed SEO audit is the intentional staging-only `noindex`; every other audited SEO check passes.
 - [x] The Cloudflare Worker explicitly consumes its own runtime bindings; a temporary deployment recognized the payment switch and still failed closed when the required secrets were absent.
 - [x] Full-screen gallery links use web-sized images and the 100-second walkthrough uses a 640x360 web copy instead of downloading 5–24 MiB originals.
 - [x] Typography and photographs are self-hosted, and Google Maps makes no request until a visitor explicitly chooses to load it; this is checked in English, French, Dutch, desktop and mobile layouts.
@@ -139,6 +143,8 @@ These values are a rollback record, not instructions for the Vercel configuratio
 
 ## SEO handover
 
+- [x] Pre-cutover technical SEO is complete: all indexable pages have unique titles/descriptions, HTTPS apex canonicals, social previews, reciprocal language alternates, current sitemap dates and valid current-accommodation structured data.
+- [x] The Cloudflare staging hostname is protected from indexing without placing a `noindex` rule on the future public custom domain.
 - [ ] Verify both domain variants in Google Search Console.
 - [ ] Submit `https://lasclottes.com/sitemap.xml` after cutover.
 - [ ] Inspect the home page and the principal activity pages in Search Console and request indexing where useful.

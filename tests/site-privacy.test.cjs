@@ -123,6 +123,9 @@ test('executable scripts are external and the CSP does not allow inline JavaScri
                     || /\btype=["']application\/ld\+json["']/i.test(attributes),
                 `${pagePath}: inline executable script`
             );
+            if (/\bsrc=["'][^"']+["']/i.test(attributes)) {
+                assert.match(attributes, /\bdefer\b/i, `${pagePath}: external script must be deferred`);
+            }
         }
     }
 
@@ -138,4 +141,16 @@ test('executable scripts are external and the CSP does not allow inline JavaScri
     assert.match(read('payment-success.html'), /src=["']js\/payment-status\.js\?v=20260824f["']/);
     assert.match(read(path.join('scripts', 'build-cloudflare.cjs')), /'payment-status\.js'/);
     assert.doesNotMatch(read('privacy.html'), /FormSubmit/i);
+});
+
+test('Cloudflare staging stays out of search and repeat visits use efficient browser caches', () => {
+    const headers = read(path.join('cloudflare', '_headers'));
+    assert.match(
+        headers,
+        /https:\/\/lasclottes\.super-bread-8b96\.workers\.dev\/\*[\s\S]*?X-Robots-Tag:\s*noindex/i
+    );
+    for (const assetPath of ['/css/*', '/js/*', '/Media/*']) {
+        const escaped = assetPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        assert.match(headers, new RegExp(`${escaped}[\\s\\S]*?max-age=(?:2592000|31536000)`, 'i'));
+    }
 });

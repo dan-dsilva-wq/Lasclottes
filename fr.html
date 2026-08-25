@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lasclottes | Location de Vacances en France, Lot-et-Garonne | 12 Couchages</title>
-    <meta name="description" content="Lasclottes est un magnifique corps de ferme sur les rives du Lot avec 5 chambres, 4 salles de bain, piscine privée, accès privé à la rivière et 2 hectares de jardins. 12 couchages. Idéal pour les familles et séjours pêche en Aquitaine, France.">
+    <meta name="description" content="La Grange et l’Annexe de Lasclottes forment une location de vacances au bord du Lot avec 5 chambres, 4 salles de bain, piscine privée, accès privé à la rivière et 2 hectares de jardins. 12 couchages.">
     <meta name="robots" content="index, follow">
 
     <!-- Alternate language -->
@@ -16,7 +16,7 @@
     <link rel="icon" href="favicon.ico" sizes="any">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Lasclottes | Corps de Ferme sur les Rives du Lot">
+    <meta property="og:title" content="Lasclottes | Location de Vacances au Bord du Lot">
     <meta property="og:description" content="5 chambres, piscine privée, accès privé à la rivière, 2 hectares de jardins. 12 couchages. Lot-et-Garonne, France.">
     <meta property="og:site_name" content="Lasclottes">
     <meta property="og:locale" content="fr_FR">
@@ -24,16 +24,16 @@
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="La ferme Lasclottes et son jardin dans le Lot-et-Garonne">
+    <meta property="og:image:alt" content="La location de vacances Lasclottes et ses jardins dans le Lot-et-Garonne">
     <meta property="og:url" content="https://lasclottes.com/fr.html">
     <meta property="og:type" content="website">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Lasclottes | Corps de Ferme sur les Rives du Lot">
+    <meta name="twitter:title" content="Lasclottes | Location de Vacances au Bord du Lot">
     <meta name="twitter:description" content="5 chambres, piscine privée, accès privé à la rivière, 2 hectares. 12 couchages.">
     <meta name="twitter:image" content="https://lasclottes.com/Media/social/lasclottes-1200x630.jpg">
-    <meta name="twitter:image:alt" content="La ferme Lasclottes et son jardin dans le Lot-et-Garonne">
+    <meta name="twitter:image:alt" content="La location de vacances Lasclottes et ses jardins dans le Lot-et-Garonne">
 
     <!-- Preload hero image -->
     <link rel="preload" as="image" href="Media/optimized/media_site_files_lasclottes_pool_jpeg-w1280.webp" imagesrcset="Media/optimized/media_site_files_lasclottes_pool_jpeg-w768.webp 768w, Media/optimized/media_site_files_lasclottes_pool_jpeg-w1280.webp 1280w, Media/optimized/media_site_files_lasclottes_pool_jpeg-w1600.webp 1600w" imagesizes="100vw" type="image/webp" fetchpriority="high">
@@ -45,11 +45,14 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "VacationRental",
-        "name": "French Riverside Holidays (Lasclottes)",
-        "description": "Magnifique corps de ferme sur les rives du Lot avec 5 chambres, 4 salles de bain, piscine privée, accès privé à la rivière et 2 hectares de jardins.",
+        "@type": "LodgingBusiness",
+        "@id": "https://lasclottes.com/#lodging",
+        "name": "Lasclottes Riverside Holidays",
+        "description": "Location de vacances dans la Grange et l’Annexe aménagées, avec cinq chambres, quatre salles de bain, piscine privée, accès privé au Lot et deux hectares de jardins.",
         "url": "https://lasclottes.com/fr.html",
         "image": "https://lasclottes.com/Media/social/lasclottes-1200x630.jpg",
+        "logo": "https://lasclottes.com/Media/optimized/lasclottes-logo-w320.webp",
+        "email": "info@lasclottes.com",
         "address": {
             "@type": "PostalAddress",
             "streetAddress": "Las Clottes",
@@ -58,21 +61,31 @@
             "postalCode": "47140",
             "addressCountry": "FR"
         },
-        "telephone": "+447572017287",
-        "numberOfBedrooms": 5,
-        "numberOfBathroomsTotal": 4,
-        "occupancy": {
-            "@type": "QuantitativeValue",
-            "maxValue": 12
+        "telephone": ["+447572017287", "+33645265319"],
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SIREN",
+            "value": "521892992"
         },
-        "amenityFeature": [
-            {"@type": "LocationFeatureSpecification", "name": "Piscine Privée", "value": true},
-            {"@type": "LocationFeatureSpecification", "name": "Accès Privé à la Rivière", "value": true},
-            {"@type": "LocationFeatureSpecification", "name": "WiFi", "value": true},
-            {"@type": "LocationFeatureSpecification", "name": "Jardin", "value": true},
-            {"@type": "LocationFeatureSpecification", "name": "Barbecue", "value": true},
-            {"@type": "LocationFeatureSpecification", "name": "Parking", "value": true}
-        ]
+        "sameAs": "https://www.gites.com/fr/gites/nouvelle-aquitaine/lot-et-garonne/saint-sylvestre-sur-lot/lasclottes-riverside-holidays-17662",
+        "containsPlace": {
+            "@type": "Accommodation",
+            "name": "La Grange et l’Annexe de Lasclottes",
+            "numberOfBedrooms": 5,
+            "numberOfBathroomsTotal": 4,
+            "occupancy": {
+                "@type": "QuantitativeValue",
+                "value": 12
+            },
+            "amenityFeature": [
+                {"@type": "LocationFeatureSpecification", "name": "Piscine privée", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "Accès privé à la rivière", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "WiFi", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "Jardin", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "Barbecue", "value": true},
+                {"@type": "LocationFeatureSpecification", "name": "Parking", "value": true}
+            ]
+        }
     }
     </script>
 </head>
@@ -136,7 +149,7 @@
 
             <div class="hero__content">
                 <h1 class="hero__title">Lasclottes</h1>
-                <p class="hero__tagline">Un corps de ferme sur les rives du Lot</p>
+                <p class="hero__tagline">Une location de vacances au bord du Lot</p>
 
                 <div class="hero__stats">
                     <div class="hero__stat">
@@ -839,7 +852,7 @@
         <div class="container footer__inner">
             <div class="footer__brand">
                 <div class="footer__logo"><img src="Media/optimized/lasclottes-logo-w320.webp" alt="Lasclottes" class="footer__logo-img" decoding="async" loading="lazy" width="220" height="83"></div>
-                <p>Un corps de ferme sur les rives du Lot</p>
+                <p>Une location de vacances au bord du Lot</p>
                 <address>
                     St Sylvestre sur Lot<br>
                     Lot-et-Garonne, Aquitaine 47140<br>
@@ -891,7 +904,7 @@
         </a>
     </div>
 
-    <script src="js/main.js?v=20260824g"></script>
+    <script defer src="js/main.js?v=20260824g"></script>
 </body>
 </html>
 

@@ -120,6 +120,29 @@ test('every indexable page has complete canonical and social metadata', () => {
     }
 });
 
+test('localized home pages describe the current accommodation with honest lodging structured data', () => {
+    for (const relativePath of ['index.html', 'fr.html', 'nl.html']) {
+        const html = read(relativePath);
+        const jsonBlocks = Array.from(
+            html.matchAll(/<script\s+type=["']application\/ld\+json["']>([\s\S]*?)<\/script>/gi),
+            (match) => JSON.parse(match[1])
+        );
+        const lodging = jsonBlocks.find((value) => value['@type'] === 'LodgingBusiness');
+
+        assert.ok(lodging, `${relativePath}: LodgingBusiness JSON-LD`);
+        assert.equal(lodging['@id'], `${origin}/#lodging`, `${relativePath}: stable lodging ID`);
+        assert.equal(lodging.identifier?.propertyID, 'SIREN', `${relativePath}: business identifier type`);
+        assert.equal(lodging.identifier?.value, '521892992', `${relativePath}: business identifier`);
+        assert.equal(lodging.containsPlace?.['@type'], 'Accommodation', `${relativePath}: accommodation entity`);
+        assert.equal(lodging.containsPlace?.numberOfBedrooms, 5, `${relativePath}: bedrooms`);
+        assert.equal(lodging.containsPlace?.numberOfBathroomsTotal, 4, `${relativePath}: bathrooms`);
+        assert.equal(lodging.containsPlace?.occupancy?.value, 12, `${relativePath}: occupancy`);
+        assert.match(lodging.containsPlace?.name || '', /Granary|Grange|graanschuur/i, `${relativePath}: current property name`);
+        assert.ok(String(lodging.sameAs || '').startsWith('https://www.gites.com/'), `${relativePath}: verified listing`);
+        assert.ok(!jsonBlocks.some((value) => value['@type'] === 'VacationRental'), `${relativePath}: incomplete gated rich-result markup`);
+    }
+});
+
 test('every local responsive image candidate used by an indexable page exists', () => {
     for (const url of sitemapUrls) {
         const relativePath = pagePathFromUrl(url);
