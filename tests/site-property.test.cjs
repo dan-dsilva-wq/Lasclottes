@@ -23,7 +23,7 @@ test('each language accurately distinguishes the current accommodation from the 
         {
             file: 'nl.html',
             current: [/vijf slaapkamers/i, /vier badkamers/i],
-            future: [/boerderij[^<]*Opening 2028/i, /zeven slaapkamers en vijf badkamers/i]
+            future: [/boerderij[^<]*open vanaf 2028/i, /zeven slaapkamers en vijf badkamers/i]
         }
     ];
 
@@ -36,7 +36,11 @@ test('each language accurately distinguishes the current accommodation from the 
 
     const french = read('fr.html');
     assert.doesNotMatch(french, /Avec sept chambres|4 chambres \(8 couchages\)|3 chambres \(4 à 6 couchages\)/i);
+    assert.match(french, /<span class="hero__stat-number">2<\/span>\s*<span class="hero__stat-label">Hectares<\/span>/i);
+    assert.doesNotMatch(french, />Acres</i);
 
     const dutch = read('nl.html');
     assert.doesNotMatch(dutch, />Bijlage<|zonder bijlage|The Granary/i);
+    assert.match(dutch, /<span class="hero__stat-number">2<\/span>\s*<span class="hero__stat-label">Hectare<\/span>/i);
+    assert.doesNotMatch(dutch, />Acres</i);
 });
