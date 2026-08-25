@@ -61,6 +61,15 @@ test('fonts and the content security policy are fully self-hosted', () => {
     assert.doesNotMatch(headers, /fonts\.(?:googleapis|gstatic)\.com|z-animoland|destination-agen/i);
 });
 
+test('legal pages identify the verified accommodation operator', () => {
+    for (const pagePath of ['privacy.html', 'booking-terms.html']) {
+        const html = read(pagePath);
+        assert.match(html, /Sally Spencer/);
+        assert.match(html, /SIREN 521 892 992/);
+        assert.match(html, /Lieu-dit Las Clottes, 47140 Saint-Sylvestre-sur-Lot, France/);
+    }
+});
+
 test('booking details never fall back to an unnecessary third-party form service', () => {
     for (const pagePath of ['index.html', 'fr.html', 'nl.html']) {
         const html = read(pagePath);

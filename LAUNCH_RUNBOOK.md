@@ -14,12 +14,12 @@ This file is the operational checklist for replacing the Wix website. It deliber
 
 ## Owner decisions required before payments are enabled
 
-- [ ] Confirm the legal name of the person or business taking bookings and the postal address that must appear in the privacy notice and booking confirmation.
+- [x] Use the verified public operator details: Sally Spencer, trading as Lasclottes / French Riverside Holidays, SIREN 521 892 992, Lieu-dit Las Clottes, 47140 Saint-Sylvestre-sur-Lot, France.
 - [ ] Approve the booking terms, especially the cancellation outcome within 60 days of arrival.
-- [ ] Confirm that the public tourist-tax figure of EUR 1.41 per adult per night is current, who is exempt, and how it will be collected.
-- [ ] Confirm the GBP pricing rules, 25% initial payment, GBP 500 refundable damage deposit, 60-day balance deadline and bank-transfer process.
-- [ ] Confirm the maximum occupancy of 12 and the current bedroom/bathroom description.
-- [ ] Choose the inbox that receives new-booking notifications and the verified sender address used for guest confirmations.
+- [x] Use the website's public tourist-tax figure of EUR 1.41 per adult per night; it remains separate from the GBP card charge and its collection method is confirmed with the booking.
+- [x] Use the website's GBP pricing rules, 25% initial payment, GBP 500 refundable damage deposit and 60-day balance deadline.
+- [x] Use the website's maximum occupancy of 12 and its current five-bedroom/four-bathroom description.
+- [x] Use the website's `info@lasclottes.com` inbox for new-booking notifications and `bookings@lasclottes.com` as the verified transactional sender once Resend DNS is active.
 - [ ] Confirm the currently blocked dates in `data/availability.json` against the authoritative booking diary.
 
 The legal pages are a practical working draft, not legal advice. The accommodation owner should approve them before accepting a payment.
@@ -37,7 +37,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Pull the provisioned Preview environment locally into the ignored `.vercel` directory without displaying or committing secret values.
 - [x] Apply the reviewed booking schema automatically to the isolated Preview database branch.
 - [ ] Confirm and seed the authoritative blocked-date ranges once from the owner's booking diary.
-- [ ] Move authoritative DNS from Wix to Cloudflare Free while initially preserving every Wix website and Google Workspace record. Resend reports that Wix cannot create the required subdomain MX record, so Resend verification cannot finish while Wix hosts DNS.
+- [ ] The Cloudflare Free zone has been prepared and all three Wix A records, the Wix `www` and `m` CNAMEs, and Google Workspace MX/TXT records were imported in DNS-only mode. Change authoritative nameservers only during the controlled DNS step; Resend verification cannot finish while Wix hosts DNS.
 - [ ] After the Cloudflare DNS zone is active, add only Resend's DKIM TXT, `send` MX and `send` SPF TXT records, then verify the domain. Keep all root Google Workspace MX, SPF and verification records unchanged.
 - [ ] Set the booking-notification inbox and verified sender address as encrypted Vercel environment variables.
 - [x] Keep `BOOKING_PAYMENTS_ENABLED` true only in Preview for sandbox testing and absent/false in Production.
