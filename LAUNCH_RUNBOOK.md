@@ -9,7 +9,7 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - The domain is registered at Wix and currently uses Wix nameservers.
 - Google Workspace email uses the domain's existing MX and TXT records. Those records must not be removed or replaced during the website cutover.
 - Vercel Hobby is the review host only. It must not serve the commercial live site under Vercel's current non-commercial Hobby terms.
-- Cloudflare Workers with Static Assets is the selected no-monthly-fee production target. The public domain will still be `lasclottes.com`; no production Cloudflare account, deployment or DNS change has been made yet.
+- Cloudflare Workers with Static Assets is the selected no-monthly-fee production target. The public domain will still be `lasclottes.com`. The Free zone has been prepared with the current Wix and Google Workspace records in DNS-only mode, but Cloudflare is not authoritative yet and no permanent Worker has been deployed.
 - Production online payments remain disabled. The payment switch is enabled only on the isolated Preview environment for sandbox acceptance testing.
 
 ## Owner decisions required before payments are enabled
@@ -21,8 +21,19 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - [x] Use the website's maximum occupancy of 12 and its current five-bedroom/four-bathroom description.
 - [x] Use the website's `info@lasclottes.com` inbox for new-booking notifications and `bookings@lasclottes.com` as the verified transactional sender once Resend DNS is active.
 - [ ] Confirm the currently blocked dates in `data/availability.json` against the authoritative booking diary.
+- [ ] Provide the current mairie registration number for the meublé de tourisme and confirm it appears on every direct and third-party listing. Since 20 May 2026, French town halls must issue a registration number for declared tourist accommodation.
+- [ ] Sally appoints a consumer mediator listed by the CECMC and provides its official name, postal address and website. Add those exact details to the website, booking terms and booking confirmation before accepting payment.
+- [ ] Confirm the operator's SIRET/RCS and VAT position with Sally or her French accountant, then approve the complete legal notice and the presentation of GBP accommodation prices and EUR tourist tax.
 
 The legal pages are a practical working draft, not legal advice. The accommodation owner should approve them before accepting a payment.
+
+## French direct-booking compliance gates
+
+- [ ] Publish a legal notice containing the final operator, contact, registration and hosting details required for a French professional website.
+- [ ] Give every guest, before payment, a written seasonal-rental agreement and sufficiently detailed property description containing the specific accommodation, dates, guests, complete price and applicable conditions.
+- [ ] Preserve the terms accepted for each booking and send the guest a durable confirmation containing the agreed booking details and cancellation/refund policy.
+- [ ] State clearly whether the initial 25% payment is an `acompte` or `arrhes`; those terms have different consequences under French law. Do not use an ambiguous translation of “deposit”.
+- [ ] Complete a qualified French legal/accounting review before enabling production checkout. Official starting points: [DGCCRF seasonal-rental guidance](https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/location-immobiliere-saisonniere), [professional website notices](https://www.economie.gouv.fr/entreprises/developper-son-entreprise/innover-et-numeriser-son-entreprise/mentions-sur-votre-site-internet-les-obligations-respecter), and [consumer-mediation duties](https://www.economie.gouv.fr/mediation-conso/vous-etes-un-professionnel/vos-principales-obligations-0).
 
 ## Vercel project gates
 
