@@ -7,6 +7,8 @@ const {
     buildGuestEmail,
     buildOwnerEmail,
     dateOnly,
+    resendBody,
+    resendHeaders,
     validDomain
 } = require('../lib/email');
 
@@ -60,4 +62,32 @@ test('email helpers normalize dates and reject unsafe sender domains', () => {
     assert.equal(validDomain('Lasclottes.com'), 'lasclottes.com');
     assert.equal(validDomain('bad domain.example'), '');
     assert.equal(validDomain('example.com\r\nBcc:attacker@example.com'), '');
+});
+
+test('transactional emails have safe reply addresses and identify the API client', () => {
+    const content = buildGuestEmail(booking);
+    const guestMessage = resendBody({
+        booking,
+        kind: 'guest_payment_confirmation',
+        from: 'Lasclottes <bookings@lasclottes.com>',
+        to: booking.email,
+        replyTo: 'info@lasclottes.com',
+        content
+    });
+    assert.equal(guestMessage.reply_to, 'info@lasclottes.com');
+    assert.deepEqual(guestMessage.to, [booking.email]);
+
+    const ownerMessage = resendBody({
+        booking,
+        kind: 'owner_booking_notification',
+        from: 'Lasclottes <bookings@lasclottes.com>',
+        to: 'info@lasclottes.com',
+        replyTo: booking.email,
+        content: buildOwnerEmail(booking)
+    });
+    assert.equal(ownerMessage.reply_to, booking.email);
+
+    const headers = resendHeaders('test-key', 'guest_payment_confirmation/test-booking');
+    assert.match(headers['User-Agent'], /^Lasclottes-Booking\//);
+    assert.equal(headers['Idempotency-Key'], 'guest_payment_confirmation/test-booking');
 });
