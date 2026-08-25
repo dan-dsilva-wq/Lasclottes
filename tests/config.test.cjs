@@ -12,11 +12,15 @@ test('Cloudflare runtime bindings are read explicitly and can be cleared safely'
     setRuntimeConfig({
         BOOKING_PAYMENTS_ENABLED: 'true',
         BOOKINGS_DATABASE_URL: 'postgresql://runtime.invalid/example',
-        PUBLIC_SITE_URL: 'https://lasclottes.com'
+        PUBLIC_SITE_URL: 'https://lasclottes.com',
+        STRIPE_SUCCESS_URL: 'https://staging.example/payment-complete',
+        STRIPE_CANCEL_URL: 'https://staging.example/payment-cancelled'
     });
     try {
         assert.equal(config.paymentsEnabled(), true);
         assert.equal(config.databaseUrl(), 'postgresql://runtime.invalid/example');
+        assert.equal(config.stripeSuccessUrl(), 'https://staging.example/payment-complete');
+        assert.equal(config.stripeCancelUrl(), 'https://staging.example/payment-cancelled');
         assert.equal(configuredOrigins()[0], 'https://lasclottes.com');
     } finally {
         setRuntimeConfig({});

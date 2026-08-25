@@ -9,8 +9,9 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - The domain is registered at Wix and currently uses Wix nameservers.
 - Google Workspace email uses the domain's existing MX and TXT records. Those records must not be removed or replaced during the website cutover.
 - Vercel Hobby is the review host only. It must not serve the commercial live site under Vercel's current non-commercial Hobby terms.
-- Cloudflare Workers with Static Assets is the selected no-monthly-fee production target. The public domain will still be `lasclottes.com`. The Free zone has been prepared with the current Wix and Google Workspace records in DNS-only mode, but Cloudflare is not authoritative yet and no permanent Worker has been deployed.
-- Production online payments remain disabled. The payment switch is enabled only on the isolated Preview environment for sandbox acceptance testing.
+- Cloudflare Workers with Static Assets is the selected no-monthly-fee production target. The public domain will still be `lasclottes.com`. The Free zone has been prepared with the current Wix and Google Workspace records in DNS-only mode, but Cloudflare is not authoritative yet.
+- A permanent Free-plan staging Worker is deployed at `https://lasclottes.super-bread-8b96.workers.dev` with encrypted test-only Stripe, Neon and Resend settings. Production online payments remain disabled; the payment switch is enabled only on the isolated Vercel Preview and Cloudflare staging environments.
+- Until Resend can verify `lasclottes.com` after the DNS move, Cloudflare staging uses Resend's provider test sender and the provider account's permitted test inbox. Production remains configured conceptually for `bookings@lasclottes.com` to guests and `info@lasclottes.com` to the owner.
 
 ## Owner decisions required before payments are enabled
 
@@ -35,7 +36,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [ ] State clearly whether the initial 25% payment is an `acompte` or `arrhes`; those terms have different consequences under French law. Do not use an ambiguous translation of “deposit”.
 - [ ] Complete a qualified French legal/accounting review before enabling production checkout. Official starting points: [DGCCRF seasonal-rental guidance](https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/location-immobiliere-saisonniere), [professional website notices](https://www.economie.gouv.fr/entreprises/developper-son-entreprise/innover-et-numeriser-son-entreprise/mentions-sur-votre-site-internet-les-obligations-respecter), and [consumer-mediation duties](https://www.economie.gouv.fr/mediation-conso/vous-etes-un-professionnel/vos-principales-obligations-0).
 
-## Vercel project gates
+## Hosting and service gates
 
 - [x] Sign in to the Vercel project dashboard.
 - [x] In Project Settings > Git, enable Git Large File Storage (LFS), redeploy the review branch, and confirm hosted media contains real image bytes.
@@ -48,9 +49,10 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Pull the provisioned Preview environment locally into the ignored `.vercel` directory without displaying or committing secret values.
 - [x] Apply the reviewed booking schema automatically to the isolated Preview database branch.
 - [ ] Confirm and seed the authoritative blocked-date ranges once from the owner's booking diary.
-- [ ] The Cloudflare Free zone has been prepared and all three Wix A records, the Wix `www` and `m` CNAMEs, and Google Workspace MX/TXT records were imported in DNS-only mode. Change authoritative nameservers only during the controlled DNS step; Resend verification cannot finish while Wix hosts DNS.
+- [x] The Cloudflare Free zone has been prepared and all three Wix A records, the Wix `www` and `m` CNAMEs, and Google Workspace MX/TXT records were imported in DNS-only mode. Authoritative nameservers have not been changed; Resend verification cannot finish while Wix hosts DNS.
+- [x] Authorize Wrangler for the Cloudflare account, deploy the permanent staging Worker and store all test service settings as encrypted Worker secrets.
 - [ ] After the Cloudflare DNS zone is active, add only Resend's DKIM TXT, `send` MX and `send` SPF TXT records, then verify the domain. Keep all root Google Workspace MX, SPF and verification records unchanged.
-- [ ] Set the booking-notification inbox and verified sender address as encrypted Vercel environment variables.
+- [ ] After Resend verifies the domain, set `info@lasclottes.com` and `bookings@lasclottes.com` in the encrypted Cloudflare production settings and remove the staging-only provider sender override.
 - [x] Keep `BOOKING_PAYMENTS_ENABLED` true only in Preview for sandbox testing and absent/false in Production.
 
 ## Payment and booking acceptance tests
@@ -71,7 +73,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [ ] Define and test the owner-approved cancellation and refund workflow before launch.
 - [x] Record partial and full Stripe refund events for audit without automatically cancelling the booking or releasing its dates.
 - [x] The return page checks the server-side payment state; it never treats a URL visit alone as proof of payment.
-- [ ] The guest and the owner each receive one confirmation email containing dates, guests, amount paid, later balance/due date, tourist tax and contact details.
+- [x] On Cloudflare staging, the guest and owner confirmation paths each send exactly one message containing dates, guests, amount paid, later balance/due date, tourist tax and contact details. The test payment, both delivery webhooks and the full test refund were verified, then the test dates were released.
 - [ ] Failed email delivery is visible to the owner and retryable without creating a duplicate booking or charge.
 - [x] Signed Resend delivery callbacks are verified against the raw body, protected from replay, de-duplicated and stored as delivered, delayed, bounced, complained, failed or suppressed audit outcomes.
 - [x] The hosted Preview Resend endpoint rejects forged signatures and accepts a valid synthetic delivery exactly once; the disposable booking, delivery and event rows were removed after verification.
@@ -90,7 +92,7 @@ Use Stripe test mode for all pre-launch tests. Do not submit a real card payment
 - [x] Every sitemap page has a canonical URL plus complete Open Graph and X/Twitter metadata backed by a verified local 1200x630 sharing image.
 - [x] All local responsive-image candidates exist; desktop and phone layouts were rechecked after repairing the missing children's hero size.
 - [x] Time-sensitive activity links were rechecked on 24 August 2026 and obsolete destinations were replaced with current official or tourism-authority pages.
-- [x] A no-secret temporary Cloudflare Workers deployment passed HTTPS page, language, activity, redirect, 404, security-header, gallery and video checks on Cloudflare's real network. A permanent account deployment with test service secrets remains pending.
+- [x] The permanent Cloudflare staging Worker passed HTTPS page, language, activity, redirect, 404, security-header, gallery, video, responsive review, booking, Stripe test payment/refund, Neon agreement and signed Resend/Stripe webhook checks on Cloudflare's real network.
 - [x] The Cloudflare Worker explicitly consumes its own runtime bindings; a temporary deployment recognized the payment switch and still failed closed when the required secrets were absent.
 - [x] Full-screen gallery links use web-sized images and the 100-second walkthrough uses a 640x360 web copy instead of downloading 5–24 MiB originals.
 - [x] Typography and photographs are self-hosted, and Google Maps makes no request until a visitor explicitly chooses to load it; this is checked in English, French, Dutch, desktop and mobile layouts.
@@ -116,7 +118,7 @@ The domain registration can remain at Wix, but authoritative DNS must move to Cl
 4. Change only the nameservers at Wix to the exact pair assigned by Cloudflare. Do not transfer or cancel the Wix domain registration.
 5. While the site still points to Wix, verify the current website and inbound/outbound email for both known Lasclottes mailboxes from more than one network.
 6. Add Resend's exact DKIM TXT, `send` MX and `send` SPF TXT records in Cloudflare, verify the Resend domain, and send an isolated test message. These subdomain records do not replace Google's root-domain mail records.
-7. Deploy the reviewed branch to a Cloudflare Workers staging hostname with test Stripe, test Resend and the isolated Neon branch. Run the full browser, payment, webhook and email acceptance suite there.
+7. Completed 25 August 2026: deploy the reviewed branch to the Cloudflare Workers staging hostname with test Stripe, test Resend and the isolated Neon branch, then run the full browser, payment, webhook and email acceptance suite there.
 8. Add production-only secrets to Cloudflare, leaving `BOOKING_PAYMENTS_ENABLED` and `BOOKING_TERMS_APPROVED` false until all owner decisions and data checks pass.
 9. At least 24 hours before website cutover, lower only the website record TTLs to 300 seconds where possible.
 10. Add `lasclottes.com` and `www.lasclottes.com` as Cloudflare Worker custom domains, then replace only the old Wix website A/CNAME routing. Leave all email records unchanged.
@@ -148,5 +150,5 @@ These values are a rollback record, not instructions for the Vercel configuratio
 
 - [ ] Change the Wix password that was shared during development and enable multi-factor authentication.
 - [ ] Use separate named administrator accounts where Wix, Vercel, GitHub, Stripe, Neon, Resend and Google support them.
-- [ ] Store production secrets only in the relevant provider/Vercel encrypted environment settings, never in Git or this file.
+- [ ] Store production secrets only in the relevant provider/Cloudflare encrypted environment settings, never in Git or this file.
 - [ ] Restrict access to booking/payment dashboards to the people who need it and review access at least annually.

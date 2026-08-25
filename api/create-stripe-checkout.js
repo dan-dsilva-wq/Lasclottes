@@ -31,9 +31,9 @@ const termsApprovalRequired = (origin, approved) => (
 );
 
 const checkoutParams = ({ booking, quote, contact, origin }) => {
-    const successUrl = process.env.STRIPE_SUCCESS_URL
+    const successUrl = config.stripeSuccessUrl()
         || `${origin}/payment-success.html?lang=${encodeURIComponent(contact.lang)}&session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = process.env.STRIPE_CANCEL_URL
+    const cancelUrl = config.stripeCancelUrl()
         || `${origin}/payment-cancelled.html?lang=${encodeURIComponent(contact.lang)}`;
     const title = quote.paymentStage === 'full_payment_now'
         ? 'Lasclottes booking payment (full amount due now)'

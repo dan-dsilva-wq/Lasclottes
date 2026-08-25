@@ -9,6 +9,7 @@ const {
     dateOnly,
     resendBody,
     resendHeaders,
+    senderAddress,
     validDomain
 } = require('../lib/email');
 
@@ -72,6 +73,9 @@ test('email helpers normalize dates and reject unsafe sender domains', () => {
     assert.equal(validDomain('Lasclottes.com'), 'lasclottes.com');
     assert.equal(validDomain('bad domain.example'), '');
     assert.equal(validDomain('example.com\r\nBcc:attacker@example.com'), '');
+    assert.equal(senderAddress('', 'lasclottes.com'), 'bookings@lasclottes.com');
+    assert.equal(senderAddress('onboarding@resend.dev', 'lasclottes.com'), 'onboarding@resend.dev');
+    assert.equal(senderAddress('bad address', 'lasclottes.com'), '');
 });
 
 test('transactional emails have safe reply addresses and identify the API client', () => {
