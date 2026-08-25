@@ -44,3 +44,17 @@ test('each language accurately distinguishes the current accommodation from the 
     assert.match(dutch, /<span class="hero__stat-number">2<\/span>\s*<span class="hero__stat-label">Hectare<\/span>/i);
     assert.doesNotMatch(dutch, />Acres</i);
 });
+
+test('guest reviews are traceable to the current independent listing', () => {
+    for (const file of ['index.html', 'fr.html', 'nl.html']) {
+        const html = read(file);
+        assert.match(html, /9[,.]5\/10/);
+        assert.match(html, /Hester N\./);
+        assert.match(html, /Viviane P\./);
+        assert.match(html, /Pieter Jan D\./);
+        assert.match(html, /href="https:\/\/www\.gites\.com\//);
+        assert.match(html, /rel="noopener noreferrer"/);
+        assert.doesNotMatch(html, /Harrison Family|Famille Harrison|familie Harrison|James &amp; Sarah|Catherine M\./i);
+        assert.doesNotMatch(html, /aria-label="5 (?:out of 5|étoiles sur 5|van de 5 sterren)"/i);
+    }
+});
