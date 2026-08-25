@@ -31,7 +31,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 
 - [ ] Publish a legal notice containing the final operator, contact, registration and hosting details required for a French professional website.
 - [ ] Give every guest, before payment, a written seasonal-rental agreement and sufficiently detailed property description containing the specific accommodation, dates, guests, complete price and applicable conditions.
-- [ ] Preserve the terms accepted for each booking and send the guest a durable confirmation containing the agreed booking details and cancellation/refund policy.
+- [x] Preserve the server-generated property description, quote, exact terms text, terms version and acceptance time for each checkout, and reproduce that record in the guest confirmation. The current version remains marked as a draft until the cancellation policy is approved.
 - [ ] State clearly whether the initial 25% payment is an `acompte` or `arrhes`; those terms have different consequences under French law. Do not use an ambiguous translation of “deposit”.
 - [ ] Complete a qualified French legal/accounting review before enabling production checkout. Official starting points: [DGCCRF seasonal-rental guidance](https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/location-immobiliere-saisonniere), [professional website notices](https://www.economie.gouv.fr/entreprises/developper-son-entreprise/innover-et-numeriser-son-entreprise/mentions-sur-votre-site-internet-les-obligations-respecter), and [consumer-mediation duties](https://www.economie.gouv.fr/mediation-conso/vous-etes-un-professionnel/vos-principales-obligations-0).
 
@@ -61,6 +61,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] More than 60 days before arrival charges 25% of accommodation now and states the later balance and damage-deposit due date.
 - [x] Within 60 days charges the full accommodation price plus the GBP 500 damage deposit.
 - [x] Tourist tax remains clearly separate in EUR and is never silently added to a GBP card charge.
+- [x] A hosted test checkout records the agreement version in Stripe and the isolated booking database, and the exact deployment passed the date, amount and acceptance-metadata check.
 - [x] The server rejects altered browser prices, invalid dates, excessive occupancy and blocked dates.
 - [x] Two simultaneous attempts for overlapping dates cannot both create payable reservations.
 - [x] The public checkout rejects requests from untrusted origins, rate-limits repeated attempts without retaining raw visitor addresses, and releases the test dates after checkout expiry.
@@ -76,7 +77,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] The hosted Preview Resend endpoint rejects forged signatures and accepts a valid synthetic delivery exactly once; the disposable booking, delivery and event rows were removed after verification.
 - [x] Concurrent webhook retries and email-delivery claims use leases so they cannot send the same notification twice while another attempt is still running.
 - [x] No card details, secrets or unnecessary personal information appear in logs or public availability responses.
-- [ ] Only after all the above pass, set `BOOKING_PAYMENTS_ENABLED=true` in the production environment and redeploy.
+- [ ] Only after all the above pass, set both `BOOKING_TERMS_APPROVED=true` and `BOOKING_PAYMENTS_ENABLED=true` in the production environment and redeploy. The live domain rejects checkout independently if the terms-approval flag is absent.
 
 Use Stripe test mode for all pre-launch tests. Do not submit a real card payment merely to test the website.
 
@@ -116,7 +117,7 @@ The domain registration can remain at Wix, but authoritative DNS must move to Cl
 5. While the site still points to Wix, verify the current website and inbound/outbound email for both known Lasclottes mailboxes from more than one network.
 6. Add Resend's exact DKIM TXT, `send` MX and `send` SPF TXT records in Cloudflare, verify the Resend domain, and send an isolated test message. These subdomain records do not replace Google's root-domain mail records.
 7. Deploy the reviewed branch to a Cloudflare Workers staging hostname with test Stripe, test Resend and the isolated Neon branch. Run the full browser, payment, webhook and email acceptance suite there.
-8. Add production-only secrets to Cloudflare, leaving `BOOKING_PAYMENTS_ENABLED` false until all owner decisions and data checks pass.
+8. Add production-only secrets to Cloudflare, leaving `BOOKING_PAYMENTS_ENABLED` and `BOOKING_TERMS_APPROVED` false until all owner decisions and data checks pass.
 9. At least 24 hours before website cutover, lower only the website record TTLs to 300 seconds where possible.
 10. Add `lasclottes.com` and `www.lasclottes.com` as Cloudflare Worker custom domains, then replace only the old Wix website A/CNAME routing. Leave all email records unchanged.
 11. Verify the apex and `www` site over HTTPS from more than one network and re-test both known Lasclottes mailboxes.
