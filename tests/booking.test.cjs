@@ -42,17 +42,23 @@ test('near-term bookings charge the full stay and refundable damage deposit', ()
     assert.equal(quote.touristTaxStatus, 'pending_owner_confirmation');
 });
 
-test('staging test-price override creates a complete one-pound checkout total', () => {
+test('staging test mode accepts otherwise unavailable dates for a complete one-pound checkout', () => {
     const quote = calculateQuote({
-        arrivalDate: '2027-05-20',
-        departureDate: '2027-05-24',
+        arrivalDate: '2027-01-20',
+        departureDate: '2027-01-21',
         adults: 2,
         children: 0
-    }, new Date('2026-08-26T00:00:00Z'), [], { testPriceGbp: 1 });
+    }, new Date('2026-08-26T00:00:00Z'), [{ start: '2027-01-01', end: '2027-02-01' }], {
+        testMode: true,
+        testPriceGbp: 1
+    });
+    assert.equal(quote.season, 'test');
+    assert.equal(quote.nights, 1);
     assert.equal(quote.stayTotal, 1);
     assert.equal(quote.amountDueNow, 1);
     assert.equal(quote.balanceDueLater, 0);
     assert.equal(quote.damageDeposit, 0);
+    assert.equal(quote.paymentStage, 'full_payment_now');
 });
 
 test('blocked dates and invalid seasonal patterns are rejected', () => {

@@ -588,8 +588,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (stagingTestPriceMode) {
             const notice = document.createElement('p');
             notice.className = 'staging-test-notice';
-            notice.textContent = 'Test site: this checkout is temporarily set to £1.';
+            notice.textContent = i18n(
+                'Test site: all future dates are available and the complete checkout is £1.',
+                'Site de test : toutes les dates futures sont disponibles et le paiement total est de 1 £.',
+                'Testsite: alle toekomstige datums zijn beschikbaar en de volledige betaling is £1.'
+            );
             bookingForm.parentElement?.prepend(notice);
+
+            const pricingSection = document.getElementById('pricing');
+            const pricingHighlight = pricingSection?.querySelector('.pricing__highlight');
+            const pricingNote = pricingSection?.querySelector('.pricing__note');
+            const pricingTerms = pricingSection?.querySelector('.pricing__terms p');
+            if (pricingHighlight) pricingHighlight.textContent = i18n('£1 per test booking', '1 £ par réservation test', '£1 per testboeking');
+            if (pricingNote) pricingNote.textContent = i18n(
+                'Temporary test pricing: choose any future dates and the whole checkout costs £1.',
+                'Tarif de test temporaire : choisissez n’importe quelles dates futures, le paiement total est de 1 £.',
+                'Tijdelijke testprijs: kies toekomstige datums en de volledige betaling kost £1.'
+            );
+            pricingSection?.querySelectorAll('.pricing__table tbody tr td:last-child').forEach((cell) => {
+                cell.textContent = i18n('£1 test total', 'Total test : 1 £', '£1 testtotaal');
+            });
+            if (pricingTerms) pricingTerms.textContent = i18n(
+                'Temporary test mode: every future date range is available and the complete card checkout is £1.',
+                'Mode test temporaire : toutes les périodes futures sont disponibles et le paiement carte total est de 1 £.',
+                'Tijdelijke testmodus: elke toekomstige periode is beschikbaar en de volledige kaartbetaling is £1.'
+            );
         }
         const touristTaxStatus = 'pending_owner_confirmation';
         const refundableDamageDeposit = 500;
@@ -597,7 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const fullPaymentWindowDays = 60;
         const maxGuests = 12;
         const availabilityStatus = document.getElementById('availabilityStatus');
-        let availabilityState = 'loading';
+        let availabilityState = stagingTestPriceMode ? 'ready' : 'loading';
         let blockedDateRanges = [];
         let checkoutPayloadSignature = '';
         let checkoutRequestId = '';
@@ -674,7 +697,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const children = Math.max(0, Number(childrenInput?.value || 0));
             const guests = adults + children;
             const nights = (arrivalDate && departureDate) ? Math.round((departureDate - arrivalDate) / (1000 * 60 * 60 * 24)) : 0;
-            const season = seasonForStay(arrivalDate, departureDate);
+            const season = stagingTestPriceMode && arrivalDate && departureDate && departureDate > arrivalDate
+                ? { code: 'test', minNights: 1, rate: 1, label: 'Test' }
+                : seasonForStay(arrivalDate, departureDate);
 
             let stayTotal = 0;
             let amountDueNow = 0;
@@ -685,7 +710,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let daysUntilArrival = null;
             let withinFullPaymentWindow = false;
             let validHighSeasonPattern = true;
-            const unavailableRange = unavailableRangeForStay(arrivalDate, departureDate);
+            const unavailableRange = stagingTestPriceMode
+                ? null
+                : unavailableRangeForStay(arrivalDate, departureDate);
 
             if (arrivalDate) {
                 const today = toDate(new Date().toISOString().slice(0, 10));
@@ -871,7 +898,14 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(() => fetch('/data/availability.json', { cache: 'no-store' }));
 
-        fetchAvailability()
+        const availabilityRequest = stagingTestPriceMode
+            ? Promise.resolve({
+                ok: true,
+                json: async () => ({ blocked: [], updated: new Date().toISOString().slice(0, 10) })
+            })
+            : fetchAvailability();
+
+        availabilityRequest
             .then((response) => {
                 if (!response.ok) throw new Error('Availability request failed');
                 return response.json();
@@ -881,11 +915,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 blockedDateRanges = data.blocked;
                 availabilityState = 'ready';
                 if (availabilityStatus) {
-                    availabilityStatus.textContent = i18n(
-                        `Availability last checked ${data.updated}. Your chosen dates are checked automatically.`,
-                        `Disponibilités mises à jour le ${data.updated}. Les dates choisies sont vérifiées automatiquement.`,
-                        `Beschikbaarheid bijgewerkt op ${data.updated}. De gekozen datums worden automatisch gecontroleerd.`
-                    );
+                    availabilityStatus.textContent = stagingTestPriceMode
+                        ? i18n(
+                            'Test mode: all future dates are available.',
+                            'Mode test : toutes les dates futures sont disponibles.',
+                            'Testmodus: alle toekomstige datums zijn beschikbaar.'
+                        )
+                        : i18n(
+                            `Availability last checked ${data.updated}. Your chosen dates are checked automatically.`,
+                            `Disponibilités mises à jour le ${data.updated}. Les dates choisies sont vérifiées automatiquement.`,
+                            `Beschikbaarheid bijgewerkt op ${data.updated}. De gekozen datums worden automatisch gecontroleerd.`
+                        );
                 }
                 calculateQuote();
             })

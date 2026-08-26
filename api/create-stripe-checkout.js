@@ -128,10 +128,12 @@ const handler = async (req, res) => {
 
     let quote;
     let contact;
+    const stagingTestMode = isStagingOrigin(requestOrigin);
     try {
         contact = validateContact(body);
         quote = calculateQuote(body, new Date(), undefined, {
-            testPriceGbp: isStagingOrigin(requestOrigin) ? 1 : null
+            testMode: stagingTestMode,
+            testPriceGbp: stagingTestMode ? 1 : null
         });
     } catch (error) {
         if (error instanceof BookingValidationError) {
@@ -178,7 +180,8 @@ const handler = async (req, res) => {
             idempotencyKey,
             publicReference: reference,
             agreementVersion: BOOKING_TERMS_VERSION,
-            agreementSnapshot
+            agreementSnapshot,
+            allowOverlap: stagingTestMode
         }));
     } catch (error) {
         if (error instanceof BookingConflictError) {

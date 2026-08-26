@@ -5,6 +5,7 @@ const test = require('node:test');
 const {
     config,
     configuredOrigins,
+    isStagingHostname,
     isStagingOrigin,
     setRuntimeConfig
 } = require('../lib/config');
@@ -33,4 +34,7 @@ test('staging test-price mode is restricted to the dedicated workers.dev origin'
     assert.equal(isStagingOrigin('https://lasclottes.super-bread-8b96.workers.dev'), true);
     assert.equal(isStagingOrigin('https://lasclottes.com'), false);
     assert.equal(isStagingOrigin('https://lasclottes.super-bread-8b96.workers.dev.evil.example'), false);
+    assert.equal(isStagingHostname('lasclottes.super-bread-8b96.workers.dev'), true);
+    assert.equal(isStagingHostname('lasclottes.super-bread-8b96.workers.dev:443'), true);
+    assert.equal(isStagingHostname('lasclottes.super-bread-8b96.workers.dev.evil.example'), false);
 });

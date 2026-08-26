@@ -7,7 +7,7 @@ const { confirmPaidSession } = require('../lib/payments');
 const { retrieveCheckoutSession } = require('../lib/stripe');
 
 const publicStatus = (booking) => {
-    if (booking.status === 'paid') return 'confirmed';
+    if (['paid', 'test_paid'].includes(booking.status)) return 'confirmed';
     if (['expired', 'checkout_failed', 'cancelled'].includes(booking.status)) return 'not_confirmed';
     return 'processing';
 };
@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
         let booking = await getBookingBySessionId(sessionId);
         if (!booking) return json(res, 404, { error: 'Booking not found.' });
 
-        if (booking.status !== 'paid' && config.stripeSecretKey()) {
+        if (!['paid', 'test_paid'].includes(booking.status) && config.stripeSecretKey()) {
             const session = await retrieveCheckoutSession(config.stripeSecretKey(), sessionId);
             if (session.payment_status === 'paid') booking = await confirmPaidSession(session);
             else if (session.status === 'expired') {
