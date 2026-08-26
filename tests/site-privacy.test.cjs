@@ -169,3 +169,12 @@ test('Cloudflare staging stays out of search and repeat visits use efficient bro
         assert.match(headers, new RegExp(`${escaped}[\\s\\S]*?max-age=(?:2592000|31536000)`, 'i'));
     }
 });
+
+test('Vercel remains a no-index review host even on its default production alias', () => {
+    const config = JSON.parse(read('vercel.json'));
+    const globalHeaders = config.headers.find((entry) => entry.source === '/(.*)')?.headers || [];
+    const robots = globalHeaders.find((header) => header.key.toLowerCase() === 'x-robots-tag')?.value || '';
+    assert.match(robots, /\bnoindex\b/i);
+    assert.match(robots, /\bnofollow\b/i);
+    assert.match(robots, /\bnoarchive\b/i);
+});
