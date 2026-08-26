@@ -20,9 +20,9 @@ test('high-season weekly booking is priced by the server', () => {
         adults: 8,
         children: 2
     }, new Date('2026-08-24T12:00:00Z'));
-    assert.equal(quote.stayTotal, 3300);
-    assert.equal(quote.amountDueNow, 825);
-    assert.equal(quote.balanceDueLater, 2975);
+    assert.equal(quote.stayTotal, 3500);
+    assert.equal(quote.amountDueNow, 700);
+    assert.equal(quote.balanceDueLater, 3300);
     assert.equal(quote.touristTaxEur, null);
     assert.equal(quote.touristTaxStatus, 'pending_owner_confirmation');
 });
@@ -100,12 +100,13 @@ test('the server creates an exact booking-agreement snapshot from its own quote'
 
     assert.equal(agreement.termsVersion, BOOKING_TERMS_VERSION);
     assert.equal(agreement.operator.register, 'Registre national des entreprises (RNE)');
+    assert.equal(agreement.operator.tradingAs, 'Lasclottes Holidays');
     assert.equal(agreement.operator.siren, '521 892 992');
     assert.equal(agreement.operator.siret, '521 892 992 00012');
     assert.equal(agreement.booking.reference, 'LC-AGREEMENT1');
     assert.equal(agreement.booking.guests, 10);
-    assert.equal(agreement.price.accommodationTotalMinorUnits, 330000);
-    assert.equal(agreement.price.amountDueNowMinorUnits, 82500);
+    assert.equal(agreement.price.accommodationTotalMinorUnits, 350000);
+    assert.equal(agreement.price.amountDueNowMinorUnits, 70000);
     assert.equal(agreement.price.touristTaxStatus, 'pending_owner_confirmation');
     assert.equal(agreement.price.touristTaxMinorUnits, null);
     assert.match(agreement.propertyDescription, /five bedrooms, four bathrooms/i);

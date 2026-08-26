@@ -76,7 +76,7 @@ const readinessReport = ({ root = defaultRoot, now = new Date() } = {}) => {
         'initial_payment_type',
         'Owner and legal decisions',
         ['arrhes', 'acompte'].includes(legalType),
-        'Confirm whether the initial 25% payment is arrhes or acompte.'
+        'Confirm whether the initial 20% payment is arrhes or acompte.'
     );
     add(
         'mairie_registration',
@@ -99,7 +99,7 @@ const readinessReport = ({ root = defaultRoot, now = new Date() } = {}) => {
             && meaningful(approvals.rcsWording, 4)
             && meaningful(approvals.touristAccommodationClassification, 3)
             && meaningful(approvals.touristTaxPosition, 12),
-        'Confirm VAT, RCS wording, the tourist-accommodation classification and the matching tourist-tax treatment.'
+        'Confirm VAT and RCS wording, approve the matching tourist-tax treatment, and retain evidence of the tourist-accommodation classification.'
     );
     add(
         'professional_review',

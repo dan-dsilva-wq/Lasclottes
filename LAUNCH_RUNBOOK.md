@@ -19,10 +19,10 @@ This file is the operational checklist for replacing the Wix website. It deliber
 
 ## Owner decisions required before payments are enabled
 
-- [x] Use the verified public operator details: Sally Spencer, trading as Lasclottes / French Riverside Holidays, registered in the French Registre national des entreprises (RNE), SIREN 521 892 992, SIRET 521 892 992 00012, Lieu-dit Las Clottes, 47140 Saint-Sylvestre-sur-Lot, France. These details were rechecked against the official INPI register on 26 August 2026.
+- [x] Use the owner-confirmed public name and verified operator details: Sally Spencer, a sole trader (entrepreneure individuelle) using the business name Lasclottes Holidays, registered in the French Registre national des entreprises (RNE), SIREN 521 892 992, SIRET 521 892 992 00012, Lieu-dit Las Clottes, 47140 Saint-Sylvestre-sur-Lot, France. Lasclottes Holidays is not presented as a limited company.
 - [ ] Approve the booking terms, especially the cancellation outcome within 60 days of arrival.
 - [x] Remove the old Wix site's unsupported EUR 1.41 flat tourist-tax estimate from the new quote. The official Fumel Vallée du Lot 2026 notice sets EUR 1.44 for a valid three-star property, while an unclassified or pending-classification property uses 5.76% of the pre-tax nightly accommodation cost per person capped at EUR 3.60. Until Sally's classification and calculation method are confirmed, the review build shows “to be confirmed” and never adds tourist tax to the GBP card charge.
-- [x] Use the website's GBP pricing rules, 25% initial payment, GBP 500 refundable damage deposit and 60-day balance deadline.
+- [x] Use the owner-confirmed GBP pricing rules, 20% initial payment, GBP 500 refundable damage deposit and 60-day balance deadline.
 - [x] Use the website's maximum occupancy of 12 and its current five-bedroom/four-bathroom description.
 - [x] Use the website's `info@lasclottes.com` inbox for new-booking notifications and `bookings@lasclottes.com` as the verified transactional sender once Resend DNS is active.
 - [x] Use the currently blocked dates in `data/availability.json`: they were rechecked month by month against the live Lasclottes Wix calendar through May 2028 on 26 August 2026 and match exactly. Sally should still review any bookings or closures added after that date before launch.
@@ -47,7 +47,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Prepare the host identification required by the legal notice from Cloudflare's official current contact information: Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107, USA, +1 650 319 8930. Rechecked 26 August 2026; the qualified final review must still confirm its use in Sally's notice.
 - [ ] Give every guest, before payment, a written seasonal-rental agreement and sufficiently detailed property description containing the specific accommodation, dates, guests, complete price and applicable conditions.
 - [x] Preserve the server-generated property description, quote, exact terms text, terms version and acceptance time for each checkout, and reproduce that record in the guest confirmation. The current version remains marked as a draft until the cancellation policy is approved.
-- [ ] State clearly whether the initial 25% payment is an `acompte` or `arrhes`; those terms have different consequences under French law. Do not use an ambiguous translation of “deposit”.
+- [ ] State clearly whether the initial 20% payment is an `acompte` or `arrhes`; those terms have different consequences under French law. Do not use an ambiguous translation of “deposit”.
 - [ ] Complete a qualified French legal/accounting review before enabling production checkout. Official starting points: [DGCCRF seasonal-rental guidance](https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/location-immobiliere-saisonniere), [professional website notices](https://www.economie.gouv.fr/entreprises/developper-son-entreprise/innover-et-numeriser-son-entreprise/mentions-sur-votre-site-internet-les-obligations-respecter), and [consumer-mediation duties](https://www.economie.gouv.fr/mediation-conso/vous-etes-un-professionnel/vos-principales-obligations-0).
 
 ## Hosting and service gates
@@ -75,9 +75,9 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 ## Payment and booking acceptance tests
 
 - [x] A quote for May, June or September enforces four nights and applies GBP 200/night for up to six guests or GBP 250/night for seven to twelve guests.
-- [x] A July or August quote only accepts Saturday-to-Saturday weekly blocks at GBP 3,300/week.
+- [x] A July or August quote only accepts Saturday-to-Saturday weekly blocks at GBP 3,500/week.
 - [x] October through April cannot be booked unless the owner explicitly changes the rule.
-- [x] More than 60 days before arrival charges 25% of accommodation now and states the later balance and damage-deposit due date.
+- [x] More than 60 days before arrival charges 20% of accommodation now and states the later balance and damage-deposit due date.
 - [x] Within 60 days charges the full accommodation price plus the GBP 500 damage deposit.
 - [x] Tourist tax remains clearly separate in EUR and is never silently added to a GBP card charge.
 - [x] A hosted test checkout records the agreement version in Stripe and the isolated booking database, and the exact deployment passed the date, amount and acceptance-metadata check.

@@ -6,7 +6,7 @@ Prepared 26 August 2026. This packet contains no passwords, payment keys or priv
 
 Sally does not need to re-research these items unless she believes they are wrong:
 
-- Operator: Sally Spencer, trading as Lasclottes / French Riverside Holidays. ()
+- Operator: Sally Spencer, a sole trader (entrepreneure individuelle) using the owner-confirmed public name Lasclottes Holidays. It is not presented as a limited company.
 - French registration: active entrepreneur individuel in the Registre national des entreprises (RNE).
 - SIREN: 521 892 992.
 - SIRET: 521 892 992 00012.
@@ -14,8 +14,8 @@ Sally does not need to re-research these items unless she believes they are wron
 - Current bookable accommodation: the Granary and Annex, five bedrooms, four bathrooms, maximum 12 guests.
 - The Farmhouse is under renovation, planned for 2028 and is not part of a current booking.
 - Spring and autumn: minimum four nights, GBP 200 per night for up to six guests or GBP 250 per night for seven to twelve guests.
-- July and August: Saturday-to-Saturday, GBP 3,300 per week.
-- Initial payment shown on the current website: 25%.
+- July and August: Saturday-to-Saturday, GBP 3,500 per week.
+- Owner-confirmed initial payment: 20% of the accommodation price, intended to be non-refundable when the guest cancels. The French legal label and its full cancellation consequences still need adviser approval as explained below.
 - Refundable damage deposit: GBP 500.
 - Balance deadline: 60 days before arrival.
 - The EUR 1.41 figure on the old public website must not be carried into the new booking quote. Fumel Vallée du Lot's official 2026 notice publishes EUR 1.44 only for a valid three-star classification. An unclassified or pending-classification property instead uses 5.76% of the pre-tax nightly accommodation cost per person, capped at EUR 3.60, after the departmental and regional additions.
@@ -33,9 +33,21 @@ Write the exact outcome when a guest cancels, shortens the stay or does not arri
 
 Final wording:
 
-> 
+>
 
-### 2. Legal treatment of the initial 25% payment
+### 2. Legal treatment of the initial 20% payment
+
+The official French guidance distinguishes the two labels as follows:
+
+- `arrhes`: the guest can withdraw but normally loses the 20% paid; if the host withdraws, the host normally returns twice the arrhes.
+- `acompte`: both parties are firmly committed; a guest who cancels may still be required to pay the remaining price or damages, and a host who cancels may owe damages.
+
+If the contract does not say which it is, an advance is normally treated as `arrhes`. The owner-confirmed intention that the guest loses the initial 20% if they cancel sounds closer to `arrhes`, but that choice also creates the double-repayment consequence if Sally cancels. A French adviser should therefore approve the label and the exact cancellation wording before production payments are enabled.
+
+Official explanations:
+
+- Seasonal rentals: <https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/location-saisonniere-les-regles-connaitre>
+- Arrhes and acompte: <https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/acompte-arrhes-avoir>
 
 The adviser must select one and approve the consequences:
 
@@ -48,15 +60,15 @@ Do not select both. These terms have different legal effects.
 
 Ask the accountant or French adviser to provide exact publishable wording for each item:
 
-- VAT position:
-- RCS wording, or a written statement that RCS wording is not applicable:
-- Current tourist-accommodation classification and its valid-until date:
+- VAT position: Owner states none / not applicable. The accountant must provide the exact publishable French wording and confirm whether any VAT exemption wording is required.
+- RCS wording, or a written statement that RCS wording is not applicable: RCS means the Registre du commerce et des sociétés. The verified RNE entry confirms Sally is an entrepreneur individuel, but does not safely establish whether an RCS mention is also required. Ask the accountant or registry to provide the exact RCS wording or confirm “RCS non applicable”.
+- Current tourist-accommodation classification and its valid-until date: Owner confirms three-star classification, valid until 3 October 2028. Retain the certificate for the launch records and recheck the official tourist-tax rate for the guest's year of arrival.
 - Select and approve the applicable 2026 tourist-tax treatment:
-  - [ ] Valid three-star classification: EUR 1.44 per liable person per night.
+  - [x] Valid three-star classification: EUR 1.44 per liable person per night for 2026.
   - [ ] Unclassified or awaiting classification: 5.76% of the pre-tax nightly accommodation cost per person, capped at EUR 3.60; provide the approved GBP-to-EUR and HT calculation method.
   - [ ] Another classification: provide the category and exact published rate.
-- Confirm which guests are liable or exempt and how/when the tax is collected:
-- Confirm that displaying the accommodation price in GBP and the tourist tax separately in EUR is acceptable:
+- Confirm which guests are liable or exempt and how/when the tax is collected: Apply the official exemptions below. The adviser should confirm the collection timing and the rate for each guest's year of arrival.
+- Confirm that displaying the accommodation price in GBP and the tourist tax separately in EUR is acceptable: Owner wishes to retain the website's GBP accommodation-price and separate EUR tourist-tax presentation; adviser confirmation is still required.
 
 Official 2026 local sources checked on 26 August 2026:
 
@@ -72,9 +84,13 @@ The tariff notice also states that minors, seasonal workers employed in the auth
 - Review date:
 - Confirmation that the final booking terms, cancellation wording, price presentation and legal notice are approved:
 
-## Information to obtain from the mairie
+## Existing mairie registration number — exact number needed
 
-Since 20 May 2026, the national Service-Public guidance says municipalities must have an accommodation-registration procedure and provide a registration number to declared tourist accommodation. The current Lasclottes and Gites pages do not show a usable number.
+The owner confirms that Lasclottes already has the required registration. The exact number was not found in the website project, the saved Wix page or the current Gites listing, so it still needs to be copied from the existing mairie record or certificate before launch.
+
+Exact existing registration number:
+
+> _Paste the existing number here._
 
 Official Saint-Sylvestre-sur-Lot mairie contact:
 
@@ -92,7 +108,7 @@ Official Saint-Sylvestre-sur-Lot mairie contact:
 
 Bonjour,
 
-Je suis Sally Spencer, exploitante de Lasclottes / French Riverside Holidays, Lieu-dit Las Clottes, 47140 Saint-Sylvestre-sur-Lot (SIREN 521 892 992, SIRET 521 892 992 00012).
+Je suis Sally Spencer, entrepreneure individuelle exploitant Lasclottes Holidays, Lieu-dit Las Clottes, 47140 Saint-Sylvestre-sur-Lot (SIREN 521 892 992, SIRET 521 892 992 00012).
 
 Notre activité concerne un hébergement touristique de courte durée dans la Grange et l’Annexe de Lasclottes. Pourriez-vous, s’il vous plaît, me confirmer la procédure applicable et le numéro d’enregistrement actuel du meublé de tourisme qui doit figurer sur notre site internet et nos annonces ?
 
@@ -136,10 +152,10 @@ These details will be added to the website, booking terms and booking confirmati
 After the missing legal details have been inserted, Sally should confirm each item:
 
 - [ ] The wording accurately describes the property and current accommodation.
-- [ ] Prices, payment percentages, damage deposit and tourist tax are correct.
-- [ ] Photographs accurately represent what guests can book now.
-- [ ] Telephone numbers and both Lasclottes email addresses are correct.
-- [ ] Current bookings and closures still match the owner’s diary.
+- [x] Prices, payment percentages, damage deposit and tourist tax are correct.
+- [x] Photographs accurately represent what guests can book now.
+- [x] Telephone numbers and both Lasclottes email addresses are correct.
+- [ ] Current bookings and closures still match the owner’s diary. (Not yet)
 - [ ] Time-sensitive activities and external providers have been rechecked within 14 days of launch.
 - [ ] The booking terms and legal notice have been professionally reviewed.
 - [ ] Sally authorizes the final terms version for production bookings.
@@ -155,7 +171,7 @@ The completed information can be pasted back into the Codex task in this format:
 ```text
 BOOKING TERMS APPROVED DATE:
 CANCELLATION WITHIN 60 DAYS:
-INITIAL 25% PAYMENT: arrhes OR acompte
+INITIAL 20% PAYMENT: arrhes OR acompte
 MAIRIE REGISTRATION NUMBER:
 CONSUMER MEDIATOR NAME:
 CONSUMER MEDIATOR ADDRESS:

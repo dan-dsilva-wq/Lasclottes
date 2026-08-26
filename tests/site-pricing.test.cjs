@@ -67,3 +67,12 @@ test('unverified tourist tax is never presented as a fixed quote', () => {
     assert.match(read('fr.html'), /taxe de séjour[^.]*séparée[^.]*classement/i);
     assert.match(read('nl.html'), /toeristenbelasting[^.]*classificatie/i);
 });
+
+test('owner-confirmed initial payment is consistently twenty percent', () => {
+    for (const pagePath of ['index.html', 'fr.html', 'nl.html', 'booking-terms.html']) {
+        const page = read(pagePath);
+        assert.match(page, /20\s*%/, `${pagePath}: missing 20% initial payment`);
+        assert.doesNotMatch(page, /25\s*%/, `${pagePath}: obsolete 25% initial payment`);
+    }
+    assert.equal(BOOKING_RULES.depositRate, 0.20);
+});

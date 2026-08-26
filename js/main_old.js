@@ -586,7 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const stripeCheckoutEndpoint = bookingForm.dataset.stripeCheckoutEndpoint || '/api/create-stripe-checkout';
         const touristTaxStatus = 'pending_owner_confirmation';
         const refundableDamageDeposit = 500;
-        const depositRate = 0.25;
+        const depositRate = 0.20;
         const fullPaymentWindowDays = 60;
         const maxGuests = 12;
         const availabilityStatus = document.getElementById('availabilityStatus');
@@ -643,7 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return {
                     code: 'high',
                     minNights: 7,
-                    rate: 3300 / 7,
+                    rate: 3500 / 7,
                     label: 'High Season',
                     requiresSaturdayTurnover: true
                 };
@@ -782,9 +782,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Volledig Bedrag Nu Verschuldigd'
                     )
                     : i18n(
-                        'Initial Payment Due Now (25%)',
-                        'Versement Initial à Régler (25%)',
-                        'Eerste betaling nu verschuldigd (25%)'
+                        'Initial Payment Due Now (20%)',
+                        'Versement Initial à Régler (20%)',
+                        'Eerste betaling nu verschuldigd (20%)'
                     );
             }
             if (balanceLabelOutput) {

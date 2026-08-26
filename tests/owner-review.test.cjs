@@ -15,7 +15,10 @@ test('the owner packet contains the verified operator and current commercial fac
     assert.match(packet, /SIRET: 521 892 992 00012/);
     assert.match(packet, /GBP 200 per night/);
     assert.match(packet, /GBP 250 per night/);
-    assert.match(packet, /GBP 3,300 per week/);
+    assert.match(packet, /Lasclottes Holidays/);
+    assert.match(packet, /GBP 3,500 per week/);
+    assert.match(packet, /initial payment: 20%/i);
+    assert.match(packet, /three-star classification, valid until 3 October 2028/i);
     assert.match(packet, /EUR 1\.44[^\n]*three-star classification/);
     assert.match(packet, /5\.76%[^\n]*capped at EUR 3\.60/);
     assert.match(packet, /fumelvalleedulot\.taxesejour\.fr/);
@@ -26,7 +29,7 @@ test('the owner packet asks for every owner-controlled launch approval exactly o
     const labels = [
         'BOOKING TERMS APPROVED DATE:',
         'CANCELLATION WITHIN 60 DAYS:',
-        'INITIAL 25% PAYMENT: arrhes OR acompte',
+        'INITIAL 20% PAYMENT: arrhes OR acompte',
         'MAIRIE REGISTRATION NUMBER:',
         'CONSUMER MEDIATOR NAME:',
         'CONSUMER MEDIATOR ADDRESS:',
