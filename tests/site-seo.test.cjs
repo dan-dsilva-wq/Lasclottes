@@ -173,6 +173,27 @@ test('every local responsive image candidate used by an indexable page exists', 
     }
 });
 
+test('localized home pages use the verified upright property and dining photographs', () => {
+    for (const relativePath of ['index.html', 'fr.html', 'nl.html']) {
+        const html = read(relativePath);
+        assert.match(
+            html,
+            /media_site_files_house_and_garden_upright_jpeg-w960\.webp/,
+            `${relativePath}: upright house and garden photograph`
+        );
+        assert.match(
+            html,
+            /media_site_files_eating_out_upright_jpg-w640\.webp/,
+            `${relativePath}: upright markets and dining photograph`
+        );
+        assert.doesNotMatch(
+            html,
+            /media_site_files_eating_out_rotated_jpg/,
+            `${relativePath}: obsolete sideways dining photograph`
+        );
+    }
+});
+
 test('language alternates are reciprocal and noindex pages stay out of the sitemap', () => {
     const expectedAlternates = {
         en: `${origin}/`,
