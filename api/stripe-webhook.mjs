@@ -12,7 +12,7 @@ const {
     recordRefundForPaymentIntent
 } = databaseModule;
 const { bookingForSession, confirmPaidSession } = paymentsModule;
-const { verifyStripeSignature } = stripeModule;
+const { verifyStripeSignature, webhookModeAllowed } = stripeModule;
 
 const respond = (status, payload) => new Response(JSON.stringify(payload), {
     status,
@@ -59,6 +59,9 @@ export async function POST(request) {
         return respond(400, { error: 'Invalid webhook event.' });
     }
     if (!event?.id || !event?.type) return respond(400, { error: 'Invalid webhook event.' });
+    if (!webhookModeAllowed(event.livemode, request.url)) {
+        return respond(400, { error: 'Webhook environment does not match this endpoint.' });
+    }
 
     let shouldProcess;
     try {

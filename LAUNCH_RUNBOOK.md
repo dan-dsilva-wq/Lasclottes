@@ -70,6 +70,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [ ] After the Cloudflare DNS zone is active, add only Resend's DKIM TXT, `send` MX and `send` SPF TXT records, then verify the domain. Keep all root Google Workspace MX, SPF and verification records unchanged.
 - [ ] After Resend verifies the domain, set `info@lasclottes.com` and `bookings@lasclottes.com` in the encrypted Cloudflare production settings and remove the staging-only provider sender override.
 - [x] Keep `BOOKING_PAYMENTS_ENABLED` true only in Preview for sandbox testing and absent/false in Production.
+- [x] Enforce Stripe environment separation in code: review and `workers.dev` hosts accept only `sk_test_` checkout credentials and test webhook events; `lasclottes.com` and `www.lasclottes.com` accept only `sk_live_` checkout credentials and live webhook events. Stripe API requests are pinned to `2026-02-25.clover` and both Stripe and Resend requests have a 15-second timeout.
 
 ## Payment and booking acceptance tests
 
@@ -83,6 +84,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] The server rejects altered browser prices, invalid dates, excessive occupancy and blocked dates.
 - [x] Two simultaneous attempts for overlapping dates cannot both create payable reservations.
 - [x] The public checkout rejects requests from untrusted origins, rate-limits repeated attempts without retaining raw visitor addresses, and releases the test dates after checkout expiry.
+- [x] Stripe Checkout returns to the exact trusted hostname that initiated the booking, uses the guest's selected language and labels the action as “Book”.
 - [x] A pending checkout hold expires and releases its dates after the documented timeout.
 - [x] Stripe's successful test card marks the reservation paid exactly once, even if the webhook is retried.
 - [x] Stripe declined-card and expiry flows leave the booking unconfirmed and release the dates.
@@ -119,6 +121,7 @@ Use Stripe test mode for all pre-launch tests. Do not submit a real card payment
 - [x] Optional guest messages are limited, server-normalized, stored with the booking and safely included in both guest and owner confirmation emails.
 - [x] English, French and Dutch price tables use GBP consistently, omit obsolete crossed-out rates and are regression-checked against the server and browser quote rules.
 - [x] Executable JavaScript is served from local files and the production content-security policy no longer permits inline scripts.
+- [x] Draft booking terms are visibly marked, carry `noindex` and stay out of the sitemap until the approved final version replaces them.
 - [x] Keyboard navigation, focus visibility, labels, alternative text, headings and colour contrast pass the automated/static checks.
 - [x] There are no browser console errors, mixed-content requests, missing files or broken internal anchors.
 - [x] The custom 404 page is returned with HTTP 404, not 200.

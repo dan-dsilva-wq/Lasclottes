@@ -783,9 +783,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Volledig Bedrag Nu Verschuldigd'
                     )
                     : i18n(
-                        'Deposit Due Now (25%)',
-                        'Acompte à Régler Maintenant (25%)',
-                        'Aanbetaling Nu Verschuldigd (25%)'
+                        'Initial Payment Due Now (25%)',
+                        'Versement Initial à Régler (25%)',
+                        'Eerste betaling nu verschuldigd (25%)'
                     );
             }
             if (balanceLabelOutput) {

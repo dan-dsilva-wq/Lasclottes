@@ -608,9 +608,17 @@ cite.review-card__author {
 
 /* Contact direct styles */
 .contact__direct {
+  min-width: 0;
   margin-top: var(--space-lg);
   padding-top: var(--space-lg);
   border-top: 1px solid var(--color-bg-alt);
+}
+
+.contact__direct .btn {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
 .contact__direct h3 {
@@ -624,6 +632,8 @@ cite.review-card__author {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--color-primary);
@@ -1283,12 +1293,13 @@ cite.review-card__author {
 
 .welcome__cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-md);
   margin-top: var(--space-xl);
 }
 
 .welcome__card {
+  min-width: 0;
   background-color: var(--color-white);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
@@ -1405,12 +1416,13 @@ cite.review-card__author {
 /* Amenities Grid */
 .amenities__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-sm);
 }
 
 .amenity {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: var(--space-xs);
   font-size: 0.875rem;
@@ -1432,7 +1444,8 @@ cite.review-card__author {
 }
 
 .amenity span {
-  white-space: nowrap;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 
@@ -2238,13 +2251,14 @@ a.activity-card {
 
 .contact__grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
   gap: var(--space-xl);
   align-items: start;
 }
 
 /* Contact Form */
 .contact__form-wrapper {
+  min-width: 0;
   background-color: var(--color-white);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
@@ -2260,6 +2274,7 @@ a.activity-card {
 }
 
 .form-group {
+  min-width: 0;
   margin-bottom: var(--space-sm);
 }
 
@@ -2274,6 +2289,7 @@ a.activity-card {
 .form-group input,
 .form-group select,
 .form-group textarea {
+  min-width: 0;
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 0.9375rem;
@@ -2306,7 +2322,7 @@ a.activity-card {
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-sm);
 }
 
@@ -2600,6 +2616,11 @@ a.activity-card {
   margin-bottom: 0.25rem;
 }
 
+.booking-summary__line > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .booking-summary__line strong {
   color: var(--color-primary);
 }
@@ -2647,6 +2668,7 @@ a.activity-card {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  min-width: 0;
 }
 
 .contact__platforms h3 {
@@ -2666,6 +2688,8 @@ a.activity-card {
 
 .btn-platform {
   display: flex;
+  min-width: 0;
+  max-width: 100%;
   align-items: center;
   gap: var(--space-sm);
   width: 100%;
@@ -2697,7 +2721,13 @@ a.activity-card {
 
 .btn-platform__text {
   flex: 1;
+  min-width: 0;
   text-align: left;
+}
+
+.btn-platform__label,
+.btn-platform__name {
+  overflow-wrap: anywhere;
 }
 
 .btn-platform__label {
@@ -3080,7 +3110,7 @@ a.activity-card {
 
   /* Introduction */
   .welcome__cards {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-sm);
   }
 
@@ -3095,7 +3125,7 @@ a.activity-card {
   }
 
   .amenities__grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   /* Gallery */
@@ -3134,7 +3164,7 @@ a.activity-card {
 
   /* Booking */
   .contact__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-lg);
   }
 
@@ -3250,7 +3280,7 @@ a.activity-card {
 
   /* Introduction */
   .welcome__cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-sm);
   }
 
@@ -3271,6 +3301,7 @@ a.activity-card {
 
   .welcome__card-content {
     flex: 1;
+    min-width: 0;
   }
 
   /* Property */
@@ -3280,7 +3311,7 @@ a.activity-card {
   }
 
   .amenities__grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-xs);
   }
 
@@ -3394,7 +3425,7 @@ a.activity-card {
 
   /* Booking */
   .form-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .contact__form-wrapper {

@@ -314,6 +314,18 @@ const runAudit = async ({ baseUrl, expectNoindex }) => {
         note(metadata(statePage.text).meta.get('robots') === 'noindex, nofollow', `${pathname} has incorrect robots metadata`);
     }
 
+    const termsPage = await textResponse(deployedUrl(base, '/booking-terms.html'));
+    note(termsPage.response.status === 200, `/booking-terms.html returned ${termsPage.response.status}`);
+    const termsRobots = metadata(termsPage.text).meta.get('robots') || '';
+    const termsIsDraft = /data-terms-version=["'][^"']*draft/i.test(termsPage.text);
+    if (termsIsDraft) {
+        note(termsRobots.includes('noindex'), 'draft booking terms are indexable');
+        note(!paths.includes('/booking-terms.html'), 'draft booking terms appear in the sitemap');
+    } else {
+        note(termsRobots === 'index, follow', 'final booking terms are not indexable');
+        note(paths.includes('/booking-terms.html'), 'final booking terms are missing from the sitemap');
+    }
+
     const missing = await request(deployedUrl(base, '/release-audit-page-that-does-not-exist'));
     note(missing.status === 404, `custom missing page returned ${missing.status}, not 404`);
 

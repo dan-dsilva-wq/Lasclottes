@@ -8,7 +8,7 @@ const {
     validateContact
 } = require('../lib/booking');
 const { checkoutFingerprint } = require('../lib/abuse');
-const { config, requestOriginAllowed, trustedOrigin } = require('../lib/config');
+const { config, requestOriginAllowed } = require('../lib/config');
 const {
     BookingConflictError,
     BookingRateLimitError,
@@ -19,7 +19,11 @@ const {
     markCheckoutPending
 } = require('../lib/database');
 const { json, parseBody } = require('../lib/http');
-const { createCheckoutSession, retrieveCheckoutSession } = require('../lib/stripe');
+const {
+    checkoutModeAllowed,
+    createCheckoutSession,
+    retrieveCheckoutSession
+} = require('../lib/stripe');
 const {
     BOOKING_TERMS_VERSION,
     bookingAgreementSnapshot
@@ -30,6 +34,15 @@ const termsApprovalRequired = (origin, approved) => (
     && approved !== true
 );
 
+const checkoutOrigin = (value) => {
+    if (!requestOriginAllowed(value)) return '';
+    try {
+        return new URL(String(value)).origin;
+    } catch (_) {
+        return '';
+    }
+};
+
 const checkoutParams = ({ booking, quote, contact, origin }) => {
     const successUrl = config.stripeSuccessUrl()
         || `${origin}/payment-success.html?lang=${encodeURIComponent(contact.lang)}&session_id={CHECKOUT_SESSION_ID}`;
@@ -37,10 +50,12 @@ const checkoutParams = ({ booking, quote, contact, origin }) => {
         || `${origin}/payment-cancelled.html?lang=${encodeURIComponent(contact.lang)}`;
     const title = quote.paymentStage === 'full_payment_now'
         ? 'Lasclottes booking payment (full amount due now)'
-        : 'Lasclottes booking payment (deposit due now)';
+        : 'Lasclottes booking payment (initial payment due now)';
     const params = new URLSearchParams();
 
     params.set('mode', 'payment');
+    params.set('submit_type', 'book');
+    params.set('locale', ['en', 'fr', 'nl'].includes(contact.lang) ? contact.lang : 'auto');
     params.set('success_url', successUrl);
     params.set('cancel_url', cancelUrl);
     params.set('expires_at', String(Math.floor(Date.now() / 1000) + (35 * 60)));
@@ -115,16 +130,16 @@ const handler = async (req, res) => {
         return json(res, 400, { error: 'Invalid booking details.' });
     }
 
-    let origin;
-    try {
-        origin = trustedOrigin();
-    } catch (_) {
-        return json(res, 503, { error: 'Secure card checkout is not configured yet.' });
-    }
-    if (!requestOriginAllowed(req.headers?.origin)) {
+    const requestOrigin = checkoutOrigin(req.headers?.origin);
+    if (!requestOrigin) {
         return json(res, 403, { error: 'This booking request did not come from the Lasclottes website.' });
     }
-    const requestOrigin = new URL(req.headers.origin).origin;
+    if (!checkoutModeAllowed(stripeSecretKey, requestOrigin)) {
+        return json(res, 503, {
+            error: 'Secure card checkout is not configured for this website environment.',
+            code: 'stripe_mode_mismatch'
+        });
+    }
     if (termsApprovalRequired(requestOrigin, config.bookingTermsApproved())) {
         return json(res, 503, {
             error: 'Online booking terms are awaiting final owner approval.',
@@ -188,7 +203,7 @@ const handler = async (req, res) => {
 
         const session = await createCheckoutSession(
             stripeSecretKey,
-            checkoutParams({ booking, quote, contact, origin }),
+            checkoutParams({ booking, quote, contact, origin: requestOrigin }),
             `booking-checkout/${booking.id}`
         );
         if (!session?.id || !session?.url) throw new Error('Stripe did not return a checkout URL.');
@@ -202,6 +217,7 @@ const handler = async (req, res) => {
 };
 
 handler.calculateQuote = calculateQuote;
+handler.checkoutOrigin = checkoutOrigin;
 handler.checkoutParams = checkoutParams;
 handler.termsApprovalRequired = termsApprovalRequired;
 module.exports = handler;

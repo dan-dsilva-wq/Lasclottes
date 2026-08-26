@@ -9,6 +9,7 @@ const {
     dateOnly,
     resendBody,
     resendHeaders,
+    resendRequestOptions,
     senderAddress,
     validDomain
 } = require('../lib/email');
@@ -104,4 +105,14 @@ test('transactional emails have safe reply addresses and identify the API client
     const headers = resendHeaders('test-key', 'guest_payment_confirmation/test-booking/v1');
     assert.match(headers['User-Agent'], /^Lasclottes-Booking\//);
     assert.equal(headers['Idempotency-Key'], 'guest_payment_confirmation/test-booking/v1');
+
+    const options = resendRequestOptions({
+        apiKey: 'test-key',
+        idempotencyKey: 'guest_payment_confirmation/test-booking/v1',
+        body: guestMessage
+    });
+    assert.equal(options.method, 'POST');
+    assert.equal(options.headers['Idempotency-Key'], 'guest_payment_confirmation/test-booking/v1');
+    assert.deepEqual(JSON.parse(options.body), guestMessage);
+    assert.equal(typeof options.signal?.aborted, 'boolean');
 });

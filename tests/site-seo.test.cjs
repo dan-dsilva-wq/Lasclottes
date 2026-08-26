@@ -75,7 +75,6 @@ test('the sitemap contains every intended indexable page once', () => {
             .filter((file) => file.endsWith('.html'))
             .sort()
             .map((file) => `/activities/${file}`),
-        '/booking-terms.html',
         '/privacy.html'
     ];
     const actualPaths = sitemapUrls.map((url) => new URL(url).pathname);
@@ -190,9 +189,12 @@ test('language alternates are reciprocal and noindex pages stay out of the sitem
         assert.deepEqual(alternates, expectedAlternates, `${relativePath}: hreflang`);
     }
 
-    for (const relativePath of ['404.html', 'payment-cancelled.html', 'payment-success.html']) {
+    for (const relativePath of ['404.html', 'booking-terms.html', 'payment-cancelled.html', 'payment-success.html']) {
         const { meta } = pageMetadata(read(relativePath));
-        assert.equal(meta.get('robots'), 'noindex, nofollow', `${relativePath}: robots`);
+        const expected = relativePath === 'booking-terms.html'
+            ? 'noindex, nofollow, noarchive'
+            : 'noindex, nofollow';
+        assert.equal(meta.get('robots'), expected, `${relativePath}: robots`);
         assert.ok(!sitemap.includes(`/${relativePath}`), `${relativePath}: sitemap`);
     }
 });

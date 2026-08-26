@@ -53,6 +53,8 @@ test('Stripe line items use the database amount, not browser totals', () => {
     });
 
     assert.equal(params.get('line_items[0][price_data][unit_amount]'), '20000');
+    assert.equal(params.get('submit_type'), 'book');
+    assert.equal(params.get('locale'), 'en');
     assert.equal(params.get('metadata[stay_total_gbp]'), '800.00');
     assert.equal(params.get('metadata[tourist_tax_eur]'), '22.56');
     assert.match(params.get('metadata[booking_terms_version]'), /^2026-08-26-/);
@@ -111,6 +113,8 @@ test('checkout accepts only configured site origins', () => {
         assert.equal(requestOriginAllowed('https://review.example.vercel.app'), true);
         assert.equal(requestOriginAllowed('https://evil.example'), false);
         assert.equal(requestOriginAllowed('null'), false);
+        assert.equal(handler.checkoutOrigin('https://review.example.vercel.app/path'), 'https://review.example.vercel.app');
+        assert.equal(handler.checkoutOrigin('https://evil.example'), '');
     } finally {
         for (const [name, value] of Object.entries(previous)) {
             if (value === undefined) delete process.env[name];
