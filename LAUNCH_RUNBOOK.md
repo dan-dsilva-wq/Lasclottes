@@ -13,6 +13,7 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - A permanent Free-plan staging Worker is deployed at `https://lasclottes.super-bread-8b96.workers.dev` with encrypted test-only Stripe, Neon and Resend settings. Production online payments remain disabled; the payment switch is enabled only on the isolated Vercel Preview and Cloudflare staging environments.
 - Until Resend can verify `lasclottes.com` after the DNS move, Cloudflare staging uses Resend's provider test sender and the provider account's permitted test inbox. Production remains configured conceptually for `bookings@lasclottes.com` to guests and `info@lasclottes.com` to the owner.
 - A private, noindex booking-operations page is staged at `/booking-operations.html`. It lists only paid-booking email failures and can retry one email without creating a booking or charge. Booking data remains unavailable unless a separate encrypted operations key is configured and supplied.
+- `npm run readiness` is the fail-closed pre-launch check. It compares the recorded owner decisions in `data/launch-approvals.json` with the actual published terms and legal pages, checks review freshness, and exits successfully only when all 15 pre-launch gates agree.
 - The temporary `workers.dev` hostname sends a host-specific `X-Robots-Tag: noindex` header. That rule does not apply to the future `lasclottes.com` custom domain, so staging cannot compete with the public site in search results.
 
 ## Owner decisions required before payments are enabled
@@ -30,6 +31,13 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - [ ] Confirm the VAT position, whether any RCS wording is appropriate, and the property's tourist-accommodation classification with Sally or her French accountant; then approve the complete legal notice and the presentation of GBP accommodation prices and EUR tourist tax. The official 2026 local tourist-tax decision publishes category-dependent rates and does not by itself identify Lasclottes' classification, so it does not safely replace the current website figure.
 
 The legal pages are a practical working draft, not legal advice. The accommodation owner should approve them before accepting a payment.
+
+## Automated launch control
+
+- Never fill an approval date or decision in `data/launch-approvals.json` speculatively. Each value must come from Sally or the named qualified adviser.
+- Run `npm run readiness` after every legal or owner-review update. A red result is an intentional production stop, not a test failure to bypass.
+- The readiness command currently reports the exact outstanding owner/legal, review, acceptance and publication items in plain language. Its automated test proves both the current fail-closed state and a complete 15/15 green state.
+- The separate DNS, Resend-domain, production-secret, live-payment and post-launch SEO steps below remain required even after the pre-launch readiness command turns green.
 
 ## French direct-booking compliance gates
 

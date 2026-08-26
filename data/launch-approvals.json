@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "bookingTermsApprovedAt": null,
+  "cancellationWithin60Days": null,
+  "initialPaymentLegalType": null,
+  "mairieRegistrationNumber": null,
+  "consumerMediator": {
+    "name": null,
+    "address": null,
+    "website": null
+  },
+  "vatPosition": null,
+  "rcsWording": null,
+  "touristAccommodationClassification": null,
+  "legalAccountingReview": {
+    "reviewedBy": null,
+    "reviewedAt": null
+  },
+  "ownerContentApprovedAt": null,
+  "activitiesReviewedAt": null,
+  "availabilityReviewedAt": "2026-08-26",
+  "externalEmailRetryTestCompletedAt": null,
+  "productionOperationsAccessDeliveredAt": null
+}
