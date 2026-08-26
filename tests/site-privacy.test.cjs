@@ -94,7 +94,7 @@ test('booking terms and database preserve the agreement accepted at checkout', (
     const databaseSource = read(path.join('lib', 'database.js'));
     const checkoutSource = read(path.join('api', 'create-stripe-checkout.js'));
 
-    assert.match(termsPage, /data-terms-version="2026-08-26-draft-5"/);
+    assert.match(termsPage, /data-terms-version="2026-08-26-draft-6"/);
     assert.match(termsPage, /name="robots" content="noindex, nofollow, noarchive"/);
     assert.doesNotMatch(read('sitemap.xml'), /booking-terms\.html/);
     assert.match(termsPage, /five bedrooms, four bathrooms and a maximum occupancy of 12 people/i);

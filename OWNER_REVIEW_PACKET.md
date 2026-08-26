@@ -15,7 +15,7 @@ Sally does not need to re-research these items unless she believes they are wron
 - The Farmhouse is under renovation, planned for 2028 and is not part of a current booking.
 - Spring and autumn: minimum four nights, GBP 200 per night for up to six guests or GBP 250 per night for seven to twelve guests.
 - July and August: Saturday-to-Saturday, GBP 3,500 per week.
-- Owner-confirmed initial payment: 20% of the accommodation price, intended to be non-refundable when the guest cancels. The French legal label and its full cancellation consequences still need adviser approval as explained below.
+- Owner-confirmed initial payment: 20% of the accommodation price, selected by the owner as `arrhes` on 26 August 2026. The draft contract states the corresponding withdrawal consequences; a French adviser still needs to approve the exact wording before production payment is enabled.
 - Refundable damage deposit: GBP 500.
 - Balance deadline: 60 days before arrival.
 - The EUR 1.41 figure on the old public website must not be carried into the new booking quote. Fumel Vallée du Lot's official 2026 notice publishes EUR 1.44 only for a valid three-star classification. An unclassified or pending-classification property instead uses 5.76% of the pre-tax nightly accommodation cost per person, capped at EUR 3.60, after the departmental and regional additions.
@@ -49,9 +49,9 @@ Official explanations:
 - Seasonal rentals: <https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/location-saisonniere-les-regles-connaitre>
 - Arrhes and acompte: <https://www.economie.gouv.fr/dgccrf/les-fiches-pratiques/acompte-arrhes-avoir>
 
-The adviser must select one and approve the consequences:
+The owner selected `arrhes` on 26 August 2026. The adviser must approve the wording and consequences:
 
-- [ ] `arrhes`
+- [x] `arrhes` — owner selected; adviser review pending
 - [ ] `acompte`
 
 Do not select both. These terms have different legal effects.
@@ -87,6 +87,8 @@ The tariff notice also states that minors, seasonal workers employed in the auth
 ## Existing mairie registration number — exact number needed
 
 The owner confirms that Lasclottes already has the required registration. The exact number was not found in the website project, the saved Wix page or the current Gites listing, so it still needs to be copied from the existing mairie record or certificate before launch.
+
+On 26 August 2026 the owner supplied `14004*02`. This is the reference of an older version of the national Cerfa declaration form, not a unique registration number for Lasclottes, so it must not be published as the property's registration number. The current official form is Cerfa 14004*04. Please use the unique reference shown on the mairie receipt or obtain confirmation from the mairie.
 
 Exact existing registration number:
 
@@ -171,7 +173,7 @@ The completed information can be pasted back into the Codex task in this format:
 ```text
 BOOKING TERMS APPROVED DATE:
 CANCELLATION WITHIN 60 DAYS:
-INITIAL 20% PAYMENT: arrhes OR acompte
+INITIAL 20% PAYMENT: arrhes (selected; adviser wording approval pending)
 MAIRIE REGISTRATION NUMBER:
 CONSUMER MEDIATOR NAME:
 CONSUMER MEDIATOR ADDRESS:

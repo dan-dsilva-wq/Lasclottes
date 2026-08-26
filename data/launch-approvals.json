@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "bookingTermsApprovedAt": null,
   "cancellationWithin60Days": null,
-  "initialPaymentLegalType": null,
+  "initialPaymentLegalType": "arrhes",
   "mairieRegistrationNumber": null,
   "consumerMediator": {
     "name": null,

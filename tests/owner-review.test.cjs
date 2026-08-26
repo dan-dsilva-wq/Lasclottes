@@ -29,7 +29,7 @@ test('the owner packet asks for every owner-controlled launch approval exactly o
     const labels = [
         'BOOKING TERMS APPROVED DATE:',
         'CANCELLATION WITHIN 60 DAYS:',
-        'INITIAL 20% PAYMENT: arrhes OR acompte',
+        'INITIAL 20% PAYMENT: arrhes (selected; adviser wording approval pending)',
         'MAIRIE REGISTRATION NUMBER:',
         'CONSUMER MEDIATOR NAME:',
         'CONSUMER MEDIATOR ADDRESS:',
@@ -47,6 +47,7 @@ test('the owner packet asks for every owner-controlled launch approval exactly o
         assert.equal(packet.split(label).length - 1, 1, label);
     }
     assert.equal(approvals.bookingTermsApprovedAt, null);
+    assert.equal(approvals.initialPaymentLegalType, 'arrhes');
     assert.equal(approvals.mairieRegistrationNumber, null);
     assert.equal(approvals.consumerMediator.name, null);
     assert.equal(approvals.touristTaxPosition, null);
@@ -57,6 +58,7 @@ test('the owner packet uses official contact routes and is not published by the 
     assert.match(packet, /05 53 41 24 58/);
     assert.match(packet, /lannuaire\.service-public\.gouv\.fr/);
     assert.match(packet, /service-public\.fr\/entreprendre\/actualites\/A17883/);
+    assert.match(packet, /14004\*02[^\n]*reference of an older version of the national Cerfa declaration form/i);
     assert.match(packet, /economie\.gouv\.fr\/mediation-conso/);
     assert.doesNotMatch(packet, /#Nevermind|STRIPE_SECRET|RESEND_API_KEY|BOOKING_OPERATIONS_TOKEN/);
     assert.doesNotMatch(buildScript, /OWNER_REVIEW_PACKET/);
