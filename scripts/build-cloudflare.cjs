@@ -18,6 +18,7 @@ const excludedLargeRawAssets = new Set([
 ]);
 const files = [
     '404.html',
+    'booking-operations.html',
     'booking-terms.html',
     'favicon.ico',
     'fr.html',
@@ -45,7 +46,7 @@ for (const directory of directories) {
 fs.mkdirSync(path.join(destination, 'css'), { recursive: true });
 fs.copyFileSync(path.join(root, 'css', 'style.css'), path.join(destination, 'css', 'style.css'));
 fs.mkdirSync(path.join(destination, 'js'), { recursive: true });
-for (const file of ['activity_lang.js', 'main.js', 'payment-status.js']) {
+for (const file of ['activity_lang.js', 'booking-operations.js', 'main.js', 'payment-status.js']) {
     fs.copyFileSync(path.join(root, 'js', file), path.join(destination, 'js', file));
 }
 fs.mkdirSync(path.join(destination, 'data'), { recursive: true });

@@ -12,6 +12,7 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - Cloudflare Workers with Static Assets is the selected no-monthly-fee production target. The public domain will still be `lasclottes.com`. The Free zone has been prepared with the current Wix and Google Workspace records in DNS-only mode, but Cloudflare is not authoritative yet.
 - A permanent Free-plan staging Worker is deployed at `https://lasclottes.super-bread-8b96.workers.dev` with encrypted test-only Stripe, Neon and Resend settings. Production online payments remain disabled; the payment switch is enabled only on the isolated Vercel Preview and Cloudflare staging environments.
 - Until Resend can verify `lasclottes.com` after the DNS move, Cloudflare staging uses Resend's provider test sender and the provider account's permitted test inbox. Production remains configured conceptually for `bookings@lasclottes.com` to guests and `info@lasclottes.com` to the owner.
+- A private, noindex booking-operations page is staged at `/booking-operations.html`. It lists only paid-booking email failures and can retry one email without creating a booking or charge. Booking data remains unavailable unless a separate encrypted operations key is configured and supplied.
 - The temporary `workers.dev` hostname sends a host-specific `X-Robots-Tag: noindex` header. That rule does not apply to the future `lasclottes.com` custom domain, so staging cannot compete with the public site in search results.
 
 ## Owner decisions required before payments are enabled
@@ -53,6 +54,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Seed the blocked-date ranges from the current public Lasclottes calendar and recheck every month through May 2028. Recheck once more immediately before launch for subsequent owner updates.
 - [x] The Cloudflare Free zone has been prepared and all three Wix A records, the Wix `www` and `m` CNAMEs, and Google Workspace MX/TXT records were imported in DNS-only mode. Authoritative nameservers have not been changed; Resend verification cannot finish while Wix hosts DNS.
 - [x] Authorize Wrangler for the Cloudflare account, deploy the permanent staging Worker and store all test service settings as encrypted Worker secrets.
+- [x] Configure a test-only encrypted operations key on the Cloudflare staging Worker and review branch. The authenticated staging page connected to Neon successfully and reported zero current email issues; invalid or missing credentials fail closed.
 - [ ] After the Cloudflare DNS zone is active, add only Resend's DKIM TXT, `send` MX and `send` SPF TXT records, then verify the domain. Keep all root Google Workspace MX, SPF and verification records unchanged.
 - [ ] After Resend verifies the domain, set `info@lasclottes.com` and `bookings@lasclottes.com` in the encrypted Cloudflare production settings and remove the staging-only provider sender override.
 - [x] Keep `BOOKING_PAYMENTS_ENABLED` true only in Preview for sandbox testing and absent/false in Production.
@@ -76,7 +78,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Record partial and full Stripe refund events for audit without automatically cancelling the booking or releasing its dates.
 - [x] The return page checks the server-side payment state; it never treats a URL visit alone as proof of payment.
 - [x] On Cloudflare staging, the guest and owner confirmation paths each send exactly one message containing dates, guests, amount paid, later balance/due date, tourist tax and contact details. The test payment, both delivery webhooks and the full test refund were verified, then the test dates were released.
-- [ ] Failed email delivery is visible to the owner and retryable without creating a duplicate booking or charge.
+- [ ] Complete the final failed-email recovery acceptance test: the authenticated operations page, delivery-failure listing, retry limits, generation-specific Resend idempotency and charge/booking isolation are implemented and tested, but deliberately triggering the final external retry email still requires action-time confirmation. Create a separate production operations key and give it to Sally through a secure channel before launch.
 - [x] Signed Resend delivery callbacks are verified against the raw body, protected from replay, de-duplicated and stored as delivered, delayed, bounced, complained, failed or suppressed audit outcomes.
 - [x] The hosted Preview Resend endpoint rejects forged signatures and accepts a valid synthetic delivery exactly once; the disposable booking, delivery and event rows were removed after verification.
 - [x] Concurrent webhook retries and email-delivery claims use leases so they cannot send the same notification twice while another attempt is still running.

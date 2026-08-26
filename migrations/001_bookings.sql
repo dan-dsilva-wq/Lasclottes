@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS email_deliveries (
     kind text NOT NULL,
     status text NOT NULL,
     attempts integer NOT NULL DEFAULT 1,
+    send_generation integer NOT NULL DEFAULT 1,
     provider_id text,
     provider_status text,
     provider_status_detail text,
@@ -92,6 +93,7 @@ CREATE TABLE IF NOT EXISTS email_deliveries (
 ALTER TABLE email_deliveries ADD COLUMN IF NOT EXISTS provider_status text;
 ALTER TABLE email_deliveries ADD COLUMN IF NOT EXISTS provider_status_detail text;
 ALTER TABLE email_deliveries ADD COLUMN IF NOT EXISTS last_provider_event_at timestamptz;
+ALTER TABLE email_deliveries ADD COLUMN IF NOT EXISTS send_generation integer NOT NULL DEFAULT 1;
 
 CREATE TABLE IF NOT EXISTS resend_webhook_events (
     event_id text PRIMARY KEY,

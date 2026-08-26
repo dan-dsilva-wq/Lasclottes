@@ -101,7 +101,7 @@ test('transactional emails have safe reply addresses and identify the API client
     });
     assert.equal(ownerMessage.reply_to, booking.email);
 
-    const headers = resendHeaders('test-key', 'guest_payment_confirmation/test-booking');
+    const headers = resendHeaders('test-key', 'guest_payment_confirmation/test-booking/v1');
     assert.match(headers['User-Agent'], /^Lasclottes-Booking\//);
-    assert.equal(headers['Idempotency-Key'], 'guest_payment_confirmation/test-booking');
+    assert.equal(headers['Idempotency-Key'], 'guest_payment_confirmation/test-booking/v1');
 });

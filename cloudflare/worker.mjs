@@ -1,4 +1,5 @@
 import availabilityHandler from '../api/availability.js';
+import bookingOperationsHandler from '../api/booking-operations.js';
 import bookingStatusHandler from '../api/booking-status.js';
 import checkoutHandler from '../api/create-stripe-checkout.js';
 import { POST as resendWebhookHandler } from '../api/resend-webhook.mjs';
@@ -9,6 +10,7 @@ const { setRuntimeConfig } = configModule;
 
 const API_ROUTES = new Map([
     ['/api/availability', availabilityHandler],
+    ['/api/booking-operations', bookingOperationsHandler],
     ['/api/booking-status', bookingStatusHandler],
     ['/api/create-stripe-checkout', checkoutHandler]
 ]);

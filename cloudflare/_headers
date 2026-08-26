@@ -14,6 +14,10 @@ https://lasclottes.super-bread-8b96.workers.dev/*
 /data/availability.json
   Cache-Control: public, max-age=0, s-maxage=60, must-revalidate
 
+/booking-operations.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
+
 /css/*
   Cache-Control: public, max-age=2592000, s-maxage=31536000, stale-while-revalidate=604800
 

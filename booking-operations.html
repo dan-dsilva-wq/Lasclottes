@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Operations | Lasclottes</title>
+    <meta name="description" content="Private Lasclottes booking email operations.">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <link rel="icon" type="image/png" href="Media/Logo/Lasclottes Logo 3 png.png">
+    <link rel="stylesheet" href="css/style.css?v=20260824f">
+</head>
+<body class="legal-page">
+    <main class="status-shell">
+        <section class="status-card" aria-labelledby="operations-title">
+            <img src="Media/optimized/lasclottes-logo-w320.webp" alt="Lasclottes" width="220" height="83">
+            <h1 id="operations-title">Booking email checks</h1>
+            <p>This private page shows paid-booking emails that need attention. It cannot create a booking or charge a card.</p>
+
+            <form id="operations-login">
+                <div class="form-group">
+                    <label for="operations-token">Operations access key</label>
+                    <input id="operations-token" name="operations-token" type="password" minlength="32" maxlength="256" autocomplete="current-password" required>
+                </div>
+                <button class="btn btn-primary" type="submit">Check booking emails</button>
+            </form>
+
+            <p id="operations-status" role="status" aria-live="polite">Enter the separate operations access key to continue.</p>
+
+            <div id="operations-results" hidden>
+                <div class="pricing__table-wrapper">
+                    <table class="pricing__table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Booking</th>
+                                <th scope="col">Guest</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Problem</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="operations-issues"></tbody>
+                    </table>
+                </div>
+                <div class="status-card__actions">
+                    <button class="btn btn-outline" id="operations-refresh" type="button">Refresh</button>
+                    <button class="btn btn-outline" id="operations-lock" type="button">Lock page</button>
+                </div>
+            </div>
+
+            <div class="status-card__actions">
+                <a class="btn btn-outline" href="index.html">Return to the website</a>
+            </div>
+        </section>
+    </main>
+    <script defer src="js/booking-operations.js?v=20260826a"></script>
+</body>
+</html>
