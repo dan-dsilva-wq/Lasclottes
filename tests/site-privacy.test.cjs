@@ -80,7 +80,10 @@ test('the legal notice draft is reviewable but fails closed until owner facts ar
     assert.match(legalNotice, /PENDING OWNER/);
     assert.match(legalNotice, /data-owner-required="mairie-registration"/);
     assert.match(legalNotice, /data-owner-required="consumer-mediator"/);
-    assert.match(legalNotice, /data-owner-required="host-details"/);
+    assert.doesNotMatch(legalNotice, /data-owner-required="host-details"/);
+    assert.match(legalNotice, /Cloudflare, Inc\./);
+    assert.match(legalNotice, /101 Townsend Street, San Francisco, California 94107/);
+    assert.match(legalNotice, /\+1 650 319 8930/);
     assert.doesNotMatch(read('sitemap.xml'), /legal-notice\.html/);
     assert.match(read(path.join('scripts', 'build-cloudflare.cjs')), /'legal-notice\.html'/);
 });

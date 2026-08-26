@@ -44,6 +44,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 ## French direct-booking compliance gates
 
 - [ ] Publish a legal notice containing the final operator, contact, registration and hosting details required for a French professional website.
+- [x] Prepare the host identification required by the legal notice from Cloudflare's official current contact information: Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107, USA, +1 650 319 8930. Rechecked 26 August 2026; the qualified final review must still confirm its use in Sally's notice.
 - [ ] Give every guest, before payment, a written seasonal-rental agreement and sufficiently detailed property description containing the specific accommodation, dates, guests, complete price and applicable conditions.
 - [x] Preserve the server-generated property description, quote, exact terms text, terms version and acceptance time for each checkout, and reproduce that record in the guest confirmation. The current version remains marked as a draft until the cancellation policy is approved.
 - [ ] State clearly whether the initial 25% payment is an `acompte` or `arrhes`; those terms have different consequences under French law. Do not use an ambiguous translation of “deposit”.
