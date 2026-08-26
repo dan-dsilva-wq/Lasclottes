@@ -12,3 +12,16 @@ Media/Videos/org_0ed7af30e437593d_1589822473000.mp4
 # Exclude local reference copies and experiments
 discarded/
 /Lasclottes French Farmhouse*
+
+# Review, test and production-build sources are not public website assets.
+OWNER_REVIEW_PACKET.md
+LAUNCH_RUNBOOK.md
+tests/
+scripts/
+migrations/
+cloudflare/
+wrangler.jsonc
+data/launch-approvals.json
+
+# Local environment files must never enter a deployment upload.
+.env*.local

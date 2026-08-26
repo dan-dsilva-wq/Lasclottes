@@ -1,6 +1,8 @@
 'use strict';
 
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const test = require('node:test');
 
 const {
@@ -13,6 +15,8 @@ const {
     redirectCases,
     sitemapPaths
 } = require('../scripts/audit-deployment.cjs');
+
+const root = path.resolve(__dirname, '..');
 
 test('deployment audit parses metadata and exact sitemap paths', () => {
     const page = metadata(`
@@ -91,4 +95,19 @@ test('deployment audit limits concurrent network work without losing items', asy
     });
     assert.ok(peak <= 2);
     assert.deepEqual(completed.sort((a, b) => a - b), [1, 2, 3, 4, 5, 6]);
+});
+
+test('Vercel review deployments exclude internal release material', () => {
+    const ignore = fs.readFileSync(path.join(root, '.vercelignore'), 'utf8');
+    for (const privatePath of [
+        'OWNER_REVIEW_PACKET.md',
+        'LAUNCH_RUNBOOK.md',
+        'tests/',
+        'scripts/',
+        'migrations/',
+        'cloudflare/',
+        'wrangler.jsonc',
+        'data/launch-approvals.json',
+        '.env*.local'
+    ]) assert.match(ignore, new RegExp(`^${privatePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'm'));
 });
