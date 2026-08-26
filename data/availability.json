@@ -1,7 +1,7 @@
 {
   "property": "Lasclottes Granary and Annex",
-  "updated": "2026-08-24",
-  "source": "Existing Lasclottes public availability calendar",
+  "updated": "2026-08-26",
+  "source": "Live Lasclottes Wix availability calendar, rechecked month by month through May 2028",
   "dateRangeRule": "start-inclusive, end-exclusive",
   "blocked": [
     {

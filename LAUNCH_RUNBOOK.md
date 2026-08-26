@@ -16,16 +16,17 @@ This file is the operational checklist for replacing the Wix website. It deliber
 
 ## Owner decisions required before payments are enabled
 
-- [x] Use the verified public operator details: Sally Spencer, trading as Lasclottes / French Riverside Holidays, SIREN 521 892 992, Lieu-dit Las Clottes, 47140 Saint-Sylvestre-sur-Lot, France.
+- [x] Use the verified public operator details: Sally Spencer, trading as Lasclottes / French Riverside Holidays, registered in the French Registre national des entreprises (RNE), SIREN 521 892 992, SIRET 521 892 992 00012, Lieu-dit Las Clottes, 47140 Saint-Sylvestre-sur-Lot, France. These details were rechecked against the official INPI register on 26 August 2026.
 - [ ] Approve the booking terms, especially the cancellation outcome within 60 days of arrival.
-- [x] Use the website's public tourist-tax figure of EUR 1.41 per adult per night; it remains separate from the GBP card charge and its collection method is confirmed with the booking.
+- [x] Use the current Wix website's public tourist-tax figure of EUR 1.41 per adult per night; it remains separate from the GBP card charge and its collection method is confirmed with the booking. The live Wix page was rechecked on 26 August 2026.
 - [x] Use the website's GBP pricing rules, 25% initial payment, GBP 500 refundable damage deposit and 60-day balance deadline.
 - [x] Use the website's maximum occupancy of 12 and its current five-bedroom/four-bathroom description.
 - [x] Use the website's `info@lasclottes.com` inbox for new-booking notifications and `bookings@lasclottes.com` as the verified transactional sender once Resend DNS is active.
-- [ ] Confirm the currently blocked dates in `data/availability.json` against the authoritative booking diary.
+- [x] Use the currently blocked dates in `data/availability.json`: they were rechecked month by month against the live Lasclottes Wix calendar through May 2028 on 26 August 2026 and match exactly. Sally should still review any bookings or closures added after that date before launch.
 - [ ] Provide the current mairie registration number for the meublé de tourisme and confirm it appears on every direct and third-party listing. Since 20 May 2026, French town halls must issue a registration number for declared tourist accommodation.
 - [ ] Sally appoints a consumer mediator listed by the CECMC and provides its official name, postal address and website. Add those exact details to the website, booking terms and booking confirmation before accepting payment.
-- [ ] Confirm the operator's SIRET/RCS and VAT position with Sally or her French accountant, then approve the complete legal notice and the presentation of GBP accommodation prices and EUR tourist tax.
+- [x] Confirm the operator's SIRET and RNE registration from the official French register: SIRET 521 892 992 00012, active entrepreneur individuel, tourist and other short-stay accommodation activity.
+- [ ] Confirm the VAT position, whether any RCS wording is appropriate, and the property's tourist-accommodation classification with Sally or her French accountant; then approve the complete legal notice and the presentation of GBP accommodation prices and EUR tourist tax. The official 2026 local tourist-tax decision publishes category-dependent rates and does not by itself identify Lasclottes' classification, so it does not safely replace the current website figure.
 
 The legal pages are a practical working draft, not legal advice. The accommodation owner should approve them before accepting a payment.
 
@@ -49,7 +50,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Keep Vercel on Hobby and restrict it to non-live review deployments; do not upgrade to Pro.
 - [x] Pull the provisioned Preview environment locally into the ignored `.vercel` directory without displaying or committing secret values.
 - [x] Apply the reviewed booking schema automatically to the isolated Preview database branch.
-- [ ] Confirm and seed the authoritative blocked-date ranges once from the owner's booking diary.
+- [x] Seed the blocked-date ranges from the current public Lasclottes calendar and recheck every month through May 2028. Recheck once more immediately before launch for subsequent owner updates.
 - [x] The Cloudflare Free zone has been prepared and all three Wix A records, the Wix `www` and `m` CNAMEs, and Google Workspace MX/TXT records were imported in DNS-only mode. Authoritative nameservers have not been changed; Resend verification cannot finish while Wix hosts DNS.
 - [x] Authorize Wrangler for the Cloudflare account, deploy the permanent staging Worker and store all test service settings as encrypted Worker secrets.
 - [ ] After the Cloudflare DNS zone is active, add only Resend's DKIM TXT, `send` MX and `send` SPF TXT records, then verify the domain. Keep all root Google Workspace MX, SPF and verification records unchanged.
@@ -110,7 +111,7 @@ Use Stripe test mode for all pre-launch tests. Do not submit a real card payment
 - [x] Security headers, caching rules, robots.txt and sitemap.xml are correct on the hosted deployment.
 - [x] Each former Wix URL returns a permanent redirect to its closest new equivalent.
 - [x] Production and development dependency audits report no known vulnerabilities.
-- [ ] The owner reviews the final wording, prices, photographs, telephone numbers and booking availability.
+- [ ] The owner reviews the final wording, prices, photographs, telephone numbers and any booking-calendar changes made after 26 August 2026.
 
 ## Domain and email cutover
 

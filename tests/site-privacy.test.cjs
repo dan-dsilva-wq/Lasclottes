@@ -66,6 +66,8 @@ test('legal pages identify the verified accommodation operator', () => {
         const html = read(pagePath);
         assert.match(html, /Sally Spencer/);
         assert.match(html, /SIREN 521 892 992/);
+        assert.match(html, /SIRET 521 892 992 00012/);
+        assert.match(html, /Registre national des entreprises \(RNE\)/);
         assert.match(html, /Lieu-dit Las Clottes, 47140 Saint-Sylvestre-sur-Lot, France/);
     }
 });
@@ -75,7 +77,7 @@ test('booking terms and database preserve the agreement accepted at checkout', (
     const databaseSource = read(path.join('lib', 'database.js'));
     const checkoutSource = read(path.join('api', 'create-stripe-checkout.js'));
 
-    assert.match(termsPage, /data-terms-version="2026-08-25-draft-1"/);
+    assert.match(termsPage, /data-terms-version="2026-08-26-draft-2"/);
     assert.match(termsPage, /five bedrooms, four bathrooms and a maximum occupancy of 12 people/i);
     assert.match(termsPage, /Farmhouse[^.]*not included in a current booking/i);
     assert.match(databaseSource, /agreement_version text/);

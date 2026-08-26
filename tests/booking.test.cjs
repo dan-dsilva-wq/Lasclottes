@@ -97,6 +97,9 @@ test('the server creates an exact booking-agreement snapshot from its own quote'
     const agreement = bookingAgreementSnapshot({ quote, publicReference: 'LC-AGREEMENT1' });
 
     assert.equal(agreement.termsVersion, BOOKING_TERMS_VERSION);
+    assert.equal(agreement.operator.register, 'Registre national des entreprises (RNE)');
+    assert.equal(agreement.operator.siren, '521 892 992');
+    assert.equal(agreement.operator.siret, '521 892 992 00012');
     assert.equal(agreement.booking.reference, 'LC-AGREEMENT1');
     assert.equal(agreement.booking.guests, 10);
     assert.equal(agreement.price.accommodationTotalMinorUnits, 330000);

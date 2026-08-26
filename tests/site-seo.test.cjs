@@ -131,8 +131,15 @@ test('localized home pages describe the current accommodation with honest lodgin
 
         assert.ok(lodging, `${relativePath}: LodgingBusiness JSON-LD`);
         assert.equal(lodging['@id'], `${origin}/#lodging`, `${relativePath}: stable lodging ID`);
-        assert.equal(lodging.identifier?.propertyID, 'SIREN', `${relativePath}: business identifier type`);
-        assert.equal(lodging.identifier?.value, '521892992', `${relativePath}: business identifier`);
+        const identifiers = Array.isArray(lodging.identifier) ? lodging.identifier : [lodging.identifier];
+        assert.ok(
+            identifiers.some((value) => value?.propertyID === 'SIREN' && value?.value === '521892992'),
+            `${relativePath}: SIREN business identifier`
+        );
+        assert.ok(
+            identifiers.some((value) => value?.propertyID === 'SIRET' && value?.value === '52189299200012'),
+            `${relativePath}: SIRET establishment identifier`
+        );
         assert.equal(lodging.containsPlace?.['@type'], 'Accommodation', `${relativePath}: accommodation entity`);
         assert.equal(lodging.containsPlace?.numberOfBedrooms, 5, `${relativePath}: bedrooms`);
         assert.equal(lodging.containsPlace?.numberOfBathroomsTotal, 4, `${relativePath}: bathrooms`);
