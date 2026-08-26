@@ -2,6 +2,7 @@
 .wrangler/
 .playwright-cli/
 output/playwright/
+tmp/
 .env*.local
 node_modules/
 dist/

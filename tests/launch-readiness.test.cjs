@@ -56,6 +56,7 @@ test('the readiness gate can turn fully green only when decisions and published 
         vatPosition: 'Not subject to VAT after professional review',
         rcsWording: 'RCS wording not applicable after professional review',
         touristAccommodationClassification: 'Unclassified furnished tourist accommodation',
+        touristTaxPosition: 'Official unclassified-accommodation proportional tariff confirmed by the adviser',
         legalAccountingReview: {
             reviewedBy: 'Qualified French adviser',
             reviewedAt: '2026-08-26'

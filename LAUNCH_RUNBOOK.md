@@ -21,7 +21,7 @@ This file is the operational checklist for replacing the Wix website. It deliber
 
 - [x] Use the verified public operator details: Sally Spencer, trading as Lasclottes / French Riverside Holidays, registered in the French Registre national des entreprises (RNE), SIREN 521 892 992, SIRET 521 892 992 00012, Lieu-dit Las Clottes, 47140 Saint-Sylvestre-sur-Lot, France. These details were rechecked against the official INPI register on 26 August 2026.
 - [ ] Approve the booking terms, especially the cancellation outcome within 60 days of arrival.
-- [x] Use the current Wix website's public tourist-tax figure of EUR 1.41 per adult per night; it remains separate from the GBP card charge and its collection method is confirmed with the booking. The live Wix page was rechecked on 26 August 2026.
+- [x] Remove the old Wix site's unsupported EUR 1.41 flat tourist-tax estimate from the new quote. The official Fumel Vallée du Lot 2026 notice sets EUR 1.44 for a valid three-star property, while an unclassified or pending-classification property uses 5.76% of the pre-tax nightly accommodation cost per person capped at EUR 3.60. Until Sally's classification and calculation method are confirmed, the review build shows “to be confirmed” and never adds tourist tax to the GBP card charge.
 - [x] Use the website's GBP pricing rules, 25% initial payment, GBP 500 refundable damage deposit and 60-day balance deadline.
 - [x] Use the website's maximum occupancy of 12 and its current five-bedroom/four-bathroom description.
 - [x] Use the website's `info@lasclottes.com` inbox for new-booking notifications and `bookings@lasclottes.com` as the verified transactional sender once Resend DNS is active.
@@ -29,7 +29,7 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - [ ] Provide the current mairie registration number for the meublé de tourisme and confirm it appears on every direct and third-party listing. Since 20 May 2026, French town halls must issue a registration number for declared tourist accommodation.
 - [ ] Sally appoints a consumer mediator listed by the CECMC and provides its official name, postal address and website. Add those exact details to the website, booking terms and booking confirmation before accepting payment.
 - [x] Confirm the operator's SIRET and RNE registration from the official French register: SIRET 521 892 992 00012, active entrepreneur individuel, tourist and other short-stay accommodation activity.
-- [ ] Confirm the VAT position, whether any RCS wording is appropriate, and the property's tourist-accommodation classification with Sally or her French accountant; then approve the complete legal notice and the presentation of GBP accommodation prices and EUR tourist tax. The official 2026 local tourist-tax decision publishes category-dependent rates and does not by itself identify Lasclottes' classification, so it does not safely replace the current website figure.
+- [ ] Confirm the VAT position, whether any RCS wording is appropriate, the property's current tourist-accommodation classification and the matching 2026 tourist-tax treatment with Sally or her French accountant; then approve the complete legal notice and the presentation of GBP accommodation prices and EUR tourist tax.
 
 The legal pages are a practical working draft, not legal advice. The accommodation owner should approve them before accepting a payment.
 

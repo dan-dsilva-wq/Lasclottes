@@ -58,6 +58,24 @@ test('confirmation email shows exact amounts and the 60-day balance deadline', (
     assert.match(content.text, /Making a booking: payment and written confirmation are required\./);
 });
 
+test('new confirmations do not invent a tourist-tax amount while classification is pending', () => {
+    const pendingTaxBooking = {
+        ...booking,
+        tourist_tax_eur_cents: 0,
+        agreement_snapshot: {
+            ...booking.agreement_snapshot,
+            price: {
+                touristTaxStatus: 'pending_owner_confirmation',
+                touristTaxCurrency: 'EUR',
+                touristTaxMinorUnits: null
+            }
+        }
+    };
+    const content = buildGuestEmail(pendingTaxBooking);
+    assert.match(content.text, /Separate tourist tax: To be confirmed from the classification and official rate/);
+    assert.doesNotMatch(content.text, /Separate tourist tax: €0\.00/);
+});
+
 test('owner notification contains booking and contact details', () => {
     const content = buildOwnerEmail(booking);
     assert.match(content.subject, /LC-EMAIL001/);

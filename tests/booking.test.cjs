@@ -23,7 +23,8 @@ test('high-season weekly booking is priced by the server', () => {
     assert.equal(quote.stayTotal, 3300);
     assert.equal(quote.amountDueNow, 825);
     assert.equal(quote.balanceDueLater, 2975);
-    assert.equal(quote.touristTaxEur, 78.96);
+    assert.equal(quote.touristTaxEur, null);
+    assert.equal(quote.touristTaxStatus, 'pending_owner_confirmation');
 });
 
 test('near-term bookings charge the full stay and refundable damage deposit', () => {
@@ -37,7 +38,8 @@ test('near-term bookings charge the full stay and refundable damage deposit', ()
     assert.equal(quote.amountDueNow, 1300);
     assert.equal(quote.balanceDueLater, 0);
     assert.equal(quote.paymentStage, 'full_payment_now');
-    assert.equal(quote.touristTaxEur, 22.56);
+    assert.equal(quote.touristTaxEur, null);
+    assert.equal(quote.touristTaxStatus, 'pending_owner_confirmation');
 });
 
 test('blocked dates and invalid seasonal patterns are rejected', () => {
@@ -104,7 +106,8 @@ test('the server creates an exact booking-agreement snapshot from its own quote'
     assert.equal(agreement.booking.guests, 10);
     assert.equal(agreement.price.accommodationTotalMinorUnits, 330000);
     assert.equal(agreement.price.amountDueNowMinorUnits, 82500);
-    assert.equal(agreement.price.touristTaxMinorUnits, 7896);
+    assert.equal(agreement.price.touristTaxStatus, 'pending_owner_confirmation');
+    assert.equal(agreement.price.touristTaxMinorUnits, null);
     assert.match(agreement.propertyDescription, /five bedrooms, four bathrooms/i);
     assert.match(agreement.propertyDescription, /Farmhouse[^.]*not included/i);
     assert.match(agreement.termsText, /Cancellation:/);

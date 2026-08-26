@@ -83,7 +83,7 @@ const checkoutParams = ({ booking, quote, contact, origin }) => {
         adults: String(quote.adults),
         children: String(quote.children),
         stay_total_gbp: quote.stayTotal.toFixed(2),
-        tourist_tax_eur: quote.touristTaxEur.toFixed(2),
+        tourist_tax_status: quote.touristTaxStatus,
         damage_deposit_gbp: quote.damageDeposit.toFixed(2),
         amount_due_now_gbp: quote.amountDueNow.toFixed(2),
         balance_due_later_gbp: quote.balanceDueLater.toFixed(2),
@@ -92,6 +92,9 @@ const checkoutParams = ({ booking, quote, contact, origin }) => {
         booking_terms_version: BOOKING_TERMS_VERSION,
         language: contact.lang
     };
+    if (Number.isFinite(quote.touristTaxEur)) {
+        metadata.tourist_tax_eur = quote.touristTaxEur.toFixed(2);
+    }
     Object.entries(metadata).forEach(([key, value]) => {
         params.set(`metadata[${key}]`, value);
         params.set(`payment_intent_data[metadata][${key}]`, value);

@@ -12,6 +12,7 @@
   "vatPosition": null,
   "rcsWording": null,
   "touristAccommodationClassification": null,
+  "touristTaxPosition": null,
   "legalAccountingReview": {
     "reviewedBy": null,
     "reviewedAt": null

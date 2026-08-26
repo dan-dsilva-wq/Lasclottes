@@ -47,7 +47,7 @@ test('all localized price tables agree with the server currency and rates', () =
 test('browser-side quote constants mirror the authoritative server rules', () => {
     const script = read('js/main_old.js');
 
-    assert.match(script, new RegExp(`const touristTaxEurPerAdultNight = ${BOOKING_RULES.touristTaxEurPerAdultNight}`));
+    assert.match(script, new RegExp(`const touristTaxStatus = '${BOOKING_RULES.touristTaxStatus}'`));
     assert.match(script, new RegExp(`const refundableDamageDeposit = ${BOOKING_RULES.refundableDamageDeposit}`));
     assert.match(script, new RegExp(`const depositRate = ${BOOKING_RULES.depositRate}`));
     assert.match(script, new RegExp(`const fullPaymentWindowDays = ${BOOKING_RULES.fullPaymentWindowDays}`));
@@ -56,4 +56,14 @@ test('browser-side quote constants mirror the authoritative server rules', () =>
     assert.match(script, new RegExp(`rate: ${BOOKING_RULES.midSeasonNightlyRate}`));
     assert.match(script, new RegExp(`reducedRate: ${BOOKING_RULES.midSeasonReducedNightlyRate}`));
     assert.match(script, /stayTotal \* depositRate/);
+});
+
+test('unverified tourist tax is never presented as a fixed quote', () => {
+    for (const pagePath of ['index.html', 'fr.html', 'nl.html', 'booking-terms.html']) {
+        const page = read(pagePath);
+        assert.doesNotMatch(page, /(?:€|&euro;|EUR)\s*1[,.]41/i, `${pagePath}: obsolete flat tourist tax`);
+    }
+    assert.match(read('index.html'), /Tourist tax[^.]*separate[^.]*classification/i);
+    assert.match(read('fr.html'), /taxe de séjour[^.]*séparée[^.]*classement/i);
+    assert.match(read('nl.html'), /toeristenbelasting[^.]*classificatie/i);
 });

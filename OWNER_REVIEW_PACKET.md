@@ -6,7 +6,7 @@ Prepared 26 August 2026. This packet contains no passwords, payment keys or priv
 
 Sally does not need to re-research these items unless she believes they are wrong:
 
-- Operator: Sally Spencer, trading as Lasclottes / French Riverside Holidays.
+- Operator: Sally Spencer, trading as Lasclottes / French Riverside Holidays. ()
 - French registration: active entrepreneur individuel in the Registre national des entreprises (RNE).
 - SIREN: 521 892 992.
 - SIRET: 521 892 992 00012.
@@ -18,7 +18,8 @@ Sally does not need to re-research these items unless she believes they are wron
 - Initial payment shown on the current website: 25%.
 - Refundable damage deposit: GBP 500.
 - Balance deadline: 60 days before arrival.
-- Current public tourist-tax figure: EUR 1.41 per adult per night, kept separate from the GBP card payment pending final professional confirmation.
+- The EUR 1.41 figure on the old public website must not be carried into the new booking quote. Fumel Vallée du Lot's official 2026 notice publishes EUR 1.44 only for a valid three-star classification. An unclassified or pending-classification property instead uses 5.76% of the pre-tax nightly accommodation cost per person, capped at EUR 3.60, after the departmental and regional additions.
+- Tourist tax remains separate from the GBP card payment. The review build now shows “to be confirmed” until Sally's valid classification and the GBP-to-EUR/HT calculation method are professionally confirmed.
 - The booking calendar was checked month by month against the live Wix calendar through May 2028 on 26 August 2026.
 - Booking notifications go to `info@lasclottes.com`; automated guest messages will come from `bookings@lasclottes.com` after the domain is verified with the email provider.
 
@@ -49,9 +50,21 @@ Ask the accountant or French adviser to provide exact publishable wording for ea
 
 - VAT position:
 - RCS wording, or a written statement that RCS wording is not applicable:
-- Current tourist-accommodation classification, including whether it is classified or unclassified:
-- Confirm the correct tourist-tax calculation and whether EUR 1.41 per adult per night remains correct:
+- Current tourist-accommodation classification and its valid-until date:
+- Select and approve the applicable 2026 tourist-tax treatment:
+  - [ ] Valid three-star classification: EUR 1.44 per liable person per night.
+  - [ ] Unclassified or awaiting classification: 5.76% of the pre-tax nightly accommodation cost per person, capped at EUR 3.60; provide the approved GBP-to-EUR and HT calculation method.
+  - [ ] Another classification: provide the category and exact published rate.
+- Confirm which guests are liable or exempt and how/when the tax is collected:
 - Confirm that displaying the accommodation price in GBP and the tourist tax separately in EUR is acceptable:
+
+Official 2026 local sources checked on 26 August 2026:
+
+- Fumel Vallée du Lot tax portal: <https://fumelvalleedulot.taxesejour.fr/>
+- Official 2026 tariff notice: <https://fumelvalleedulot.taxesejour.fr/portail/document/38242491/download?referer=https://fumelvalleedulot.taxesejour.fr/>
+- Official resolution for rates effective 1 January 2026: <https://fumelvalleedulot.taxesejour.fr/portail/document/27994651/download?referer=https://fumelvalleedulot.taxesejour.fr/>
+
+The tariff notice also states that minors, seasonal workers employed in the authority's territory, and people receiving emergency or temporary rehousing are exempt. The final website wording should use the adviser's confirmed treatment rather than assuming that every adult is automatically liable.
 
 ### 4. Qualified review
 

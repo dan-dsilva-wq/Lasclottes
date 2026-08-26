@@ -16,7 +16,9 @@ test('the owner packet contains the verified operator and current commercial fac
     assert.match(packet, /GBP 200 per night/);
     assert.match(packet, /GBP 250 per night/);
     assert.match(packet, /GBP 3,300 per week/);
-    assert.match(packet, /EUR 1\.41 per adult per night/);
+    assert.match(packet, /EUR 1\.44[^\n]*three-star classification/);
+    assert.match(packet, /5\.76%[^\n]*capped at EUR 3\.60/);
+    assert.match(packet, /fumelvalleedulot\.taxesejour\.fr/);
     assert.match(packet, /five bedrooms, four bathrooms, maximum 12 guests/i);
 });
 
@@ -32,6 +34,7 @@ test('the owner packet asks for every owner-controlled launch approval exactly o
         'VAT POSITION:',
         'RCS WORDING OR NOT-APPLICABLE WORDING:',
         'TOURIST-ACCOMMODATION CLASSIFICATION:',
+        'TOURIST-TAX CONFIRMATION:',
         'LEGAL/ACCOUNTING REVIEWER:',
         'LEGAL/ACCOUNTING REVIEW DATE:',
         'FINAL CONTENT APPROVAL DATE:',
@@ -43,6 +46,7 @@ test('the owner packet asks for every owner-controlled launch approval exactly o
     assert.equal(approvals.bookingTermsApprovedAt, null);
     assert.equal(approvals.mairieRegistrationNumber, null);
     assert.equal(approvals.consumerMediator.name, null);
+    assert.equal(approvals.touristTaxPosition, null);
 });
 
 test('the owner packet uses official contact routes and is not published by the live Cloudflare build', () => {

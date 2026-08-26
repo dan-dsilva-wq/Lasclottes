@@ -56,7 +56,8 @@ test('Stripe line items use the database amount, not browser totals', () => {
     assert.equal(params.get('submit_type'), 'book');
     assert.equal(params.get('locale'), 'en');
     assert.equal(params.get('metadata[stay_total_gbp]'), '800.00');
-    assert.equal(params.get('metadata[tourist_tax_eur]'), '22.56');
+    assert.equal(params.get('metadata[tourist_tax_status]'), 'pending_owner_confirmation');
+    assert.equal(params.has('metadata[tourist_tax_eur]'), false);
     assert.match(params.get('metadata[booking_terms_version]'), /^2026-08-26-/);
     assert.match(params.get('success_url'), /^https:\/\/preview\.example\/payment-success\.html/);
 });

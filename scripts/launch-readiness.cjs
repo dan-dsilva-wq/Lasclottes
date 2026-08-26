@@ -97,8 +97,9 @@ const readinessReport = ({ root = defaultRoot, now = new Date() } = {}) => {
         'Owner and legal decisions',
         meaningful(approvals.vatPosition, 4)
             && meaningful(approvals.rcsWording, 4)
-            && meaningful(approvals.touristAccommodationClassification, 3),
-        'Confirm VAT, RCS wording and the tourist-accommodation classification.'
+            && meaningful(approvals.touristAccommodationClassification, 3)
+            && meaningful(approvals.touristTaxPosition, 12),
+        'Confirm VAT, RCS wording, the tourist-accommodation classification and the matching tourist-tax treatment.'
     );
     add(
         'professional_review',

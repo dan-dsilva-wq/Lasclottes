@@ -584,7 +584,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const agreementInput = document.getElementById('equipmentAgreement');
         const submitButton = bookingForm.querySelector('button[type="submit"]');
         const stripeCheckoutEndpoint = bookingForm.dataset.stripeCheckoutEndpoint || '/api/create-stripe-checkout';
-        const touristTaxEurPerAdultNight = 1.41;
+        const touristTaxStatus = 'pending_owner_confirmation';
         const refundableDamageDeposit = 500;
         const depositRate = 0.25;
         const fullPaymentWindowDays = 60;
@@ -605,14 +605,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const formatGbp = (value) => {
             if (!Number.isFinite(value) || value <= 0) return '-';
             return `\u00A3${value.toLocaleString('en-GB', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            })}`;
-        };
-
-        const formatEur = (value) => {
-            if (!Number.isFinite(value) || value <= 0) return '-';
-            return `\u20AC${value.toLocaleString('en-GB', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             })}`;
@@ -680,7 +672,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let stayTotal = 0;
             let amountDueNow = 0;
             let balanceDueLater = 0;
-            let touristTax = 0;
+            let touristTax = null;
             let damageDeposit = 0;
             let warning = '';
             let daysUntilArrival = null;
@@ -758,7 +750,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     stayTotal = season.rate * nights;
                 }
                 damageDeposit = refundableDamageDeposit;
-                touristTax = adults * nights * touristTaxEurPerAdultNight;
                 if (withinFullPaymentWindow) {
                     amountDueNow = stayTotal + damageDeposit;
                     balanceDueLater = 0;
@@ -771,7 +762,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (nightsOutput) nightsOutput.textContent = nights > 0 ? String(nights) : '-';
             if (guestsOutput) guestsOutput.textContent = guests > 0 ? String(guests) : '-';
             if (totalOutput) totalOutput.textContent = formatGbp(stayTotal);
-            if (touristTaxOutput) touristTaxOutput.textContent = formatEur(touristTax);
+            if (touristTaxOutput) {
+                touristTaxOutput.textContent = stayTotal > 0
+                    ? i18n(
+                        'To be confirmed',
+                        'À confirmer',
+                        'Wordt bevestigd'
+                    )
+                    : '-';
+            }
             if (damageDepositOutput) damageDepositOutput.textContent = formatGbp(damageDeposit);
             if (depositOutput) depositOutput.textContent = formatGbp(amountDueNow);
             if (balanceOutput) balanceOutput.textContent = formatGbp(balanceDueLater);
@@ -801,7 +800,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (hiddenGuests) hiddenGuests.value = guests > 0 ? String(guests) : '';
             if (hiddenTotal) hiddenTotal.value = stayTotal > 0 ? stayTotal.toFixed(2) : '';
             if (hiddenDeposit) hiddenDeposit.value = amountDueNow > 0 ? amountDueNow.toFixed(2) : '';
-            if (hiddenTouristTax) hiddenTouristTax.value = touristTax > 0 ? touristTax.toFixed(2) : '';
+            if (hiddenTouristTax) hiddenTouristTax.value = '';
             if (hiddenDamageDeposit) hiddenDamageDeposit.value = damageDeposit > 0 ? damageDeposit.toFixed(2) : '';
             if (hiddenDueNow) hiddenDueNow.value = amountDueNow > 0 ? amountDueNow.toFixed(2) : '';
             if (hiddenBalanceLater) hiddenBalanceLater.value = balanceDueLater > 0 ? balanceDueLater.toFixed(2) : '';
@@ -823,6 +822,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 amountDueNow,
                 balanceDueLater,
                 touristTax,
+                touristTaxStatus,
                 damageDeposit,
                 warning,
                 daysUntilArrival,
@@ -953,6 +953,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     stayTotal: quote.stayTotal,
                     balanceDueLater: quote.balanceDueLater,
                     touristTaxEur: quote.touristTax,
+                    touristTaxStatus: quote.touristTaxStatus,
                     damageDeposit: quote.damageDeposit,
                     paymentStage: quote.withinFullPaymentWindow ? 'full_payment_now' : 'deposit_now_balance_later',
                     firstName: document.getElementById('firstName')?.value?.trim() || '',
