@@ -9,6 +9,7 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - The domain is registered at Wix and currently uses Wix nameservers.
 - Google Workspace email uses the domain's existing MX and TXT records. Those records must not be removed or replaced during the website cutover.
 - Vercel Hobby is the review host only. It must not serve the commercial live site under Vercel's current non-commercial Hobby terms.
+- The stable `lasclottes.vercel.app` alias formerly served an obsolete indexable March 2026 deployment with an old checkout route. On 26 August 2026 it was replaced with the current fail-closed build, given an explicit `X-Robots-Tag: noindex, nofollow, noarchive` header, and verified to return `payments_disabled` before any booking, database or Stripe work. It remains a review/quarantine alias only; `lasclottes.com` still points to Wix.
 - Cloudflare Workers with Static Assets is the selected no-monthly-fee production target. The public domain will still be `lasclottes.com`. The Free zone has been prepared with the current Wix and Google Workspace records in DNS-only mode, but Cloudflare is not authoritative yet.
 - A permanent Free-plan staging Worker is deployed at `https://lasclottes.super-bread-8b96.workers.dev` with encrypted test-only Stripe, Neon and Resend settings. Production online payments remain disabled; the payment switch is enabled only on the isolated Vercel Preview and Cloudflare staging environments.
 - Until Resend can verify `lasclottes.com` after the DNS move, Cloudflare staging uses Resend's provider test sender and the provider account's permitted test inbox. Production remains configured conceptually for `bookings@lasclottes.com` to guests and `info@lasclottes.com` to the owner.
@@ -58,6 +59,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Configure a Preview-only Stripe webhook and verify signed callbacks, rejected invalid signatures and retry idempotency.
 - [x] Configure the Preview-only Resend delivery webhook for sent, delivered, delayed, bounced, complained, failed and suppressed events; keep its signing secret scoped to the review branch.
 - [x] Keep Vercel on Hobby and restrict it to non-live review deployments; do not upgrade to Pro.
+- [x] Replace the obsolete indexable `lasclottes.vercel.app` production alias with the current no-index, payments-disabled review build.
 - [x] Pull the provisioned Preview environment locally into the ignored `.vercel` directory without displaying or committing secret values.
 - [x] Apply the reviewed booking schema automatically to the isolated Preview database branch.
 - [x] Seed the blocked-date ranges from the current public Lasclottes calendar and recheck every month through May 2028. Recheck once more immediately before launch for subsequent owner updates.
@@ -169,4 +171,5 @@ These values are a rollback record, not instructions for the Vercel configuratio
 - [ ] Change the Wix password that was shared during development and enable multi-factor authentication.
 - [ ] Use separate named administrator accounts where Wix, Vercel, GitHub, Stripe, Neon, Resend and Google support them.
 - [ ] Store production secrets only in the relevant provider/Cloudflare encrypted environment settings, never in Git or this file.
+- [ ] After the live Stripe credential has been installed and verified in Cloudflare production, remove the legacy encrypted live Stripe variable from Vercel Production. It is currently unable to create checkout sessions because the Vercel production payment and terms gates are both disabled; do not delete it before confirming it is the credential intended for the Cloudflare cutover.
 - [ ] Restrict access to booking/payment dashboards to the people who need it and review access at least annually.
