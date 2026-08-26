@@ -1,5 +1,7 @@
 .vercel
 .wrangler/
+.playwright-cli/
+output/playwright/
 .env*.local
 node_modules/
 dist/

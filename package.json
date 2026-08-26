@@ -9,7 +9,8 @@
     "build:css": "esbuild css/style_old.css --minify --outfile=css/style.css",
     "build:cloudflare": "node scripts/build-cloudflare.cjs",
     "check:cloudflare": "npm run build:cloudflare && wrangler deploy --dry-run",
-    "readiness": "node scripts/launch-readiness.cjs"
+    "readiness": "node scripts/launch-readiness.cjs",
+    "audit:deployment": "node scripts/audit-deployment.cjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0"

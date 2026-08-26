@@ -36,6 +36,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 
 - Never fill an approval date or decision in `data/launch-approvals.json` speculatively. Each value must come from Sally or the named qualified adviser.
 - Run `npm run readiness` after every legal or owner-review update. A red result is an intentional production stop, not a test failure to bypass.
+- Run `npm run audit:deployment -- <https-url> --expect-noindex` against every Vercel or Workers staging deployment. After cutover, run the same command against `https://lasclottes.com` with `--expect-index`. It rechecks the deployed sitemap pages, internal destinations, assets, legacy redirects, security headers, private-operations protection, public availability API and real 404 response.
 - The readiness command currently reports the exact outstanding owner/legal, review, acceptance and publication items in plain language. Its automated test proves both the current fail-closed state and a complete 15/15 green state.
 - The separate DNS, Resend-domain, production-secret, live-payment and post-launch SEO steps below remain required even after the pre-launch readiness command turns green.
 
