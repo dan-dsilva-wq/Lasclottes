@@ -5,6 +5,7 @@ const test = require('node:test');
 const {
     config,
     configuredOrigins,
+    isStagingOrigin,
     setRuntimeConfig
 } = require('../lib/config');
 
@@ -26,4 +27,10 @@ test('Cloudflare runtime bindings are read explicitly and can be cleared safely'
         setRuntimeConfig({});
     }
     assert.notEqual(config.databaseUrl(), 'postgresql://runtime.invalid/example');
+});
+
+test('staging test-price mode is restricted to the dedicated workers.dev origin', () => {
+    assert.equal(isStagingOrigin('https://lasclottes.super-bread-8b96.workers.dev'), true);
+    assert.equal(isStagingOrigin('https://lasclottes.com'), false);
+    assert.equal(isStagingOrigin('https://lasclottes.super-bread-8b96.workers.dev.evil.example'), false);
 });

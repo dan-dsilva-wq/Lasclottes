@@ -681,6 +681,17 @@ cite.review-card__author {
   color: #c85050;
 }
 
+.staging-test-notice {
+  margin: 0 0 var(--space-sm);
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(200, 149, 108, 0.45);
+  border-radius: var(--radius-md);
+  background: #fff7ed;
+  color: #7c2d12;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
 /* Form field error state */
 .form-group input.error,
 .form-group textarea.error {

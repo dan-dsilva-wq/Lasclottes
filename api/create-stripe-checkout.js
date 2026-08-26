@@ -8,7 +8,7 @@ const {
     validateContact
 } = require('../lib/booking');
 const { checkoutFingerprint } = require('../lib/abuse');
-const { config, requestOriginAllowed } = require('../lib/config');
+const { config, isStagingOrigin, requestOriginAllowed } = require('../lib/config');
 const {
     BookingConflictError,
     BookingRateLimitError,
@@ -121,21 +121,23 @@ const handler = async (req, res) => {
     }
 
     const body = parseBody(req);
+    const requestOrigin = checkoutOrigin(req.headers?.origin);
+    if (!requestOrigin) {
+        return json(res, 403, { error: 'This booking request did not come from the Lasclottes website.' });
+    }
+
     let quote;
     let contact;
     try {
         contact = validateContact(body);
-        quote = calculateQuote(body);
+        quote = calculateQuote(body, new Date(), undefined, {
+            testPriceGbp: isStagingOrigin(requestOrigin) ? 1 : null
+        });
     } catch (error) {
         if (error instanceof BookingValidationError) {
             return json(res, 400, { error: error.message, code: error.code });
         }
         return json(res, 400, { error: 'Invalid booking details.' });
-    }
-
-    const requestOrigin = checkoutOrigin(req.headers?.origin);
-    if (!requestOrigin) {
-        return json(res, 403, { error: 'This booking request did not come from the Lasclottes website.' });
     }
     if (!checkoutModeAllowed(stripeSecretKey, requestOrigin)) {
         return json(res, 503, {

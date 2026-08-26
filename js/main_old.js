@@ -584,6 +584,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const agreementInput = document.getElementById('equipmentAgreement');
         const submitButton = bookingForm.querySelector('button[type="submit"]');
         const stripeCheckoutEndpoint = bookingForm.dataset.stripeCheckoutEndpoint || '/api/create-stripe-checkout';
+        const stagingTestPriceMode = window.location.hostname === 'lasclottes.super-bread-8b96.workers.dev';
+        if (stagingTestPriceMode) {
+            const notice = document.createElement('p');
+            notice.className = 'staging-test-notice';
+            notice.textContent = 'Test site: this checkout is temporarily set to £1.';
+            bookingForm.parentElement?.prepend(notice);
+        }
         const touristTaxStatus = 'pending_owner_confirmation';
         const refundableDamageDeposit = 500;
         const depositRate = 0.20;
@@ -756,6 +763,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     amountDueNow = stayTotal * depositRate;
                     balanceDueLater = (stayTotal - amountDueNow) + damageDeposit;
+                }
+                if (stagingTestPriceMode) {
+                    stayTotal = 1;
+                    amountDueNow = 1;
+                    balanceDueLater = 0;
+                    damageDeposit = 0;
+                    withinFullPaymentWindow = true;
                 }
             }
 
