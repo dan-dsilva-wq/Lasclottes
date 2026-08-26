@@ -96,8 +96,18 @@ Sally must formally choose or join a consumer-mediation service that is currentl
 Official sources:
 
 - Current CECMC search: <https://www.economie.gouv.fr/mediation-conso/vous-etes-un-professionnel/choisir-un-mediateur-de-la-consommation/mediateurs-references>
-- Sector list; the relevant starting category is **J01 — Hôtellerie**: <https://www.economie.gouv.fr/liste-des-mediateurs-par-secteurs-dactivite>
+- Sector list, updated 24 August 2026: <https://www.economie.gouv.fr/liste-des-mediateurs-par-secteurs-dactivite>
 - Professional obligations: <https://www.economie.gouv.fr/mediation-conso/vous-etes-un-professionnel/vos-principales-obligations-0>
+
+The two plausible CECMC categories are **J01 — Hôtellerie** and **K03 — Biens immobiliers saisonniers et temporaires**. To avoid relying on a debatable classification, the shortlist below contains only services shown in the current government list for both categories.
+
+### Shortlist — no service has been appointed yet
+
+1. **CM2C (recommended starting point).** Its current published tariff for a professional with up to 10 employees is EUR 48 for a three-year designation, paid once, plus EUR 36 for a remote mediation if a case occurs. It offers an online professional-registration process. Official provider pages: <https://www.cm2c.net/tarifs.php> and <https://www.cm2c.net/inscription-professionnel.php>.
+2. **Avenir Conso.** The European Commission's current listing publishes individual membership at EUR 50 per year for three years, plus case fees based on the amount claimed. Provider: <https://www.avenir-conso.com/>. EU listing: <https://consumer-redress.ec.europa.eu/list-alternative-dispute-resolution-adr-bodies/france-avenir-conso_en>.
+3. **Atlantique Médiation Conso.** Its professional page publishes EUR 60 excluding tax per year for a micro-enterprise or individual enterprise. The dispute fees on that page are still labelled 2025, so Sally should request the current 2026 schedule before choosing it: <https://consommation.atlantique-mediation.org/professionnels/>.
+
+The low published cost makes CM2C the practical first choice, but Sally should confirm that it will convention her exact activity under SIRET 521 892 992 00012 before paying. The government expressly says a business must conclude the membership or convention first; the website must not name a mediator merely because it appears on the approved list.
 
 After appointment, provide exactly:
 
