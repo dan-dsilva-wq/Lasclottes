@@ -11,6 +11,7 @@ const pagePaths = [
     'booking-terms.html',
     'fr.html',
     'index.html',
+    'legal-notice.html',
     'nl.html',
     'payment-cancelled.html',
     'payment-success.html',
@@ -62,7 +63,7 @@ test('fonts and the content security policy are fully self-hosted', () => {
 });
 
 test('legal pages identify the verified accommodation operator', () => {
-    for (const pagePath of ['privacy.html', 'booking-terms.html']) {
+    for (const pagePath of ['privacy.html', 'booking-terms.html', 'legal-notice.html']) {
         const html = read(pagePath);
         assert.match(html, /Sally Spencer/);
         assert.match(html, /SIREN 521 892 992/);
@@ -70,6 +71,18 @@ test('legal pages identify the verified accommodation operator', () => {
         assert.match(html, /Registre national des entreprises \(RNE\)/);
         assert.match(html, /Lieu-dit Las Clottes, 47140 Saint-Sylvestre-sur-Lot, France/);
     }
+});
+
+test('the legal notice draft is reviewable but fails closed until owner facts are supplied', () => {
+    const legalNotice = read('legal-notice.html');
+    assert.match(legalNotice, /data-legal-status="draft"/);
+    assert.match(legalNotice, /name="robots" content="noindex, nofollow, noarchive"/);
+    assert.match(legalNotice, /PENDING OWNER/);
+    assert.match(legalNotice, /data-owner-required="mairie-registration"/);
+    assert.match(legalNotice, /data-owner-required="consumer-mediator"/);
+    assert.match(legalNotice, /data-owner-required="host-details"/);
+    assert.doesNotMatch(read('sitemap.xml'), /legal-notice\.html/);
+    assert.match(read(path.join('scripts', 'build-cloudflare.cjs')), /'legal-notice\.html'/);
 });
 
 test('booking terms and database preserve the agreement accepted at checkout', () => {

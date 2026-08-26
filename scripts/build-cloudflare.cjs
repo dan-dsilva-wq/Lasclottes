@@ -23,6 +23,7 @@ const files = [
     'favicon.ico',
     'fr.html',
     'index.html',
+    'legal-notice.html',
     'nl.html',
     'payment-cancelled.html',
     'payment-success.html',
