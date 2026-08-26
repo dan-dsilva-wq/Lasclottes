@@ -45,7 +45,9 @@ for (const directory of directories) {
     });
 }
 fs.mkdirSync(path.join(destination, 'css'), { recursive: true });
-fs.copyFileSync(path.join(root, 'css', 'style.css'), path.join(destination, 'css', 'style.css'));
+for (const file of ['style.css', 'style-20260826c.css']) {
+    fs.copyFileSync(path.join(root, 'css', file), path.join(destination, 'css', file));
+}
 fs.mkdirSync(path.join(destination, 'js'), { recursive: true });
 for (const file of ['activity_lang.js', 'booking-operations.js', 'main.js', 'payment-status.js']) {
     fs.copyFileSync(path.join(root, 'js', file), path.join(destination, 'js', file));

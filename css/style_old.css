@@ -725,6 +725,11 @@ cite.review-card__author {
 
 .footer__logo {
   margin-bottom: var(--space-sm);
+  display: inline-flex;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
 }
 
 .footer__brand p {
@@ -824,7 +829,7 @@ cite.review-card__author {
 }
 
 .nav__logo-img {
-  height: 48px;
+  height: 54px;
   width: auto;
 }
 
