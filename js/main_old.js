@@ -584,7 +584,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const agreementInput = document.getElementById('equipmentAgreement');
         const submitButton = bookingForm.querySelector('button[type="submit"]');
         const stripeCheckoutEndpoint = bookingForm.dataset.stripeCheckoutEndpoint || '/api/create-stripe-checkout';
-        const stagingTestPriceMode = window.location.hostname === 'lasclottes.super-bread-8b96.workers.dev';
+        const stagingTestPriceMode = [
+            'lasclottes.super-bread-8b96.workers.dev',
+            'test.lasclottes.com'
+        ].includes(window.location.hostname);
         if (stagingTestPriceMode) {
             const notice = document.createElement('p');
             notice.className = 'staging-test-notice';

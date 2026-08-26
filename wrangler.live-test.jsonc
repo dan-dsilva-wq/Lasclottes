@@ -1,0 +1,34 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "lasclottes-live-test",
+  "main": "./cloudflare/worker.mjs",
+  "compatibility_date": "2026-08-24",
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "test.lasclottes.com",
+      "custom_domain": true
+    }
+  ],
+  "vars": {
+    "PUBLIC_SITE_URL": "https://test.lasclottes.com",
+    "BOOKING_PAYMENTS_ENABLED": "true",
+    "BOOKING_EMAILS_ENABLED": "true",
+    "BOOKING_TERMS_APPROVED": "false",
+    "BOOKING_OWNER_EMAIL": "sallyaspencer@icloud.com",
+    "BOOKING_SENDER_EMAIL": "bookings@lasclottes.com",
+    "RESEND_EMAIL_DOMAIN": "lasclottes.com"
+  },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "html_handling": "none",
+    "run_worker_first": [
+      "/",
+      "/api/*",
+      "/fr",
+      "/nl"
+    ]
+  }
+}

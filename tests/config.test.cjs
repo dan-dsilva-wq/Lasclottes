@@ -30,11 +30,13 @@ test('Cloudflare runtime bindings are read explicitly and can be cleared safely'
     assert.notEqual(config.databaseUrl(), 'postgresql://runtime.invalid/example');
 });
 
-test('staging test-price mode is restricted to the dedicated workers.dev origin', () => {
+test('test-price mode is restricted to the dedicated test origins', () => {
     assert.equal(isStagingOrigin('https://lasclottes.super-bread-8b96.workers.dev'), true);
+    assert.equal(isStagingOrigin('https://test.lasclottes.com'), true);
     assert.equal(isStagingOrigin('https://lasclottes.com'), false);
     assert.equal(isStagingOrigin('https://lasclottes.super-bread-8b96.workers.dev.evil.example'), false);
     assert.equal(isStagingHostname('lasclottes.super-bread-8b96.workers.dev'), true);
     assert.equal(isStagingHostname('lasclottes.super-bread-8b96.workers.dev:443'), true);
+    assert.equal(isStagingHostname('test.lasclottes.com'), true);
     assert.equal(isStagingHostname('lasclottes.super-bread-8b96.workers.dev.evil.example'), false);
 });
