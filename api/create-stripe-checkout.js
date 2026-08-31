@@ -28,6 +28,7 @@ const {
     BOOKING_TERMS_VERSION,
     bookingAgreementSnapshot
 } = require('../lib/terms');
+const { wixBridgeContext, wixReturnUrl } = require('../lib/wix-bridge');
 
 const termsApprovalRequired = (origin, approved) => (
     ['https://lasclottes.com', 'https://www.lasclottes.com'].includes(origin)
@@ -43,10 +44,10 @@ const checkoutOrigin = (value) => {
     }
 };
 
-const checkoutParams = ({ booking, quote, contact, origin }) => {
-    const successUrl = config.stripeSuccessUrl()
+const checkoutParams = ({ booking, quote, contact, origin, successUrl: suppliedSuccessUrl, cancelUrl: suppliedCancelUrl }) => {
+    const successUrl = suppliedSuccessUrl || config.stripeSuccessUrl()
         || `${origin}/payment-success.html?lang=${encodeURIComponent(contact.lang)}&session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = config.stripeCancelUrl()
+    const cancelUrl = suppliedCancelUrl || config.stripeCancelUrl()
         || `${origin}/payment-cancelled.html?lang=${encodeURIComponent(contact.lang)}`;
     const title = quote.paymentStage === 'full_payment_now'
         ? 'Lasclottes booking payment (full amount due now)'
@@ -121,14 +122,19 @@ const handler = async (req, res) => {
     }
 
     const body = parseBody(req);
-    const requestOrigin = checkoutOrigin(req.headers?.origin);
+    const wixBridge = await wixBridgeContext(req);
+    const requestOrigin = wixBridge.authenticated
+        ? new URL(wixBridge.siteBaseUrl).origin
+        : checkoutOrigin(req.headers?.origin);
     if (!requestOrigin) {
         return json(res, 403, { error: 'This booking request did not come from the Lasclottes website.' });
     }
 
     let quote;
     let contact;
-    const stagingTestMode = isStagingOrigin(requestOrigin);
+    const stagingTestMode = wixBridge.authenticated
+        ? wixBridge.testMode
+        : isStagingOrigin(requestOrigin);
     try {
         contact = validateContact(body);
         quote = calculateQuote(body, new Date(), undefined, {
@@ -141,13 +147,16 @@ const handler = async (req, res) => {
         }
         return json(res, 400, { error: 'Invalid booking details.' });
     }
-    if (!checkoutModeAllowed(stripeSecretKey, requestOrigin)) {
+    const stripeModeOrigin = wixBridge.authenticated
+        ? (stagingTestMode ? 'https://test.lasclottes.com' : 'https://lasclottes.com')
+        : requestOrigin;
+    if (!checkoutModeAllowed(stripeSecretKey, stripeModeOrigin)) {
         return json(res, 503, {
             error: 'Secure card checkout is not configured for this website environment.',
             code: 'stripe_mode_mismatch'
         });
     }
-    if (termsApprovalRequired(requestOrigin, config.bookingTermsApproved())) {
+    if (termsApprovalRequired(stripeModeOrigin, config.bookingTermsApproved())) {
         return json(res, 503, {
             error: 'Online booking terms are awaiting final owner approval.',
             code: 'booking_terms_not_approved'
@@ -155,7 +164,15 @@ const handler = async (req, res) => {
     }
 
     try {
-        await consumeCheckoutAttempt(checkoutFingerprint(req, stripeWebhookSecret));
+        const fingerprintRequest = wixBridge.authenticated
+            ? {
+                headers: {
+                    'cf-connecting-ip': `wix:${normalizeRequestId(body.visitorId || body.requestId)}`,
+                    'user-agent': 'Lasclottes Wix booking bridge'
+                }
+            }
+            : req;
+        await consumeCheckoutAttempt(checkoutFingerprint(fingerprintRequest, stripeWebhookSecret));
     } catch (error) {
         if (error instanceof BookingRateLimitError) {
             res.setHeader('Retry-After', '900');
@@ -209,9 +226,26 @@ const handler = async (req, res) => {
             });
         }
 
+        const wixSuccessUrl = wixBridge.authenticated
+            ? wixReturnUrl(config.wixStripeSuccessUrl(), wixBridge.siteBaseUrl, '/payment-success')
+            : '';
+        const wixCancelUrl = wixBridge.authenticated
+            ? wixReturnUrl(config.wixStripeCancelUrl(), wixBridge.siteBaseUrl, '/payment-cancelled')
+            : '';
         const session = await createCheckoutSession(
             stripeSecretKey,
-            checkoutParams({ booking, quote, contact, origin: requestOrigin }),
+            checkoutParams({
+                booking,
+                quote,
+                contact,
+                origin: requestOrigin,
+                successUrl: wixSuccessUrl
+                    ? `${wixSuccessUrl}?lang=${encodeURIComponent(contact.lang)}&session_id={CHECKOUT_SESSION_ID}`
+                    : '',
+                cancelUrl: wixCancelUrl
+                    ? `${wixCancelUrl}?lang=${encodeURIComponent(contact.lang)}`
+                    : ''
+            }),
             `booking-checkout/${booking.id}`
         );
         if (!session?.id || !session?.url) throw new Error('Stripe did not return a checkout URL.');

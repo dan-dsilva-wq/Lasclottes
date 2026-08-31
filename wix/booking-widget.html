@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    :root{color-scheme:light;--ink:#213028;--muted:#5f6f65;--cream:#fbf7ee;--paper:#fff;--sage:#78917e;--forest:#284d37;--gold:#bd8c43;--line:#d9ded8;--error:#9d2e2e}
+    *{box-sizing:border-box}body{margin:0;background:transparent;color:var(--ink);font:16px/1.5 Arial,sans-serif}.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;box-shadow:0 14px 45px rgba(32,48,40,.12);padding:clamp(20px,4vw,38px)}h2{font:700 clamp(28px,5vw,44px)/1.08 Georgia,serif;margin:0 0 8px;color:var(--forest)}.lead{margin:0 0 24px;color:var(--muted)}.test{display:none;margin:0 0 18px;padding:12px 14px;border-radius:12px;background:#fff3d6;color:#684d1f;font-weight:700}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.wide{grid-column:1/-1}label{display:grid;gap:6px;font-size:14px;font-weight:700}input,textarea{width:100%;border:1px solid #bcc8bf;border-radius:10px;background:#fff;color:var(--ink);font:inherit;padding:12px 13px;outline:none}input:focus,textarea:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(120,145,126,.2)}textarea{min-height:94px;resize:vertical}.summary{margin:20px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}.summary div{background:var(--cream);padding:13px}.summary small{display:block;color:var(--muted)}.summary strong{display:block;font-size:18px;margin-top:2px}.agreement{display:flex;align-items:flex-start;gap:10px;font-weight:400}.agreement input{width:auto;margin-top:4px}.status{min-height:24px;margin:12px 0;color:var(--muted)}.status.error{color:var(--error);font-weight:700}button{width:100%;border:0;border-radius:999px;background:var(--forest);color:#fff;font:700 16px/1 Arial,sans-serif;padding:16px 20px;cursor:pointer}button:hover{background:#1d3e2b}button:disabled{cursor:wait;opacity:.62}.fine{font-size:13px;color:var(--muted);margin:12px 0 0;text-align:center}@media(max-width:620px){.grid,.summary{grid-template-columns:1fr}.wide{grid-column:auto}.card{border-radius:14px;padding:18px}}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h2>Check availability &amp; book</h2>
+    <p class="lead">Choose your dates, see the amount due, then continue to secure Stripe checkout.</p>
+    <p class="test" id="testNotice">Private test mode: all future dates are available and checkout is £1.</p>
+    <form id="bookingForm" novalidate>
+      <div class="grid">
+        <label>Arrival<input id="arrivalDate" type="date" required></label>
+        <label>Departure<input id="departureDate" type="date" required></label>
+        <label>Adults<input id="adults" type="number" min="1" max="12" value="2" required></label>
+        <label>Children<input id="children" type="number" min="0" max="11" value="0" required></label>
+        <label>First name<input id="firstName" autocomplete="given-name" maxlength="80" required></label>
+        <label>Last name<input id="lastName" autocomplete="family-name" maxlength="80" required></label>
+        <label>Email<input id="email" type="email" autocomplete="email" maxlength="180" required></label>
+        <label>Phone<input id="phone" type="tel" autocomplete="tel" maxlength="40" required></label>
+        <label class="wide">Anything Sally should know?<textarea id="message" maxlength="1500"></textarea></label>
+      </div>
+      <section class="summary" aria-live="polite">
+        <div><small>Nights</small><strong id="nights">–</strong></div>
+        <div><small>Guests</small><strong id="guests">–</strong></div>
+        <div><small>Stay total</small><strong id="stayTotal">–</strong></div>
+        <div><small>Due now</small><strong id="dueNow">–</strong></div>
+        <div><small>Refundable damage deposit</small><strong id="damageDeposit">–</strong></div>
+        <div><small>Balance due later</small><strong id="balanceLater">–</strong></div>
+      </section>
+      <label class="agreement"><input id="agreement" type="checkbox" required><span>I accept the booking terms and the property equipment and safety agreement.</span></label>
+      <p class="status" id="status" role="status">Loading current availability…</p>
+      <button id="submitButton" type="submit">Continue to secure card payment</button>
+      <p class="fine">Payment is handled securely by Stripe. Card details never pass through Wix or Lasclottes.</p>
+    </form>
+  </main>
+  <script>
+    (() => {
+      'use strict';
+      const parentOrigin = (() => { try { return new URL(document.referrer).origin; } catch (_) { return ''; } })();
+      const send = (message) => { if (parentOrigin) window.parent.postMessage(message, parentOrigin); };
+      const $ = (id) => document.getElementById(id);
+      const DAY = 86400000;
+      const state = { testMode: false, availabilityReady: false, blocked: [] };
+      const visitorId = sessionStorage.getItem('lasclottesVisitorId') || (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
+      sessionStorage.setItem('lasclottesVisitorId', visitorId);
+      let requestId = '';
+      let lastSignature = '';
+
+      const isoDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(value || '') ? new Date(`${value}T00:00:00Z`) : null;
+      const money = (value) => value > 0 ? new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP'}).format(value) : '–';
+      const overlap = (start,end) => state.blocked.some((range) => start < isoDate(range.end) && end > isoDate(range.start));
+      const setStatus = (message, error = false) => { $('status').textContent = message; $('status').className = `status${error ? ' error' : ''}`; };
+      const quote = () => {
+        const arrival = isoDate($('arrivalDate').value);
+        const departure = isoDate($('departureDate').value);
+        const adults = Number($('adults').value || 0);
+        const children = Number($('children').value || 0);
+        const guests = adults + children;
+        const nights = arrival && departure ? Math.round((departure - arrival) / DAY) : 0;
+        let stayTotal = 0, dueNow = 0, balanceLater = 0, damageDeposit = 0, warning = '';
+        if (!arrival || !departure || nights < 1) warning = 'Choose valid arrival and departure dates.';
+        else if (!state.testMode && !state.availabilityReady) warning = 'Current availability is still loading.';
+        else if (!state.testMode && overlap(arrival, departure)) warning = 'Those dates are already booked or unavailable.';
+        else if (guests < 1 || adults < 1) warning = 'Please add at least one adult.';
+        else if (guests > 12) warning = 'Maximum occupancy is 12 guests.';
+        else if (state.testMode) stayTotal = dueNow = 1;
+        else {
+          const months = new Set(); for (let d = new Date(arrival); d < departure; d = new Date(d.getTime() + DAY)) months.add(d.getUTCMonth());
+          if ([...months].some((m) => ![4,5,6,7,8].includes(m))) warning = 'October to April is currently closed.';
+          else if ([...months].some((m) => [6,7].includes(m))) {
+            if (nights < 7 || arrival.getUTCDay() !== 6 || departure.getUTCDay() !== 6 || nights % 7) warning = 'July and August bookings run Saturday to Saturday in weekly blocks.';
+            else stayTotal = 500 * nights;
+          } else if (nights < 4) warning = 'Minimum stay is 4 nights for this period.';
+          else stayTotal = (guests <= 6 ? 200 : 250) * nights;
+          if (!warning) {
+            damageDeposit = 500;
+            const daysUntilArrival = Math.ceil((arrival - new Date(new Date().toISOString().slice(0,10) + 'T00:00:00Z')) / DAY);
+            if (daysUntilArrival <= 60) dueNow = stayTotal + damageDeposit;
+            else { dueNow = stayTotal * .2; balanceLater = stayTotal - dueNow + damageDeposit; }
+          }
+        }
+        $('nights').textContent = nights > 0 ? nights : '–'; $('guests').textContent = guests > 0 ? guests : '–';
+        $('stayTotal').textContent = money(stayTotal); $('dueNow').textContent = money(dueNow); $('damageDeposit').textContent = money(damageDeposit); $('balanceLater').textContent = money(balanceLater);
+        if (warning) setStatus(warning, true); else setStatus(state.testMode ? 'Private £1 checkout test is ready.' : 'Dates and price look available. Final availability is checked again at checkout.');
+        return { arrival, departure, adults, children, guests, nights, stayTotal, dueNow, balanceLater, damageDeposit, warning };
+      };
+
+      ['arrivalDate','departureDate','adults','children'].forEach((id) => $(id).addEventListener('input', quote));
+      $('arrivalDate').min = new Date().toISOString().slice(0,10);
+      $('arrivalDate').addEventListener('change', () => { $('departureDate').min = $('arrivalDate').value; });
+      $('bookingForm').addEventListener('submit', (event) => {
+        event.preventDefault(); const q = quote();
+        if (q.warning || !$('bookingForm').reportValidity() || !$('agreement').checked) return;
+        const payload = {
+          firstName:$('firstName').value.trim(),lastName:$('lastName').value.trim(),email:$('email').value.trim(),phone:$('phone').value.trim(),message:$('message').value.trim(),
+          arrivalDate:$('arrivalDate').value,departureDate:$('departureDate').value,adults:q.adults,children:q.children,guests:q.guests,nights:q.nights,
+          amountDueNow:q.dueNow,stayTotal:q.stayTotal,balanceDueLater:q.balanceLater,damageDeposit:q.damageDeposit,touristTaxStatus:'pending_owner_confirmation',paymentStage:q.balanceLater > 0 ? 'deposit_now_balance_later' : 'full_payment_now',agreementAccepted:true,lang:'en',visitorId
+        };
+        const signature = JSON.stringify(payload); if (signature !== lastSignature) { lastSignature = signature; requestId = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`; }
+        payload.requestId = requestId; send({type:'lasclottes-checkout',payload});
+      });
+      window.addEventListener('message', (event) => {
+        if (event.origin !== parentOrigin || !event.data || typeof event.data !== 'object') return;
+        const message = event.data;
+        if (message.type === 'lasclottes-config') { state.testMode = message.testMode === true; $('testNotice').style.display = state.testMode ? 'block' : 'none'; quote(); }
+        if (message.type === 'lasclottes-availability') { state.availabilityReady = true; state.blocked = Array.isArray(message.availability?.blocked) ? message.availability.blocked : []; quote(); }
+        if (message.type === 'lasclottes-working') { $('submitButton').disabled = true; setStatus('Opening secure Stripe checkout…'); }
+        if (message.type === 'lasclottes-error') { $('submitButton').disabled = false; setStatus(message.message || 'Something went wrong. Please try again.', true); }
+      });
+      quote(); send({type:'lasclottes-ready'});
+    })();
+  </script>
+</body>
+</html>

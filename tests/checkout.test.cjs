@@ -6,6 +6,11 @@ const { checkoutFingerprint, requestAddress } = require('../lib/abuse');
 const { configuredOrigins, requestOriginAllowed, trustedOrigin } = require('../lib/config');
 const bookingStatusHandler = require('../api/booking-status');
 const handler = require('../api/create-stripe-checkout');
+const {
+    normalizeSiteBaseUrl,
+    wixBridgeContext,
+    wixReturnUrl
+} = require('../lib/wix-bridge');
 
 const makeResponse = () => {
     const state = { status: null, body: null };
@@ -122,6 +127,82 @@ test('checkout accepts only configured site origins', () => {
             else process.env[name] = value;
         }
     }
+});
+
+test('Wix bridge accepts only an exact configured HTTPS site and a strong bearer token', async () => {
+    const previous = {
+        WIX_BOOKING_BRIDGE_TOKEN: process.env.WIX_BOOKING_BRIDGE_TOKEN,
+        WIX_SITE_BASE_URLS: process.env.WIX_SITE_BASE_URLS,
+        WIX_BOOKING_TEST_MODE: process.env.WIX_BOOKING_TEST_MODE
+    };
+    process.env.WIX_BOOKING_BRIDGE_TOKEN = 'wix-bridge-token-value-that-is-long-enough';
+    process.env.WIX_SITE_BASE_URLS = 'https://example.wixsite.com/lasclottes-draft,https://lasclottes.com';
+    process.env.WIX_BOOKING_TEST_MODE = 'true';
+    try {
+        const accepted = await wixBridgeContext({ headers: {
+            authorization: 'Bearer wix-bridge-token-value-that-is-long-enough',
+            'x-lasclottes-site-base-url': 'https://example.wixsite.com/lasclottes-draft/'
+        } });
+        assert.deepEqual(accepted, {
+            authenticated: true,
+            siteBaseUrl: 'https://example.wixsite.com/lasclottes-draft',
+            testMode: true
+        });
+        assert.equal((await wixBridgeContext({ headers: {
+            authorization: 'Bearer wrong-token-value-that-is-long-enough',
+            'x-lasclottes-site-base-url': 'https://example.wixsite.com/lasclottes-draft'
+        } })).authenticated, false);
+        assert.equal((await wixBridgeContext({ headers: {
+            authorization: 'Bearer wix-bridge-token-value-that-is-long-enough',
+            'x-lasclottes-site-base-url': 'https://evil.example'
+        } })).authenticated, false);
+    } finally {
+        for (const [name, value] of Object.entries(previous)) {
+            if (value === undefined) delete process.env[name];
+            else process.env[name] = value;
+        }
+    }
+});
+
+test('Wix return URLs preserve the free-site path and reject unsafe values', () => {
+    assert.equal(
+        normalizeSiteBaseUrl('https://example.wixsite.com/lasclottes-draft/'),
+        'https://example.wixsite.com/lasclottes-draft'
+    );
+    assert.equal(normalizeSiteBaseUrl('http://example.wixsite.com/site'), '');
+    assert.equal(normalizeSiteBaseUrl('https://user:pass@example.wixsite.com/site'), '');
+    assert.equal(
+        wixReturnUrl('', 'https://example.wixsite.com/lasclottes-draft', '/payment-success'),
+        'https://example.wixsite.com/lasclottes-draft/payment-success'
+    );
+    assert.equal(
+        wixReturnUrl('https://lasclottes.com/thanks', 'https://example.wixsite.com/site', '/payment-success'),
+        'https://lasclottes.com/thanks'
+    );
+});
+
+test('Wix checkout uses explicit Wix return pages without weakening server pricing', () => {
+    const quote = handler.calculateQuote({
+        arrivalDate: '2027-05-15',
+        departureDate: '2027-05-19',
+        adults: 4,
+        children: 0
+    }, new Date('2026-08-24T12:00:00Z'));
+    const params = handler.checkoutParams({
+        booking: {
+            id: '00000000-0000-4000-8000-000000000000',
+            public_reference: 'LC-WIX0001',
+            amount_due_now_pence: 20000
+        },
+        quote,
+        contact: { email: 'guest@example.test', lang: 'en' },
+        origin: 'https://example.wixsite.com',
+        successUrl: 'https://example.wixsite.com/lasclottes-draft/payment-success?session_id={CHECKOUT_SESSION_ID}',
+        cancelUrl: 'https://example.wixsite.com/lasclottes-draft/payment-cancelled'
+    });
+    assert.equal(params.get('line_items[0][price_data][unit_amount]'), '20000');
+    assert.equal(params.get('success_url'), 'https://example.wixsite.com/lasclottes-draft/payment-success?session_id={CHECKOUT_SESSION_ID}');
+    assert.equal(params.get('cancel_url'), 'https://example.wixsite.com/lasclottes-draft/payment-cancelled');
 });
 
 test('checkout rate-limit fingerprints do not retain visitor addresses', () => {

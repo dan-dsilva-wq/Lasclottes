@@ -16,13 +16,22 @@ test('Cloudflare runtime bindings are read explicitly and can be cleared safely'
         BOOKINGS_DATABASE_URL: 'postgresql://runtime.invalid/example',
         PUBLIC_SITE_URL: 'https://lasclottes.com',
         STRIPE_SUCCESS_URL: 'https://staging.example/payment-complete',
-        STRIPE_CANCEL_URL: 'https://staging.example/payment-cancelled'
+        STRIPE_CANCEL_URL: 'https://staging.example/payment-cancelled',
+        WIX_BOOKING_BRIDGE_TOKEN: 'wix-bridge-token-value-that-is-long-enough',
+        WIX_SITE_BASE_URLS: 'https://example.wixsite.com/lasclottes-draft, https://lasclottes.com',
+        WIX_BOOKING_TEST_MODE: 'true'
     });
     try {
         assert.equal(config.paymentsEnabled(), true);
         assert.equal(config.databaseUrl(), 'postgresql://runtime.invalid/example');
         assert.equal(config.stripeSuccessUrl(), 'https://staging.example/payment-complete');
         assert.equal(config.stripeCancelUrl(), 'https://staging.example/payment-cancelled');
+        assert.equal(config.wixBridgeToken(), 'wix-bridge-token-value-that-is-long-enough');
+        assert.deepEqual(config.wixSiteBaseUrls(), [
+            'https://example.wixsite.com/lasclottes-draft',
+            'https://lasclottes.com'
+        ]);
+        assert.equal(config.wixTestMode(), true);
         assert.equal(configuredOrigins()[0], 'https://lasclottes.com');
     } finally {
         setRuntimeConfig({});
