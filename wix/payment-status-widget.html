@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    :root{color-scheme:light;--ink:#213028;--muted:#5f6f65;--paper:#fff;--forest:#284d37;--line:#d9ded8;--success:#2f744b;--warn:#8a641f;--error:#9d2e2e}
+    *{box-sizing:border-box}body{margin:0;background:transparent;color:var(--ink);font:16px/1.55 Arial,sans-serif}.card{max-width:720px;margin:auto;text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:20px;box-shadow:0 14px 45px rgba(32,48,40,.12);padding:clamp(24px,6vw,52px)}.icon{display:grid;place-items:center;width:62px;height:62px;margin:0 auto 18px;border-radius:50%;background:#edf4ef;color:var(--forest);font:700 31px/1 Georgia,serif}h2{margin:0 0 12px;color:var(--forest);font:700 clamp(28px,5vw,42px)/1.1 Georgia,serif}p{margin:10px 0;color:var(--muted)}.details{display:none;margin:22px auto 0;padding:16px;border-radius:14px;background:#f7f4ec}.details strong{display:block;color:var(--ink);font-size:19px}.confirmed .icon{background:#e5f4e9;color:var(--success)}.processing .icon{background:#fff3d6;color:var(--warn)}.problem .icon{background:#faeaea;color:var(--error)}
+  </style>
+</head>
+<body>
+  <main class="card processing" id="card">
+    <div class="icon" id="icon" aria-hidden="true">…</div>
+    <h2 id="title">Checking your payment</h2>
+    <p id="message">Please wait while we securely verify the result with the booking system.</p>
+    <p id="help"><strong>Do not submit another payment.</strong></p>
+    <div class="details" id="details"><strong id="reference"></strong><span id="dates"></span></div>
+  </main>
+  <script>
+    (() => {
+      'use strict';
+      const parentOrigin = (() => { try { return new URL(document.referrer).origin; } catch (_) { return ''; } })();
+      const send = (message) => { if (parentOrigin) window.parent.postMessage(message, parentOrigin); };
+      const el = (id) => document.getElementById(id);
+      let configured = false;
+      const render = (result) => {
+        const state = result?.status || 'problem';
+        el('card').className = `card ${state}`;
+        if (state === 'confirmed') {
+          el('icon').textContent = '✓'; el('title').textContent = 'Booking confirmed';
+          el('message').textContent = 'Thank you. Your payment was received and your Lasclottes booking is confirmed.';
+          el('help').textContent = 'A written confirmation will be emailed to you. If it does not arrive, contact info@lasclottes.com.';
+          el('reference').textContent = result.reference ? `Reference ${result.reference}` : '';
+          el('dates').textContent = result.arrivalDate && result.departureDate ? `${result.arrivalDate} to ${result.departureDate}` : '';
+          el('details').style.display = result.reference || result.arrivalDate ? 'block' : 'none';
+        } else if (state === 'processing') {
+          el('icon').textContent = '…'; el('title').textContent = 'Payment is being confirmed';
+          el('message').textContent = 'Stripe has returned you to Lasclottes and the secure confirmation is still processing.';
+          el('help').textContent = 'Please wait here for a moment. Do not submit another payment.';
+        } else {
+          el('icon').textContent = '!'; el('title').textContent = 'We could not confirm the booking';
+          el('message').textContent = 'The payment result could not be verified from this page.';
+          el('help').textContent = 'Do not pay again. Contact info@lasclottes.com and include the time of your payment.';
+        }
+      };
+      window.addEventListener('message', (event) => {
+        if (event.origin !== parentOrigin || !event.data || typeof event.data !== 'object') return;
+        if (event.data.type === 'lasclottes-status-result') { configured = true; render(event.data.result); }
+      });
+      let attempts = 0;
+      const ready = () => {
+        if (configured) return;
+        attempts += 1; send({type:'lasclottes-status-ready'});
+        if (attempts >= 12) { clearInterval(timer); render({status:'problem'}); }
+      };
+      const timer = setInterval(ready, 500);
+      ready();
+    })();
+  </script>
+</body>
+</html>

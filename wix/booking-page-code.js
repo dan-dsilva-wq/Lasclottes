@@ -10,17 +10,26 @@ const WIX_DRAFT_TEST_MODE = true;
 $w.onReady(() => {
     const bookingWidget = $w('#bookingWidget');
     let working = false;
+    let widgetReady = false;
     let availabilityData = null;
     let availabilityRequest = null;
 
     const send = (message) => bookingWidget.postMessage(message);
+    const sendConfig = () => send({ type: 'lasclottes-config', testMode: WIX_DRAFT_TEST_MODE });
+    const configTimer = setInterval(() => {
+        if (widgetReady) return clearInterval(configTimer);
+        sendConfig();
+    }, 500);
+    sendConfig();
 
     bookingWidget.onMessage(async (event) => {
         const message = event.data;
         if (!message || typeof message !== 'object') return;
 
         if (message.type === 'lasclottes-ready') {
-            send({ type: 'lasclottes-config', testMode: WIX_DRAFT_TEST_MODE });
+            widgetReady = true;
+            clearInterval(configTimer);
+            sendConfig();
             if (availabilityData) {
                 send({ type: 'lasclottes-availability', availability: availabilityData });
                 return;

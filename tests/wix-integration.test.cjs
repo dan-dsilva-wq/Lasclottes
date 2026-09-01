@@ -23,6 +23,18 @@ test('Wix backend uses Secrets Manager and an authenticated server-to-server req
     assert.match(bridge, /X-Lasclottes-Site-Base-Url/);
     assert.doesNotMatch(bridge, /sk_(?:test|live)_/);
     assert.doesNotMatch(bridge, /whsec_/);
+    assert.match(bridge, /export const getLasclottesBookingStatus/);
+    assert.match(bridge, /\/api\/booking-status\?session_id=/);
+});
+
+test('Wix payment success page verifies Stripe before confirming the booking', () => {
+    const widget = read('payment-status-widget.html');
+    const pageCode = read('payment-status-page-code.js');
+    assert.match(pageCode, /getLasclottesBookingStatus\(sessionId\)/);
+    assert.match(pageCode, /\['confirmed', 'not_confirmed'\]/);
+    assert.match(widget, /if \(state === 'confirmed'\)/);
+    assert.match(widget, /Do not pay again/);
+    assert.doesNotMatch(widget, /postMessage\([^\n]+,\s*['"]\*['"]/);
 });
 
 test('Wix widget collects the agreement and sends only the expected checkout event', () => {
@@ -39,6 +51,9 @@ test('Wix booking handshake retries safely and availability is requested only on
     const pageCode = read('booking-page-code.js');
     assert.match(widget, /setInterval\(announceReady, 500\)/);
     assert.match(widget, /if \(state\.configReady\) return;/);
+    assert.match(widget, /event\.source !== window\.parent/);
+    assert.match(pageCode, /const configTimer = setInterval/);
+    assert.match(pageCode, /sendConfig\(\);/);
     assert.match(pageCode, /let availabilityRequest = null;/);
     assert.match(pageCode, /if \(!availabilityRequest\)/);
     assert.match(pageCode, /if \(availabilityData\)/);
