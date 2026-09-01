@@ -3,7 +3,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { checkoutFingerprint, requestAddress } = require('../lib/abuse');
-const { configuredOrigins, requestOriginAllowed, trustedOrigin } = require('../lib/config');
+const { configuredOrigins, requestOriginAllowed, setRuntimeConfig, trustedOrigin } = require('../lib/config');
 const bookingStatusHandler = require('../api/booking-status');
 const handler = require('../api/create-stripe-checkout');
 const {
@@ -203,6 +203,48 @@ test('Wix checkout uses explicit Wix return pages without weakening server prici
     assert.equal(params.get('line_items[0][price_data][unit_amount]'), '20000');
     assert.equal(params.get('success_url'), 'https://example.wixsite.com/lasclottes-draft/payment-success?session_id={CHECKOUT_SESSION_ID}');
     assert.equal(params.get('cancel_url'), 'https://example.wixsite.com/lasclottes-draft/payment-cancelled');
+});
+
+test('Wix one-pound mode can switch from test Stripe to a restricted live key explicitly', () => {
+    const baseConfig = {
+        TEST_STRIPE_SECRET_KEY: 'sk_test_wix_example',
+        TEST_STRIPE_WEBHOOK_SECRET: 'whsec_test_wix_example',
+        STRIPE_LIVE_SECRET_KEY: 'rk_live_wix_example',
+        STRIPE_LIVE_WEBHOOK_SECRET: 'whsec_live_wix_example'
+    };
+    try {
+        setRuntimeConfig({ ...baseConfig, WIX_LIVE_PAYMENTS: 'false' });
+        const testContext = handler.stripeExecutionContext({
+            wixBridge: { authenticated: true },
+            stagingTestMode: true,
+            requestOrigin: 'https://www.lasclottes.com'
+        });
+        assert.deepEqual(testContext, {
+            useLiveStripe: false,
+            testPriceMode: true,
+            secretKey: 'sk_test_wix_example',
+            webhookSecret: 'whsec_test_wix_example',
+            modeOrigin: 'https://test.lasclottes.com'
+        });
+
+        setRuntimeConfig({ ...baseConfig, WIX_LIVE_PAYMENTS: 'true' });
+        const liveContext = handler.stripeExecutionContext({
+            wixBridge: { authenticated: true },
+            stagingTestMode: true,
+            requestOrigin: 'https://www.lasclottes.com'
+        });
+        assert.deepEqual(liveContext, {
+            useLiveStripe: true,
+            testPriceMode: true,
+            secretKey: 'rk_live_wix_example',
+            webhookSecret: 'whsec_live_wix_example',
+            modeOrigin: 'https://lasclottes.com'
+        });
+        assert.equal(bookingStatusHandler.stripeSecretForSession('cs_live_example'), 'rk_live_wix_example');
+        assert.equal(bookingStatusHandler.stripeSecretForSession('cs_test_example'), 'sk_test_wix_example');
+    } finally {
+        setRuntimeConfig({});
+    }
 });
 
 test('checkout rate-limit fingerprints do not retain visitor addresses', () => {

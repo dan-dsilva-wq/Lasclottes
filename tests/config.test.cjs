@@ -20,6 +20,10 @@ test('Cloudflare runtime bindings are read explicitly and can be cleared safely'
         WIX_BOOKING_BRIDGE_TOKEN: 'wix-bridge-token-value-that-is-long-enough',
         WIX_SITE_BASE_URLS: 'https://example.wixsite.com/lasclottes-draft, https://lasclottes.com',
         WIX_BOOKING_TEST_MODE: 'true',
+        WIX_LIVE_PAYMENTS: 'true',
+        STRIPE_LIVE_WEBHOOKS_ON_SHARED_ENDPOINT: 'true',
+        STRIPE_LIVE_SECRET_KEY: 'rk_live_runtime_example',
+        STRIPE_LIVE_WEBHOOK_SECRET: 'whsec_live_runtime_example',
         BOOKING_MONITOR_EMAILS: 'sally@example.com, dan@example.com'
     });
     try {
@@ -33,6 +37,10 @@ test('Cloudflare runtime bindings are read explicitly and can be cleared safely'
             'https://lasclottes.com'
         ]);
         assert.equal(config.wixTestMode(), true);
+        assert.equal(config.wixLivePayments(), true);
+        assert.equal(config.liveStripeWebhooksOnSharedEndpoint(), true);
+        assert.equal(config.stripeLiveSecretKey(), 'rk_live_runtime_example');
+        assert.equal(config.stripeLiveWebhookSecret(), 'whsec_live_runtime_example');
         assert.deepEqual(config.monitorEmails(), ['sally@example.com', 'dan@example.com']);
         assert.equal(configuredOrigins()[0], 'https://lasclottes.com');
     } finally {

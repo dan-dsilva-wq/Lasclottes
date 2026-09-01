@@ -21,6 +21,8 @@
     "RESEND_EMAIL_DOMAIN": "lasclottes.com",
     "WIX_SITE_BASE_URLS": "https://www.lasclottes.com,https://lasclottes.com",
     "WIX_BOOKING_TEST_MODE": "true",
+    "WIX_LIVE_PAYMENTS": "false",
+    "STRIPE_LIVE_WEBHOOKS_ON_SHARED_ENDPOINT": "false",
     "WIX_STRIPE_SUCCESS_URL": "https://www.lasclottes.com/payment-success",
     "WIX_STRIPE_CANCEL_URL": "https://www.lasclottes.com/payment-cancelled"
   },

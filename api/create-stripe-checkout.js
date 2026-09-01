@@ -45,6 +45,21 @@ const checkoutOrigin = (value) => {
     }
 };
 
+const stripeExecutionContext = ({ wixBridge, stagingTestMode, requestOrigin }) => {
+    const useLiveStripe = wixBridge.authenticated && config.wixLivePayments();
+    return {
+        useLiveStripe,
+        testPriceMode: stagingTestMode === true,
+        secretKey: useLiveStripe ? config.stripeLiveSecretKey() : config.stripeSecretKey(),
+        webhookSecret: useLiveStripe
+            ? config.stripeLiveWebhookSecret()
+            : config.stripeWebhookSecret(),
+        modeOrigin: wixBridge.authenticated
+            ? (useLiveStripe ? 'https://lasclottes.com' : 'https://test.lasclottes.com')
+            : requestOrigin
+    };
+};
+
 const checkoutParams = ({ booking, quote, contact, origin, successUrl: suppliedSuccessUrl, cancelUrl: suppliedCancelUrl }) => {
     const successUrl = suppliedSuccessUrl || config.stripeSuccessUrl()
         || `${origin}/payment-success.html?lang=${encodeURIComponent(contact.lang)}&session_id={CHECKOUT_SESSION_ID}`;
@@ -116,12 +131,6 @@ const handler = async (req, res) => {
         });
     }
 
-    const stripeSecretKey = config.stripeSecretKey();
-    const stripeWebhookSecret = config.stripeWebhookSecret();
-    if (!stripeSecretKey || !stripeWebhookSecret || !config.databaseUrl()) {
-        return json(res, 503, { error: 'Secure card checkout is not configured yet.' });
-    }
-
     const body = parseBody(req);
     const wixBridge = await wixBridgeContext(req);
     const requestOrigin = wixBridge.authenticated
@@ -129,6 +138,17 @@ const handler = async (req, res) => {
         : checkoutOrigin(req.headers?.origin);
     if (!requestOrigin) {
         return json(res, 403, { error: 'This booking request did not come from the Lasclottes website.' });
+    }
+
+    const stripeContext = stripeExecutionContext({
+        wixBridge,
+        stagingTestMode: wixBridge.authenticated ? wixBridge.testMode : isStagingOrigin(requestOrigin),
+        requestOrigin
+    });
+    const stripeSecretKey = stripeContext.secretKey;
+    const stripeWebhookSecret = stripeContext.webhookSecret;
+    if (!stripeSecretKey || !stripeWebhookSecret || !config.databaseUrl()) {
+        return json(res, 503, { error: 'Secure card checkout is not configured yet.' });
     }
 
     let quote;
@@ -148,9 +168,7 @@ const handler = async (req, res) => {
         }
         return json(res, 400, { error: 'Invalid booking details.' });
     }
-    const stripeModeOrigin = wixBridge.authenticated
-        ? (stagingTestMode ? 'https://test.lasclottes.com' : 'https://lasclottes.com')
-        : requestOrigin;
+    const stripeModeOrigin = stripeContext.modeOrigin;
     if (!checkoutModeAllowed(stripeSecretKey, stripeModeOrigin)) {
         return json(res, 503, {
             error: 'Secure card checkout is not configured for this website environment.',
@@ -265,5 +283,6 @@ const handler = async (req, res) => {
 handler.calculateQuote = calculateQuote;
 handler.checkoutOrigin = checkoutOrigin;
 handler.checkoutParams = checkoutParams;
+handler.stripeExecutionContext = stripeExecutionContext;
 handler.termsApprovalRequired = termsApprovalRequired;
 module.exports = handler;

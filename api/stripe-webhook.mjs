@@ -36,8 +36,7 @@ export const refundRecordFromCharge = (charge) => {
 };
 
 export async function POST(request) {
-    const webhookSecret = bookingConfig.stripeWebhookSecret();
-    if (!webhookSecret || !bookingConfig.databaseUrl()) {
+    if (!bookingConfig.databaseUrl()) {
         return respond(503, { error: 'Webhook processing is not configured.' });
     }
 
@@ -48,10 +47,6 @@ export async function POST(request) {
         console.error('Stripe webhook raw body unavailable.', error?.name || 'Error');
         return respond(400, { error: 'Invalid webhook body.' });
     }
-    if (!verifyStripeSignature(rawBody, request.headers.get('stripe-signature'), webhookSecret)) {
-        return respond(400, { error: 'Invalid webhook signature.' });
-    }
-
     let event;
     try {
         event = JSON.parse(rawBody);
@@ -59,7 +54,20 @@ export async function POST(request) {
         return respond(400, { error: 'Invalid webhook event.' });
     }
     if (!event?.id || !event?.type) return respond(400, { error: 'Invalid webhook event.' });
-    if (!webhookModeAllowed(event.livemode, request.url)) {
+    const webhookSecret = event.livemode === true
+        ? bookingConfig.stripeLiveWebhookSecret()
+        : bookingConfig.stripeWebhookSecret();
+    if (!webhookSecret) {
+        return respond(503, { error: 'Webhook processing is not configured.' });
+    }
+    if (!verifyStripeSignature(rawBody, request.headers.get('stripe-signature'), webhookSecret)) {
+        return respond(400, { error: 'Invalid webhook signature.' });
+    }
+    if (!webhookModeAllowed(
+        event.livemode,
+        request.url,
+        bookingConfig.liveStripeWebhooksOnSharedEndpoint()
+    )) {
         return respond(400, { error: 'Webhook environment does not match this endpoint.' });
     }
 

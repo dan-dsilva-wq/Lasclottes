@@ -11,8 +11,11 @@ This folder is the checked-in source for the unpublished Wix replacement site.
 - Set `BOOKING_OWNER_EMAIL=sallyaspencer@icloud.com` and `BOOKING_MONITOR_EMAILS=dan-dsilva@outlook.com`. Checkout-started and paid-booking alerts are delivered and audited separately for the two recipients.
 - Keep a native Wix enquiry form on the contact section. Its automation must both show the submission in Wix Inbox and send the complete submission independently to Sally and Daniel.
 - During unpublished draft testing, both `WIX_DRAFT_TEST_MODE` in the Wix page code and the Cloudflare Worker's `WIX_BOOKING_TEST_MODE` are `true`.
+- `WIX_BOOKING_TEST_MODE` controls only the temporary £1 quote and open-date behaviour. `WIX_LIVE_PAYMENTS` separately chooses the restricted live Stripe key, so the owner-approved £1 real-card test can run without losing the private test pricing.
+- Store the restricted key as the encrypted Cloudflare secret `STRIPE_LIVE_SECRET_KEY` and its live endpoint signing secret as `STRIPE_LIVE_WEBHOOK_SECRET`. Keep the existing test secrets in place for staging checks.
+- Set `STRIPE_LIVE_WEBHOOKS_ON_SHARED_ENDPOINT=true` only after the live Stripe endpoint targets the signed Worker webhook URL. Test and live deliveries remain isolated by their separate signing secrets.
 - Configure `WIX_STRIPE_SUCCESS_URL` and `WIX_STRIPE_CANCEL_URL` to the Wix thank-you and retry pages before testing checkout. This prevents Stripe from returning a guest to a missing page.
 - Keep the cancelled-payment page explicit: state that no reservation was made, offer a return to the booking page, and show `info@lasclottes.com` for help. It does not need access to booking data.
-- Before Sally publishes the replacement, switch both test flags to `false`, replace Stripe test credentials with the restricted live key/webhook, point the return URLs at the final Wix pages, and re-run the complete payment/email test.
+- For the owner-approved £1 real-card test, keep both test-price flags `true`, set `WIX_LIVE_PAYMENTS=true`, approve the reviewed booking terms gate, and verify the payment, database record, webhook and all guest/owner emails. After that test, restore real pricing by switching both test-price flags to `false`; leave `WIX_LIVE_PAYMENTS=true` for ordinary live bookings.
 
 Do not publish the draft from Wix. Sally will perform the final publish/replace action after the verified screenshots and owner/legal approvals.

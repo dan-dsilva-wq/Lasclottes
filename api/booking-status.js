@@ -21,6 +21,10 @@ const publicDate = (value) => {
     return isoDate ? isoDate[1] : '';
 };
 
+const stripeSecretForSession = (sessionId) => sessionId.startsWith('cs_live_')
+    ? config.stripeLiveSecretKey()
+    : config.stripeSecretKey();
+
 module.exports = async (req, res) => {
     if (req.method !== 'GET') {
         res.setHeader('Allow', 'GET');
@@ -30,13 +34,14 @@ module.exports = async (req, res) => {
     if (!/^cs_(?:test|live)_[A-Za-z0-9]+$/.test(sessionId)) {
         return json(res, 400, { error: 'Invalid checkout session.' });
     }
+    const stripeSecretKey = stripeSecretForSession(sessionId);
 
     try {
         let booking = await getBookingBySessionId(sessionId);
         if (!booking) return json(res, 404, { error: 'Booking not found.' });
 
-        if (!['paid', 'test_paid'].includes(booking.status) && config.stripeSecretKey()) {
-            const session = await retrieveCheckoutSession(config.stripeSecretKey(), sessionId);
+        if (!['paid', 'test_paid'].includes(booking.status) && stripeSecretKey) {
+            const session = await retrieveCheckoutSession(stripeSecretKey, sessionId);
             if (session.payment_status === 'paid') booking = await confirmPaidSession(session);
             else if (session.status === 'expired') {
                 await cancelBooking(booking.id, 'expired');
@@ -57,3 +62,4 @@ module.exports = async (req, res) => {
 };
 
 module.exports.publicDate = publicDate;
+module.exports.stripeSecretForSession = stripeSecretForSession;

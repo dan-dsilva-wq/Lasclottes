@@ -39,15 +39,23 @@ test('Stripe API calls pin a tested version, time out and preserve idempotency',
 test('live keys and events are accepted only on the live Lasclottes host', () => {
     assert.equal(stripeKeyMode('sk_test_example'), 'test');
     assert.equal(stripeKeyMode('sk_live_example'), 'live');
-    assert.equal(stripeKeyMode('rk_live_example'), '');
+    assert.equal(stripeKeyMode('rk_test_example'), 'test');
+    assert.equal(stripeKeyMode('rk_live_example'), 'live');
     assert.equal(checkoutModeAllowed('sk_test_example', 'https://preview.example'), true);
     assert.equal(checkoutModeAllowed('sk_live_example', 'https://preview.example'), false);
     assert.equal(checkoutModeAllowed('sk_live_example', 'https://test.lasclottes.com'), true);
     assert.equal(checkoutModeAllowed('sk_test_example', 'https://test.lasclottes.com'), false);
     assert.equal(checkoutModeAllowed('sk_live_example', 'https://lasclottes.com'), true);
     assert.equal(checkoutModeAllowed('sk_test_example', 'https://lasclottes.com'), false);
+    assert.equal(checkoutModeAllowed('rk_live_example', 'https://lasclottes.com'), true);
+    assert.equal(checkoutModeAllowed('rk_test_example', 'https://preview.example'), true);
     assert.equal(webhookModeAllowed(false, 'https://lasclottes.super-bread-8b96.workers.dev/api/stripe-webhook'), true);
     assert.equal(webhookModeAllowed(true, 'https://lasclottes.super-bread-8b96.workers.dev/api/stripe-webhook'), false);
+    assert.equal(webhookModeAllowed(
+        true,
+        'https://lasclottes.super-bread-8b96.workers.dev/api/stripe-webhook',
+        true
+    ), true);
     assert.equal(webhookModeAllowed(true, 'https://lasclottes.com/api/stripe-webhook'), true);
     assert.equal(webhookModeAllowed(false, 'https://lasclottes.com/api/stripe-webhook'), false);
     assert.equal(webhookModeAllowed(true, 'https://test.lasclottes.com/api/stripe-webhook'), true);
