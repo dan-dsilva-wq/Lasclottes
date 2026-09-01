@@ -10,6 +10,8 @@ const WIX_DRAFT_TEST_MODE = true;
 $w.onReady(() => {
     const bookingWidget = $w('#bookingWidget');
     let working = false;
+    let availabilityData = null;
+    let availabilityRequest = null;
 
     const send = (message) => bookingWidget.postMessage(message);
 
@@ -19,15 +21,24 @@ $w.onReady(() => {
 
         if (message.type === 'lasclottes-ready') {
             send({ type: 'lasclottes-config', testMode: WIX_DRAFT_TEST_MODE });
-            try {
-                const availability = await getLasclottesAvailability();
-                send({ type: 'lasclottes-availability', availability });
-            } catch (_) {
-                send({
-                    type: 'lasclottes-error',
-                    message: 'Availability is temporarily unavailable. Please contact Sally before booking.'
-                });
+            if (availabilityData) {
+                send({ type: 'lasclottes-availability', availability: availabilityData });
+                return;
             }
+            if (!availabilityRequest) {
+                availabilityRequest = getLasclottesAvailability()
+                    .then((availability) => {
+                        availabilityData = availability;
+                        send({ type: 'lasclottes-availability', availability });
+                    })
+                    .catch(() => {
+                        send({
+                            type: 'lasclottes-error',
+                            message: 'Availability is temporarily unavailable. Please contact Sally before booking.'
+                        });
+                    });
+            }
+            await availabilityRequest;
             return;
         }
 

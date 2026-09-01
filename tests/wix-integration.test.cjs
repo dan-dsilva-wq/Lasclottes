@@ -34,6 +34,16 @@ test('Wix widget collects the agreement and sends only the expected checkout eve
     assert.doesNotMatch(widget, /postMessage\([^\n]+,\s*['"]\*['"]/);
 });
 
+test('Wix booking handshake retries safely and availability is requested only once', () => {
+    const widget = read('booking-widget.html');
+    const pageCode = read('booking-page-code.js');
+    assert.match(widget, /setInterval\(announceReady, 500\)/);
+    assert.match(widget, /if \(state\.configReady\) return;/);
+    assert.match(pageCode, /let availabilityRequest = null;/);
+    assert.match(pageCode, /if \(!availabilityRequest\)/);
+    assert.match(pageCode, /if \(availabilityData\)/);
+});
+
 test('Wix draft mode is explicit and must be switched off before final publication', () => {
     const pageCode = read('booking-page-code.js');
     const instructions = read('README.md');

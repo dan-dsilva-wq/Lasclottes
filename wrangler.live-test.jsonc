@@ -1,9 +1,9 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "lasclottes-live-test",
+  "name": "lasclottes",
   "main": "./cloudflare/worker.mjs",
   "compatibility_date": "2026-08-24",
-  "workers_dev": false,
+  "workers_dev": true,
   "routes": [
     {
       "pattern": "test.lasclottes.com",
@@ -18,7 +18,11 @@
     "BOOKING_OWNER_EMAIL": "sallyaspencer@icloud.com",
     "BOOKING_MONITOR_EMAILS": "dan-dsilva@outlook.com",
     "BOOKING_SENDER_EMAIL": "bookings@lasclottes.com",
-    "RESEND_EMAIL_DOMAIN": "lasclottes.com"
+    "RESEND_EMAIL_DOMAIN": "lasclottes.com",
+    "WIX_SITE_BASE_URLS": "https://www.lasclottes.com,https://lasclottes.com",
+    "WIX_BOOKING_TEST_MODE": "true",
+    "WIX_STRIPE_SUCCESS_URL": "https://test.lasclottes.com/payment-success.html",
+    "WIX_STRIPE_CANCEL_URL": "https://test.lasclottes.com/payment-cancelled.html"
   },
   "assets": {
     "directory": "./dist",

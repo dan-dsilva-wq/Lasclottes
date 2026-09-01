@@ -46,7 +46,7 @@
       const send = (message) => { if (parentOrigin) window.parent.postMessage(message, parentOrigin); };
       const $ = (id) => document.getElementById(id);
       const DAY = 86400000;
-      const state = { testMode: false, availabilityReady: false, blocked: [] };
+      const state = { testMode: false, configReady: false, availabilityReady: false, blocked: [] };
       const visitorId = sessionStorage.getItem('lasclottesVisitorId') || (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
       sessionStorage.setItem('lasclottesVisitorId', visitorId);
       let requestId = '';
@@ -108,12 +108,23 @@
       window.addEventListener('message', (event) => {
         if (event.origin !== parentOrigin || !event.data || typeof event.data !== 'object') return;
         const message = event.data;
-        if (message.type === 'lasclottes-config') { state.testMode = message.testMode === true; $('testNotice').style.display = state.testMode ? 'block' : 'none'; quote(); }
+        if (message.type === 'lasclottes-config') { state.configReady = true; state.testMode = message.testMode === true; $('testNotice').style.display = state.testMode ? 'block' : 'none'; quote(); }
         if (message.type === 'lasclottes-availability') { state.availabilityReady = true; state.blocked = Array.isArray(message.availability?.blocked) ? message.availability.blocked : []; quote(); }
         if (message.type === 'lasclottes-working') { $('submitButton').disabled = true; setStatus('Opening secure Stripe checkout…'); }
         if (message.type === 'lasclottes-error') { $('submitButton').disabled = false; setStatus(message.message || 'Something went wrong. Please try again.', true); }
       });
-      quote(); send({type:'lasclottes-ready'});
+      let readyAttempts = 0;
+      const announceReady = () => {
+        if (state.configReady) return;
+        readyAttempts += 1;
+        send({type:'lasclottes-ready'});
+        if (readyAttempts >= 12) {
+          clearInterval(readyTimer);
+          setStatus('The secure booking connection is taking longer than expected. Please refresh or send an enquiry.', true);
+        }
+      };
+      const readyTimer = setInterval(announceReady, 500);
+      quote(); announceReady();
     })();
   </script>
 </body>
