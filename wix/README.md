@@ -18,4 +18,4 @@ This folder is the checked-in source for the unpublished Wix replacement site.
 - Keep the cancelled-payment page explicit: state that no reservation was made, offer a return to the booking page, and show `info@lasclottes.com` for help. It does not need access to booking data.
 - For the owner-approved £1 real-card test, keep both test-price flags `true`, set `WIX_LIVE_PAYMENTS=true`, approve the reviewed booking terms gate, and verify the payment, database record, webhook and all guest/owner emails. After that test, restore real pricing by switching both test-price flags to `false`; leave `WIX_LIVE_PAYMENTS=true` for ordinary live bookings.
 
-Do not publish the draft from Wix. Sally will perform the final publish/replace action after the verified screenshots and owner/legal approvals.
+Before Sally publishes, switch both test flags to `false`, complete the verified screenshots and owner/legal approvals, and rerun the full acceptance checklist. Do not publish the draft from Wix; Sally will perform the final publish/replace action herself.
