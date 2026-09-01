@@ -16,6 +16,7 @@
     "BOOKING_EMAILS_ENABLED": "true",
     "BOOKING_TERMS_APPROVED": "false",
     "BOOKING_OWNER_EMAIL": "sallyaspencer@icloud.com",
+    "BOOKING_MONITOR_EMAILS": "dan-dsilva@outlook.com",
     "BOOKING_SENDER_EMAIL": "bookings@lasclottes.com",
     "RESEND_EMAIL_DOMAIN": "lasclottes.com"
   },

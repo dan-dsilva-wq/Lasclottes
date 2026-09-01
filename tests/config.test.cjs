@@ -19,7 +19,8 @@ test('Cloudflare runtime bindings are read explicitly and can be cleared safely'
         STRIPE_CANCEL_URL: 'https://staging.example/payment-cancelled',
         WIX_BOOKING_BRIDGE_TOKEN: 'wix-bridge-token-value-that-is-long-enough',
         WIX_SITE_BASE_URLS: 'https://example.wixsite.com/lasclottes-draft, https://lasclottes.com',
-        WIX_BOOKING_TEST_MODE: 'true'
+        WIX_BOOKING_TEST_MODE: 'true',
+        BOOKING_MONITOR_EMAILS: 'sally@example.com, dan@example.com'
     });
     try {
         assert.equal(config.paymentsEnabled(), true);
@@ -32,6 +33,7 @@ test('Cloudflare runtime bindings are read explicitly and can be cleared safely'
             'https://lasclottes.com'
         ]);
         assert.equal(config.wixTestMode(), true);
+        assert.deepEqual(config.monitorEmails(), ['sally@example.com', 'dan@example.com']);
         assert.equal(configuredOrigins()[0], 'https://lasclottes.com');
     } finally {
         setRuntimeConfig({});

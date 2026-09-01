@@ -4,6 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
     balanceDueDate,
+    buildCheckoutStartedEmail,
     buildGuestEmail,
     buildOwnerEmail,
     dateOnly,
@@ -86,6 +87,14 @@ test('owner notification contains booking and contact details', () => {
     assert.match(content.text, /Terms version: 2026-08-26-draft-2/);
 });
 
+test('checkout-started notification cannot be mistaken for a paid booking', () => {
+    const content = buildCheckoutStartedEmail(booking);
+    assert.match(content.subject, /checkout started LC-EMAIL001/);
+    assert.match(content.text, /No payment has been confirmed yet/);
+    assert.match(content.text, /guest@example\.test/);
+    assert.doesNotMatch(content.text, /New paid Lasclottes booking/);
+});
+
 test('email helpers normalize dates and reject unsafe sender domains', () => {
     assert.equal(dateOnly(new Date('2027-07-17T12:00:00Z')), '2027-07-17');
     assert.equal(dateOnly('2027-07-24'), '2027-07-24');
@@ -119,6 +128,16 @@ test('transactional emails have safe reply addresses and identify the API client
         content: buildOwnerEmail(booking)
     });
     assert.equal(ownerMessage.reply_to, booking.email);
+
+    const monitorMessage = resendBody({
+        booking,
+        kind: 'monitor_booking_notification',
+        from: 'Lasclottes <bookings@lasclottes.com>',
+        to: ['dan-dsilva@outlook.com'],
+        replyTo: booking.email,
+        content: buildOwnerEmail(booking)
+    });
+    assert.deepEqual(monitorMessage.to, ['dan-dsilva@outlook.com']);
 
     const headers = resendHeaders('test-key', 'guest_payment_confirmation/test-booking/v1');
     assert.match(headers['User-Agent'], /^Lasclottes-Booking\//);

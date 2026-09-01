@@ -40,9 +40,13 @@
         return element;
     };
 
-    const kindLabel = (kind) => kind === 'guest_payment_confirmation'
-        ? 'Guest confirmation'
-        : 'Owner notification';
+    const kindLabel = (kind) => ({
+        guest_payment_confirmation: 'Guest payment confirmation',
+        owner_booking_notification: 'Sally paid-booking alert',
+        monitor_booking_notification: 'Daniel paid-booking alert',
+        owner_checkout_started: 'Sally checkout-started alert',
+        monitor_checkout_started: 'Daniel checkout-started alert'
+    })[kind] || 'Booking notification';
 
     const retry = async (issue, button) => {
         const confirmed = window.confirm(`Retry the ${kindLabel(issue.kind).toLowerCase()} for ${issue.reference}? This sends an email but cannot charge the guest.`);
@@ -92,14 +96,14 @@
     };
 
     async function loadIssues() {
-        setStatus('Checking paid-booking email delivery…');
+        setStatus('Checking booking email delivery…');
         try {
             const data = await request();
             renderIssues(Array.isArray(data.issues) ? data.issues : []);
             results.hidden = false;
             setStatus(data.issues?.length
                 ? `${data.issues.length} booking email${data.issues.length === 1 ? '' : 's'} need attention.`
-                : 'All recorded paid-booking emails are clear.');
+                : 'All recorded booking emails are clear.');
         } catch (error) {
             results.hidden = true;
             if (error.status === 401) accessToken = '';

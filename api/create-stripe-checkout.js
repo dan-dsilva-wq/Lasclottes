@@ -19,6 +19,7 @@ const {
     markCheckoutPending
 } = require('../lib/database');
 const { json, parseBody } = require('../lib/http');
+const { sendCheckoutStartedNotifications } = require('../lib/email');
 const {
     checkoutModeAllowed,
     createCheckoutSession,
@@ -250,6 +251,9 @@ const handler = async (req, res) => {
         );
         if (!session?.id || !session?.url) throw new Error('Stripe did not return a checkout URL.');
         await markCheckoutPending(booking.id, session.id);
+        await sendCheckoutStartedNotifications(booking).catch((error) => {
+            console.error('Checkout-started notification failed.', error?.name || 'Error');
+        });
         return json(res, 200, { id: session.id, url: session.url, quote });
     } catch (error) {
         if (!reused) await cancelBooking(booking.id).catch(() => {});
