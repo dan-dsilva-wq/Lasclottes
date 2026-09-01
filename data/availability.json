@@ -1,7 +1,7 @@
 {
   "property": "Lasclottes Granary and Annex",
-  "updated": "2026-08-26",
-  "source": "Live Lasclottes Wix availability calendar, rechecked month by month through May 2028",
+  "updated": "2026-09-01",
+  "source": "Live Lasclottes Wix availability calendar, rechecked month by month through May 2028; the three 2027 booking ranges were confirmed directly by the owner on 2026-09-01",
   "dateRangeRule": "start-inclusive, end-exclusive",
   "blocked": [
     {
@@ -22,17 +22,20 @@
     {
       "start": "2027-06-19",
       "end": "2027-06-26",
-      "status": "booked"
+      "status": "booked",
+      "source": "owner-confirmed-2026-09-01"
     },
     {
       "start": "2027-07-03",
       "end": "2027-07-17",
-      "status": "booked"
+      "status": "booked",
+      "source": "owner-confirmed-2026-09-01"
     },
     {
       "start": "2027-07-31",
       "end": "2027-08-14",
-      "status": "booked"
+      "status": "booked",
+      "source": "owner-confirmed-2026-09-01"
     },
     {
       "start": "2027-08-28",

@@ -3,6 +3,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
+    AVAILABILITY,
     BookingValidationError,
     calculateQuote,
     normalizeRequestId,
@@ -12,6 +13,44 @@ const {
     BOOKING_TERMS_VERSION,
     bookingAgreementSnapshot
 } = require('../lib/terms');
+
+test('owner-confirmed 2027 bookings remain blocked with checkout days available for turnover', () => {
+    const confirmed = AVAILABILITY.blocked.filter((range) => range.source === 'owner-confirmed-2026-09-01');
+    assert.deepEqual(confirmed, [
+        {
+            start: '2027-06-19',
+            end: '2027-06-26',
+            status: 'booked',
+            source: 'owner-confirmed-2026-09-01'
+        },
+        {
+            start: '2027-07-03',
+            end: '2027-07-17',
+            status: 'booked',
+            source: 'owner-confirmed-2026-09-01'
+        },
+        {
+            start: '2027-07-31',
+            end: '2027-08-14',
+            status: 'booked',
+            source: 'owner-confirmed-2026-09-01'
+        }
+    ]);
+
+    assert.throws(() => calculateQuote({
+        arrivalDate: '2027-06-19',
+        departureDate: '2027-06-26',
+        adults: 2,
+        children: 0
+    }, new Date('2026-09-01T00:00:00Z')), BookingValidationError);
+
+    assert.doesNotThrow(() => calculateQuote({
+        arrivalDate: '2027-06-26',
+        departureDate: '2027-07-03',
+        adults: 2,
+        children: 0
+    }, new Date('2026-09-01T00:00:00Z')));
+});
 
 test('high-season weekly booking is priced by the server', () => {
     const quote = calculateQuote({
