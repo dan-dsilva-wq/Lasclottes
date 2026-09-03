@@ -25,7 +25,7 @@ This file is the operational checklist for replacing the Wix website. It deliber
 - [x] Use the owner-confirmed GBP pricing rules, 20% initial payment, GBP 500 refundable damage deposit and 60-day balance deadline.
 - [x] Use the website's maximum occupancy of 12 and its current five-bedroom/four-bathroom description.
 - [x] Use the website's `info@lasclottes.com` inbox for new-booking notifications and `bookings@lasclottes.com` as the verified transactional sender once Resend DNS is active.
-- [x] Use the currently blocked dates in `data/availability.json`: they were rechecked month by month against the live Lasclottes Wix calendar through May 2028 on 26 August 2026 and match exactly. Sally should still review any bookings or closures added after that date before launch.
+- [x] Use the currently blocked dates in `data/availability.json`: they were rechecked month by month against the live Lasclottes Wix calendar through May 2028 on 26 August 2026, and Sally directly reconfirmed the three 2027 booking ranges on 1 September 2026 (19–26 June, 3–17 July and 31 July–14 August). Sally should still review any bookings or closures added after that date before launch.
 - [ ] Provide the current mairie registration number for the meublé de tourisme and confirm it appears on every direct and third-party listing. Since 20 May 2026, French town halls must issue a registration number for declared tourist accommodation.
 - [x] Check the owner-supplied `14004*02`: this is an older Cerfa form reference, not Lasclottes's unique mairie registration number, so it has not been published as the property number.
 - [ ] Sally appoints a consumer mediator listed by the CECMC and provides its official name, postal address and website. Add those exact details to the website, booking terms and booking confirmation before accepting payment.
@@ -64,7 +64,7 @@ The legal pages are a practical working draft, not legal advice. The accommodati
 - [x] Replace the obsolete indexable `lasclottes.vercel.app` production alias with the current no-index, payments-disabled review build.
 - [x] Pull the provisioned Preview environment locally into the ignored `.vercel` directory without displaying or committing secret values.
 - [x] Apply the reviewed booking schema automatically to the isolated Preview database branch.
-- [x] Seed the blocked-date ranges from the current public Lasclottes calendar and recheck every month through May 2028. Recheck once more immediately before launch for subsequent owner updates.
+- [x] Seed the blocked-date ranges from the current public Lasclottes calendar and recheck every month through May 2028. The three 2027 ranges were directly reconfirmed by Sally on 1 September 2026. Recheck once more immediately before launch for subsequent owner updates.
 - [x] The Cloudflare Free zone has been prepared and all three Wix A records, the Wix `www` and `m` CNAMEs, and Google Workspace MX/TXT records were imported in DNS-only mode. Authoritative nameservers have not been changed; Resend verification cannot finish while Wix hosts DNS.
 - [x] Authorize Wrangler for the Cloudflare account, deploy the permanent staging Worker and store all test service settings as encrypted Worker secrets.
 - [x] Configure a test-only encrypted operations key on the Cloudflare staging Worker and review branch. The authenticated staging page connected to Neon successfully and reported zero current email issues; invalid or missing credentials fail closed.
@@ -129,7 +129,7 @@ Use Stripe test mode for all pre-launch tests. Do not submit a real card payment
 - [x] Security headers, caching rules, robots.txt and sitemap.xml are correct on the hosted deployment.
 - [x] Each former Wix URL returns a permanent redirect to its closest new equivalent.
 - [x] Production and development dependency audits report no known vulnerabilities.
-- [ ] The owner reviews the final wording, prices, photographs, telephone numbers and any booking-calendar changes made after 26 August 2026.
+- [ ] The owner reviews the final wording, prices, photographs, telephone numbers and any booking-calendar changes made after 1 September 2026.
 
 ## Domain and email cutover
 

@@ -20,7 +20,7 @@ Sally does not need to re-research these items unless she believes they are wron
 - Balance deadline: 60 days before arrival.
 - The EUR 1.41 figure on the old public website must not be carried into the new booking quote. Fumel Vallée du Lot's official 2026 notice publishes EUR 1.44 only for a valid three-star classification. An unclassified or pending-classification property instead uses 5.76% of the pre-tax nightly accommodation cost per person, capped at EUR 3.60, after the departmental and regional additions.
 - Tourist tax remains separate from the GBP card payment. The review build now shows “to be confirmed” until Sally's valid classification and the GBP-to-EUR/HT calculation method are professionally confirmed.
-- The booking calendar was checked month by month against the live Wix calendar through May 2028 on 26 August 2026.
+- The booking calendar was checked month by month against the live Wix calendar through May 2028 on 26 August 2026. Sally subsequently reconfirmed these 2027 booked ranges on 1 September 2026: 19–26 June, 3–17 July and 31 July–14 August (checkout dates are end-exclusive in the booking system).
 - Booking notifications go to `info@lasclottes.com`; automated guest messages will come from `bookings@lasclottes.com` after the domain is verified with the email provider.
 
 ## Decisions Sally must make with her French adviser
@@ -157,7 +157,7 @@ After the missing legal details have been inserted, Sally should confirm each it
 - [x] Prices, payment percentages, damage deposit and tourist tax are correct.
 - [x] Photographs accurately represent what guests can book now.
 - [x] Telephone numbers and both Lasclottes email addresses are correct.
-- [ ] Current bookings and closures still match the owner’s diary. (Not yet)
+- [x] Current 2027 bookings supplied by Sally match the owner’s diary as of 1 September 2026. Recheck any later changes immediately before launch.
 - [ ] Time-sensitive activities and external providers have been rechecked within 14 days of launch.
 - [ ] The booking terms and legal notice have been professionally reviewed.
 - [ ] Sally authorizes the final terms version for production bookings.
